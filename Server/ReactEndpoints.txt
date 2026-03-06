@@ -1,0 +1,27 @@
+# Public endpoints
+GET    /api/products           # List all products (with pagination, filtering)
+GET    /api/products/{id}      # Get single product
+GET    /api/products/featured  # Get featured products
+GET    /api/products/brand/{brand}  # Products by brand
+GET    /api/products/category/{category}  # Products by category
+GET    /api/categories         # List all categories
+GET    /api/brands            # List all brands
+POST   /api/auth/login         # User login
+POST   /api/auth/register      # User registration
+
+# Protected endpoints (require JWT token)
+GET    /api/cart               # Get user's cart
+POST   /api/cart/items         # Add item to cart
+PUT    /api/cart/items/{id}    # Update cart item
+DELETE /api/cart/items/{id}    # Remove from cart
+POST   /api/orders             # Create order
+GET    /api/orders             # Get user's orders
+GET    /api/orders/{id}        # Get order details
+GET    /api/customers/profile  # Get customer profile
+PUT    /api/customers/profile  # Update customer profile
+
+# Admin endpoints (require ADMIN role)
+POST   /api/products           # Create product
+PUT    /api/products/{id}      # Update product
+DELETE /api/products/{id}      # Delete product
+GET    /api/orders/all         # Get all orders (admin)
