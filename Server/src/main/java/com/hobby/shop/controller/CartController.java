@@ -1,114 +1,147 @@
 package com.hobby.shop.controller;
 
 import com.hobby.shop.dto.request.CartItemRequest;
-import com.hobby.shop.dto.response.ApiResponse;
 import com.hobby.shop.dto.response.CartResponse;
 import com.hobby.shop.service.CartService;
-import jakarta.servlet.http.HttpServletRequest;
+import com.hobby.shop.util.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/cart")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class CartController {
 
     private final CartService cartService;
+    private final SecurityUtils securityUtils;
 
+    // User cart endpoints
     @GetMapping
-    public ResponseEntity<CartResponse> getCart(
-            @AuthenticationPrincipal UserDetails userDetails,
-            HttpServletRequest request) {
-
-        String sessionId = getSessionId(request);
-        if (userDetails != null) {
-            return ResponseEntity.ok(cartService.getCartByUser(userDetails.getUsername()));
+    public ResponseEntity<CartResponse> getUserCart() {
+        if (securityUtils.isAuthenticated()) {
+            String email = securityUtils.getCurrentUserEmail();
+            return ResponseEntity.ok(cartService.getCartByUser(email));
         } else {
+            // Handle guest cart via session ID
+            String sessionId = getSessionIdFromRequest();
             return ResponseEntity.ok(cartService.getCartBySession(sessionId));
         }
     }
 
     @PostMapping("/items")
-    public ResponseEntity<CartResponse> addToCart(
-            @Valid @RequestBody CartItemRequest itemRequest,
-            @AuthenticationPrincipal UserDetails userDetails,
-            HttpServletRequest request) {
-
-        String sessionId = getSessionId(request);
-        CartResponse cartResponse;
-
-        if (userDetails != null) {
-            cartResponse = cartService.addItemToUserCart(userDetails.getUsername(), itemRequest);
+    public ResponseEntity<CartResponse> addItemToCart(@Valid @RequestBody CartItemRequest request) {
+        if (securityUtils.isAuthenticated()) {
+            String email = securityUtils.getCurrentUserEmail();
+            return new ResponseEntity<>(cartService.addItemToUserCart(email, request), HttpStatus.CREATED);
         } else {
-            cartResponse = cartService.addItemToSessionCart(sessionId, itemRequest);
+            String sessionId = getSessionIdFromRequest();
+            return new ResponseEntity<>(cartService.addItemToSessionCart(sessionId, request), HttpStatus.CREATED);
         }
-
-        return ResponseEntity.ok(cartResponse);
     }
 
-    @PutMapping("/items/{itemId}")
-    public ResponseEntity<CartResponse> updateCartItem(
-            @PathVariable Long itemId,
-            @RequestParam Integer quantity,
-            @AuthenticationPrincipal UserDetails userDetails,
-            HttpServletRequest request) {
-
-        String sessionId = getSessionId(request);
-        CartResponse cartResponse;
-
-        if (userDetails != null) {
-            cartResponse = cartService.updateCartItemQuantity(userDetails.getUsername(), itemId, quantity);
+    @PutMapping("/items/{cartItemId}")
+    public ResponseEntity<CartResponse> updateCartItemQuantity(
+            @PathVariable Long cartItemId,
+            @RequestParam Integer quantity) {
+        if (securityUtils.isAuthenticated()) {
+            String email = securityUtils.getCurrentUserEmail();
+            return ResponseEntity.ok(cartService.updateCartItemQuantity(email, cartItemId, quantity));
         } else {
-            cartResponse = cartService.updateSessionCartItemQuantity(sessionId, itemId, quantity);
+            String sessionId = getSessionIdFromRequest();
+            return ResponseEntity.ok(cartService.updateSessionCartItemQuantity(sessionId, cartItemId, quantity));
         }
-
-        return ResponseEntity.ok(cartResponse);
     }
 
-    @DeleteMapping("/items/{itemId}")
-    public ResponseEntity<CartResponse> removeFromCart(
-            @PathVariable Long itemId,
-            @AuthenticationPrincipal UserDetails userDetails,
-            HttpServletRequest request) {
-
-        String sessionId = getSessionId(request);
-        CartResponse cartResponse;
-
-        if (userDetails != null) {
-            cartResponse = cartService.removeItemFromUserCart(userDetails.getUsername(), itemId);
+    @DeleteMapping("/items/{cartItemId}")
+    public ResponseEntity<CartResponse> removeItemFromCart(@PathVariable Long cartItemId) {
+        if (securityUtils.isAuthenticated()) {
+            String email = securityUtils.getCurrentUserEmail();
+            return ResponseEntity.ok(cartService.removeItemFromUserCart(email, cartItemId));
         } else {
-            cartResponse = cartService.removeItemFromSessionCart(sessionId, itemId);
+            String sessionId = getSessionIdFromRequest();
+            return ResponseEntity.ok(cartService.removeItemFromSessionCart(sessionId, cartItemId));
         }
-
-        return ResponseEntity.ok(cartResponse);
     }
 
-    @DeleteMapping("/clear")
-    public ResponseEntity<ApiResponse> clearCart(
-            @AuthenticationPrincipal UserDetails userDetails,
-            HttpServletRequest request) {
-
-        String sessionId = getSessionId(request);
-
-        if (userDetails != null) {
-            cartService.clearUserCart(userDetails.getUsername());
+    @DeleteMapping
+    public ResponseEntity<Void> clearCart() {
+        if (securityUtils.isAuthenticated()) {
+            String email = securityUtils.getCurrentUserEmail();
+            cartService.clearUserCart(email);
         } else {
+            String sessionId = getSessionIdFromRequest();
             cartService.clearSessionCart(sessionId);
         }
-
-        return ResponseEntity.ok(new ApiResponse(true, "Cart cleared successfully"));
+        return ResponseEntity.noContent().build();
     }
 
-    private String getSessionId(HttpServletRequest request) {
-        String sessionId = request.getHeader("X-Session-ID");
-        if (sessionId == null || sessionId.isEmpty()) {
-            sessionId = request.getSession().getId();
+    // Explicit session cart endpoints (for when you want to force session-based cart)
+    @GetMapping("/session")
+    public ResponseEntity<CartResponse> getSessionCart(@RequestParam String sessionId) {
+        return ResponseEntity.ok(cartService.getCartBySession(sessionId));
+    }
+
+    @PostMapping("/session/items")
+    public ResponseEntity<CartResponse> addItemToSessionCart(
+            @RequestParam String sessionId,
+            @Valid @RequestBody CartItemRequest request) {
+        return new ResponseEntity<>(cartService.addItemToSessionCart(sessionId, request), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/session/items/{cartItemId}")
+    public ResponseEntity<CartResponse> updateSessionCartItemQuantity(
+            @RequestParam String sessionId,
+            @PathVariable Long cartItemId,
+            @RequestParam Integer quantity) {
+        return ResponseEntity.ok(cartService.updateSessionCartItemQuantity(sessionId, cartItemId, quantity));
+    }
+
+    @DeleteMapping("/session/items/{cartItemId}")
+    public ResponseEntity<CartResponse> removeItemFromSessionCart(
+            @RequestParam String sessionId,
+            @PathVariable Long cartItemId) {
+        return ResponseEntity.ok(cartService.removeItemFromSessionCart(sessionId, cartItemId));
+    }
+
+    @DeleteMapping("/session")
+    public ResponseEntity<Void> clearSessionCart(@RequestParam String sessionId) {
+        cartService.clearSessionCart(sessionId);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/merge")
+    public ResponseEntity<CartResponse> mergeCarts(@RequestParam String sessionId) {
+        String email = securityUtils.getCurrentUserEmail();
+        return ResponseEntity.ok(cartService.mergeCarts(email, sessionId));
+    }
+
+    @GetMapping("/count")
+    public ResponseEntity<Integer> getCartItemCount() {
+        if (securityUtils.isAuthenticated()) {
+            String email = securityUtils.getCurrentUserEmail();
+            return ResponseEntity.ok(cartService.getCartItemCount(email, true));
+        } else {
+            String sessionId = getSessionIdFromRequest();
+            return ResponseEntity.ok(cartService.getCartItemCount(sessionId, false));
         }
-        return sessionId;
+    }
+
+    @GetMapping("/session/count")
+    public ResponseEntity<Integer> getSessionCartItemCount(@RequestParam String sessionId) {
+        return ResponseEntity.ok(cartService.getCartItemCount(sessionId, false));
+    }
+
+    private String getSessionIdFromRequest() {
+        // You can implement this to get session ID from:
+        // 1. Cookie - @CookieValue("sessionId") String sessionId
+        // 2. Header - @RequestHeader("X-Session-ID") String sessionId
+        // 3. Parameter - @RequestParam("sessionId") String sessionId
+
+        // For now, returning null - you'll need to inject HttpServletRequest
+        // or use Spring's RequestContextHolder to get the current request
+        return null;
     }
 }

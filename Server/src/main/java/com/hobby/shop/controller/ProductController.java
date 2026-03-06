@@ -1,15 +1,14 @@
 package com.hobby.shop.controller;
 
 import com.hobby.shop.dto.request.ProductRequest;
-import com.hobby.shop.dto.response.ApiResponse;
 import com.hobby.shop.dto.response.ProductResponse;
 import com.hobby.shop.service.ProductService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,77 +19,15 @@ import java.math.BigDecimal;
 @RestController
 @RequestMapping("/api/products")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class ProductController {
 
     private final ProductService productService;
 
+    // Public endpoints
     @GetMapping
     public ResponseEntity<Page<ProductResponse>> getAllProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "id") String sortBy,
-            @RequestParam(defaultValue = "asc") String sortDirection) {
-
-        Sort sort = sortDirection.equalsIgnoreCase("desc") ?
-                Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
-        Pageable pageable = PageRequest.of(page, size, sort);
-
+            @PageableDefault(size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(productService.getAllProducts(pageable));
-    }
-
-    @GetMapping("/search")
-    public ResponseEntity<Page<ProductResponse>> searchProducts(
-            @RequestParam String query,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(productService.searchProducts(query, pageable));
-    }
-
-    @GetMapping("/filter")
-    public ResponseEntity<Page<ProductResponse>> filterProducts(
-            @RequestParam(required = false) Long categoryId,
-            @RequestParam(required = false) Long brandId,
-            @RequestParam(required = false) BigDecimal minPrice,
-            @RequestParam(required = false) BigDecimal maxPrice,
-            @RequestParam(required = false) String searchTerm,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(productService.filterProducts(
-                categoryId, brandId, minPrice, maxPrice, searchTerm, pageable));
-    }
-
-    @GetMapping("/category/{categoryId}")
-    public ResponseEntity<Page<ProductResponse>> getProductsByCategory(
-            @PathVariable Long categoryId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(productService.getProductsByCategory(categoryId, pageable));
-    }
-
-    @GetMapping("/brand/{brandId}")
-    public ResponseEntity<Page<ProductResponse>> getProductsByBrand(
-            @PathVariable Long brandId,
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(productService.getProductsByBrand(brandId, pageable));
-    }
-
-    @GetMapping("/featured")
-    public ResponseEntity<Page<ProductResponse>> getFeaturedProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(productService.getFeaturedProducts(pageable));
     }
 
     @GetMapping("/{id}")
@@ -103,6 +40,46 @@ public class ProductController {
         return ResponseEntity.ok(productService.getProductBySku(sku));
     }
 
+    @GetMapping("/featured")
+    public ResponseEntity<Page<ProductResponse>> getFeaturedProducts(
+            @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseEntity.ok(productService.getFeaturedProducts(pageable));
+    }
+
+    @GetMapping("/brand/{brandId}")
+    public ResponseEntity<Page<ProductResponse>> getProductsByBrand(
+            @PathVariable Long brandId,
+            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(productService.getProductsByBrand(brandId, pageable));
+    }
+
+    @GetMapping("/category/{categoryId}")
+    public ResponseEntity<Page<ProductResponse>> getProductsByCategory(
+            @PathVariable Long categoryId,
+            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(productService.getProductsByCategory(categoryId, pageable));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<ProductResponse>> searchProducts(
+            @RequestParam String q,
+            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(productService.searchProducts(q, pageable));
+    }
+
+    @GetMapping("/filter")
+    public ResponseEntity<Page<ProductResponse>> filterProducts(
+            @RequestParam(required = false) Long categoryId,
+            @RequestParam(required = false) Long brandId,
+            @RequestParam(required = false) BigDecimal minPrice,
+            @RequestParam(required = false) BigDecimal maxPrice,
+            @RequestParam(required = false) String searchTerm,
+            @PageableDefault(size = 20) Pageable pageable) {
+        return ResponseEntity.ok(productService.filterProducts(
+                categoryId, brandId, minPrice, maxPrice, searchTerm, pageable));
+    }
+
+    // Admin endpoints
     @PostMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
@@ -119,8 +96,8 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<ApiResponse> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
-        return ResponseEntity.ok(new ApiResponse(true, "Product deactivated successfully"));
+        return ResponseEntity.noContent().build();
     }
 }
