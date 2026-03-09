@@ -229,7 +229,7 @@ VALUES ('user@example.com', '$2a$10$kHzSQlviEvUEidG1Vaw/guBJf7GBrbZfXEOBXnxY8dYa
 -- Assign roles to users
 INSERT INTO customer_roles (customer_id, role_id)
 VALUES (1, 1), -- user@example.com gets ROLE_USER
-       (2, 1), -- admin gets ROLE_USER
+       (2, 1),
        (2, 2);
 -- admin gets ROLE_ADMIN
 
