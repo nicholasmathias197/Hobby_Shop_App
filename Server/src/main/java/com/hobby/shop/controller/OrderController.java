@@ -2,10 +2,12 @@ package com.hobby.shop.controller;
 
 import com.hobby.shop.dto.request.OrderRequest;
 import com.hobby.shop.dto.response.OrderResponse;
+
 import com.hobby.shop.service.OrderService;
 import com.hobby.shop.util.SecurityUtils;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/orders")
 @RequiredArgsConstructor
@@ -23,92 +26,141 @@ public class OrderController {
     private final OrderService orderService;
     private final SecurityUtils securityUtils;
 
-    // Customer endpoints
+    // ============= AUTHENTICATED USER ENDPOINTS =============
+
+    /**
+     * Create order for authenticated user
+     * POST /api/orders
+     */
     @PostMapping
     public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest request) {
         String email = securityUtils.getCurrentUserEmail();
+        log.info("Creating order for authenticated user: {}", email);
         return new ResponseEntity<>(orderService.createOrder(email, request), HttpStatus.CREATED);
     }
 
-    @PostMapping("/guest")
-    public ResponseEntity<OrderResponse> createGuestOrder(
-            @RequestParam String sessionId,
-            @RequestParam(required = false) String guestEmail,
-            @Valid @RequestBody OrderRequest request) {
-        return new ResponseEntity<>(orderService.createGuestOrder(sessionId, request, guestEmail),
-                HttpStatus.CREATED);
-    }
-
+    /**
+     * Get all orders for authenticated user
+     * GET /api/orders
+     */
     @GetMapping
     public ResponseEntity<Page<OrderResponse>> getUserOrders(
             @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        // If authenticated, get user email, otherwise check for guest email in session
-        if (securityUtils.isAuthenticated()) {
-            String email = securityUtils.getCurrentUserEmail();
-            return ResponseEntity.ok(orderService.getUserOrders(email, pageable));
-        } else {
-            // Handle guest orders via session ID - you might want to get this from a cookie or header
-            String sessionId = getSessionIdFromRequest(); // Implement this method
-            return ResponseEntity.ok(orderService.getGuestOrders(sessionId, pageable));
-        }
+
+        String email = securityUtils.getCurrentUserEmail();
+        log.info("Fetching orders for authenticated user: {}", email);
+        return ResponseEntity.ok(orderService.getUserOrders(email, pageable));
     }
 
+    /**
+     * Get specific order by order number (must belong to authenticated user)
+     * GET /api/orders/{orderNumber}
+     */
     @GetMapping("/{orderNumber}")
     public ResponseEntity<OrderResponse> getOrderByNumber(@PathVariable String orderNumber) {
-        return ResponseEntity.ok(orderService.getOrderByNumber(orderNumber));
+        String email = securityUtils.getCurrentUserEmail();
+        log.info("Fetching order {} for user: {}", orderNumber, email);
+        return ResponseEntity.ok(orderService.getOrderByNumber(email, orderNumber));
     }
 
+    /**
+     * Cancel order (must belong to authenticated user)
+     * PUT /api/orders/{orderId}/cancel
+     */
     @PutMapping("/{orderId}/cancel")
     public ResponseEntity<OrderResponse> cancelOrder(
             @PathVariable Long orderId,
             @RequestParam(required = false) String reason) {
-        return ResponseEntity.ok(orderService.cancelOrder(orderId, reason));
+
+        String email = securityUtils.getCurrentUserEmail();
+        log.info("User {} cancelling order ID: {}", email, orderId);
+        return ResponseEntity.ok(orderService.cancelOrder(email, orderId, reason));
     }
 
-    // Admin endpoints
+    // ============= GUEST ORDER LOOKUP (Public) =============
+
+    /**
+     * Guest order lookup (requires email verification)
+     * GET /api/orders/guest/lookup
+     */
+    @GetMapping("/guest/lookup")
+    public ResponseEntity<OrderResponse> getGuestOrder(
+            @RequestParam String email,
+            @RequestParam String orderNumber) {
+
+        log.info("Guest looking up order: {} for email: {}", orderNumber, email);
+        return ResponseEntity.ok(orderService.getGuestOrder(orderNumber, email));
+    }
+
+    // ============= ADMIN ENDPOINTS =============
+
+    /**
+     * Get all orders (admin only)
+     * GET /api/orders/all
+     */
     @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<OrderResponse>> getAllOrders(
             @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        log.info("Admin fetching all orders");
         return ResponseEntity.ok(orderService.getAllOrders(pageable));
     }
 
+    /**
+     * Get orders by status (admin only)
+     * GET /api/orders/status/{status}
+     */
     @GetMapping("/status/{status}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<OrderResponse>> getOrdersByStatus(
             @PathVariable String status,
             @PageableDefault(size = 20) Pageable pageable) {
+
+        log.info("Admin fetching orders with status: {}", status);
         return ResponseEntity.ok(orderService.getOrdersByStatus(status, pageable));
     }
 
+    /**
+     * Update order status (admin only)
+     * PUT /api/orders/{orderId}/status
+     */
     @PutMapping("/{orderId}/status")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> updateOrderStatus(
             @PathVariable Long orderId,
             @RequestParam String status,
             @RequestParam(required = false) String comment) {
+
+        log.info("Admin updating order {} status to: {}", orderId, status);
         return ResponseEntity.ok(orderService.updateOrderStatus(orderId, status, comment));
     }
 
+    /**
+     * Update payment status (admin only)
+     * PUT /api/orders/{orderId}/payment
+     */
     @PutMapping("/{orderId}/payment")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> updatePaymentStatus(
             @PathVariable Long orderId,
             @RequestParam String paymentStatus) {
+
+        log.info("Admin updating payment for order {} to: {}", orderId, paymentStatus);
         return ResponseEntity.ok(orderService.updatePaymentStatus(orderId, paymentStatus));
     }
 
+    /**
+     * Update tracking number (admin only)
+     * PUT /api/orders/{orderId}/tracking
+     */
     @PutMapping("/{orderId}/tracking")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> updateTrackingNumber(
             @PathVariable Long orderId,
             @RequestParam String trackingNumber) {
-        return ResponseEntity.ok(orderService.updateTrackingNumber(orderId, trackingNumber));
-    }
 
-    private String getSessionIdFromRequest() {
-        // Implement logic to get session ID from cookie, header, or parameter
-        // This is just a placeholder
-        return null;
+        log.info("Admin updating tracking for order {} to: {}", orderId, trackingNumber);
+        return ResponseEntity.ok(orderService.updateTrackingNumber(orderId, trackingNumber));
     }
 }

@@ -30,6 +30,10 @@ public class OrderResponse {
     private LocalDateTime createdAt;
     private List<OrderItemResponse> items;
 
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+
+    }
+
     @Data
     public static class OrderItemResponse {
         private Long id;

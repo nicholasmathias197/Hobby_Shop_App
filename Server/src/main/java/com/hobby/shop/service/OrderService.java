@@ -7,22 +7,19 @@ import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
 
-    // Customer order operations
+    // Customer order operations (AUTHENTICATED USERS ONLY)
     OrderResponse createOrder(String email, OrderRequest request);
-    OrderResponse createGuestOrder(String sessionId, OrderRequest request, String guestEmail);
-    OrderResponse getOrderByNumber(String orderNumber);
+    OrderResponse getOrderByNumber(String email, String orderNumber); // Add email param for security
     Page<OrderResponse> getUserOrders(String email, Pageable pageable);
-    Page<OrderResponse> getGuestOrders(String guestEmail, Pageable pageable);
-
-    // Order status operations
-    OrderResponse updateOrderStatus(Long orderId, String status, String comment);
-    OrderResponse updatePaymentStatus(Long orderId, String paymentStatus);
-    OrderResponse cancelOrder(Long orderId, String reason);
+    OrderResponse cancelOrder(String email, Long orderId, String reason); // Add email param
 
     // Admin operations
     Page<OrderResponse> getAllOrders(Pageable pageable);
     Page<OrderResponse> getOrdersByStatus(String status, Pageable pageable);
-
-    // Tracking
+    OrderResponse updateOrderStatus(Long orderId, String status, String comment);
+    OrderResponse updatePaymentStatus(Long orderId, String paymentStatus);
     OrderResponse updateTrackingNumber(Long orderId, String trackingNumber);
+
+    // Guest operations (GUESTS CAN ONLY VIEW THEIR OWN ORDER WITH EMAIL VERIFICATION)
+    OrderResponse getGuestOrder(String orderNumber, String guestEmail);
 }

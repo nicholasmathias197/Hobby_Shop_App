@@ -2,10 +2,11 @@ package com.hobby.shop.service;
 
 import com.hobby.shop.dto.request.RegisterRequest;
 import com.hobby.shop.dto.response.CustomerResponse;
+import com.hobby.shop.dto.response.RegisterResponse; // Add this import
 
 public interface AuthService {
 
-    CustomerResponse registerUser(RegisterRequest request);
+    RegisterResponse registerUser(RegisterRequest request); // Changed return type
     CustomerResponse registerAdmin(RegisterRequest request);
     boolean verifyEmail(String token);
     void requestPasswordReset(String email);
