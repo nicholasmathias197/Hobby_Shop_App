@@ -52,7 +52,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public CartResponse updateCartItemQuantity(String email, Long cartItemId, Integer quantity) {
+        log.info("=== UPDATE CART ITEM QUANTITY (USER) ===");
+        log.info("Email: {}, CartItemId: {}, Quantity: {}", email, cartItemId, quantity);
+
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
@@ -67,14 +71,19 @@ public class CartServiceImpl implements CartService {
         }
 
         if (quantity <= 0) {
+            log.info("Quantity <= 0, removing item from cart");
+            cart.getItems().remove(cartItem);
             cartItemRepository.delete(cartItem);
+            cartItemRepository.flush();
         } else {
             // Check stock availability
             if (!productService.checkStock(cartItem.getProduct().getId(), quantity)) {
                 throw new BadRequestException("Insufficient stock for product: " + cartItem.getProduct().getName());
             }
+            log.info("Updating quantity from {} to {}", cartItem.getQuantity(), quantity);
             cartItem.setQuantity(quantity);
             cartItemRepository.save(cartItem);
+            cartItemRepository.flush();
         }
 
         cart = cartRepository.findById(cart.getId())
@@ -84,29 +93,66 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public CartResponse removeItemFromUserCart(String email, Long cartItemId) {
-        Customer customer = customerRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+        log.info("=== REMOVE ITEM FROM USER CART ===");
+        log.info("Email: {}", email);
+        log.info("CartItemId: {}", cartItemId);
 
-        Cart cart = cartRepository.findByCustomerId(customer.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found for user"));
+        try {
+            Customer customer = customerRepository.findByEmail(email)
+                    .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
-        CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found with id: " + cartItemId));
+            Cart cart = cartRepository.findByCustomerId(customer.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Cart not found for user"));
+            log.info("Found cart with ID: {}, Items before deletion: {}", cart.getId(), cart.getItems().size());
 
-        if (!cartItem.getCart().getId().equals(cart.getId())) {
-            throw new BadRequestException("Cart item does not belong to this user");
+            CartItem cartItem = cartItemRepository.findById(cartItemId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Cart item not found with id: " + cartItemId));
+            log.info("Found cart item: ID={}, Product={}, Quantity={}",
+                    cartItem.getId(), cartItem.getProduct().getName(), cartItem.getQuantity());
+
+            if (!cartItem.getCart().getId().equals(cart.getId())) {
+                log.error("Cart item {} does not belong to cart {}", cartItemId, cart.getId());
+                throw new BadRequestException("Cart item does not belong to this user");
+            }
+            log.info("Item belongs to cart ✓");
+
+            // Remove from cart's collection to maintain consistency
+            cart.getItems().remove(cartItem);
+            log.info("Removed item from cart's collection");
+
+            // Delete the item
+            log.info("Deleting cart item from database...");
+            cartItemRepository.delete(cartItem);
+            log.info("Delete method called");
+
+            // Force flush to ensure deletion is committed
+            cartItemRepository.flush();
+            log.info("Flush completed");
+
+            // Save cart to update the collection
+            cart = cartRepository.save(cart);
+            log.info("Cart saved. Items after deletion: {}", cart.getItems().size());
+
+            // Refresh to ensure we have latest state
+            cart = cartRepository.findById(cart.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+            log.info("Cart refreshed. Final item count: {}", cart.getItems().size());
+
+            CartResponse response = mapToCartResponse(cart);
+            log.info("Returning response with {} items", response.getItems().size());
+
+            return response;
+
+        } catch (Exception e) {
+            log.error("Error removing item from user cart: {}", e.getMessage(), e);
+            throw e;
         }
-
-        cartItemRepository.delete(cartItem);
-
-        cart = cartRepository.findById(cart.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-
-        return mapToCartResponse(cart);
     }
 
     @Override
+    @Transactional
     public void clearUserCart(String email) {
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
@@ -115,6 +161,7 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.deleteAll(cart.getItems());
             cart.getItems().clear();
             cartRepository.save(cart);
+            cartItemRepository.flush();
         });
     }
 
@@ -135,7 +182,11 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public CartResponse updateSessionCartItemQuantity(String sessionId, Long cartItemId, Integer quantity) {
+        log.info("=== UPDATE CART ITEM QUANTITY (SESSION) ===");
+        log.info("SessionId: {}, CartItemId: {}, Quantity: {}", sessionId, cartItemId, quantity);
+
         Cart cart = cartRepository.findBySessionId(sessionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found for session"));
 
@@ -147,14 +198,19 @@ public class CartServiceImpl implements CartService {
         }
 
         if (quantity <= 0) {
+            log.info("Quantity <= 0, removing item from cart");
+            cart.getItems().remove(cartItem);
             cartItemRepository.delete(cartItem);
+            cartItemRepository.flush();
         } else {
             // Check stock availability
             if (!productService.checkStock(cartItem.getProduct().getId(), quantity)) {
                 throw new BadRequestException("Insufficient stock for product: " + cartItem.getProduct().getName());
             }
+            log.info("Updating quantity from {} to {}", cartItem.getQuantity(), quantity);
             cartItem.setQuantity(quantity);
             cartItemRepository.save(cartItem);
+            cartItemRepository.flush();
         }
 
         cart = cartRepository.findById(cart.getId())
@@ -164,35 +220,77 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
+    @Transactional
     public CartResponse removeItemFromSessionCart(String sessionId, Long cartItemId) {
-        Cart cart = cartRepository.findBySessionId(sessionId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found for session"));
+        log.info("=== REMOVE ITEM FROM SESSION CART ===");
+        log.info("SessionId: {}", sessionId);
+        log.info("CartItemId: {}", cartItemId);
 
-        CartItem cartItem = cartItemRepository.findById(cartItemId)
-                .orElseThrow(() -> new ResourceNotFoundException("Cart item not found with id: " + cartItemId));
+        try {
+            // Find cart
+            Cart cart = cartRepository.findBySessionId(sessionId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Cart not found for session"));
+            log.info("Found cart with ID: {}, Items before deletion: {}", cart.getId(), cart.getItems().size());
 
-        if (!cartItem.getCart().getId().equals(cart.getId())) {
-            throw new BadRequestException("Cart item does not belong to this session");
+            // Find cart item
+            CartItem cartItem = cartItemRepository.findById(cartItemId)
+                    .orElseThrow(() -> new ResourceNotFoundException("Cart item not found with id: " + cartItemId));
+            log.info("Found cart item: ID={}, Product={}, Quantity={}",
+                    cartItem.getId(), cartItem.getProduct().getName(), cartItem.getQuantity());
+
+            // Verify item belongs to cart
+            if (!cartItem.getCart().getId().equals(cart.getId())) {
+                log.error("Cart item {} does not belong to cart {}", cartItemId, cart.getId());
+                throw new BadRequestException("Cart item does not belong to this session");
+            }
+            log.info("Item belongs to cart ✓");
+
+            // Remove from cart's collection to maintain consistency
+            cart.getItems().remove(cartItem);
+            log.info("Removed item from cart's collection");
+
+            // Delete the item
+            log.info("Deleting cart item from database...");
+            cartItemRepository.delete(cartItem);
+            log.info("Delete method called");
+
+            // Force flush to ensure deletion is committed
+            cartItemRepository.flush();
+            log.info("Flush completed");
+
+            // Save cart to update the collection
+            cart = cartRepository.save(cart);
+            log.info("Cart saved. Items after deletion: {}", cart.getItems().size());
+
+            // Refresh to ensure we have latest state
+            cart = cartRepository.findById(cart.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
+            log.info("Cart refreshed. Final item count: {}", cart.getItems().size());
+
+            CartResponse response = mapToCartResponse(cart);
+            log.info("Returning response with {} items", response.getItems().size());
+
+            return response;
+
+        } catch (Exception e) {
+            log.error("Error removing item from session cart: {}", e.getMessage(), e);
+            throw e;
         }
-
-        cartItemRepository.delete(cartItem);
-
-        cart = cartRepository.findById(cart.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
-
-        return mapToCartResponse(cart);
     }
 
     @Override
+    @Transactional
     public void clearSessionCart(String sessionId) {
         cartRepository.findBySessionId(sessionId).ifPresent(cart -> {
             cartItemRepository.deleteAll(cart.getItems());
             cart.getItems().clear();
             cartRepository.save(cart);
+            cartItemRepository.flush();
         });
     }
 
     @Override
+    @Transactional
     public CartResponse mergeCarts(String email, String sessionId) {
         Customer customer = customerRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
@@ -229,6 +327,7 @@ public class CartServiceImpl implements CartService {
 
             // Delete session cart after merge
             cartRepository.delete(sessionCart);
+            cartRepository.flush();
         }
 
         return mapToCartResponse(userCart);
@@ -302,6 +401,8 @@ public class CartServiceImpl implements CartService {
             cart.getItems().add(cartItem);
         }
 
+        cartItemRepository.flush();
+
         cart = cartRepository.findById(cart.getId())
                 .orElseThrow(() -> new ResourceNotFoundException("Cart not found"));
 
@@ -316,27 +417,32 @@ public class CartServiceImpl implements CartService {
         response.setCreatedAt(cart.getCreatedAt());
         response.setUpdatedAt(cart.getUpdatedAt());
 
+        // IMPORTANT: Initialize the items set
+        response.setItems(new HashSet<>());
+
         int totalItems = 0;
         BigDecimal totalPrice = BigDecimal.ZERO;
 
-        for (CartItem item : cart.getItems()) {
-            CartResponse.CartItemResponse itemResponse = new CartResponse.CartItemResponse();
-            itemResponse.setId(item.getId());
-            itemResponse.setProductId(item.getProduct().getId());
-            itemResponse.setProductName(item.getProduct().getName());
-            itemResponse.setProductSku(item.getProduct().getSku());
-            itemResponse.setProductImage(item.getProduct().getImageUrl());
-            itemResponse.setPrice(item.getProduct().getPrice());
-            itemResponse.setQuantity(item.getQuantity());
+        if (cart.getItems() != null) {
+            for (CartItem item : cart.getItems()) {
+                CartResponse.CartItemResponse itemResponse = new CartResponse.CartItemResponse();
+                itemResponse.setId(item.getId());
+                itemResponse.setProductId(item.getProduct().getId());
+                itemResponse.setProductName(item.getProduct().getName());
+                itemResponse.setProductSku(item.getProduct().getSku());
+                itemResponse.setProductImage(item.getProduct().getImageUrl());
+                itemResponse.setPrice(item.getProduct().getPrice());
+                itemResponse.setQuantity(item.getQuantity());
 
-            BigDecimal subtotal = item.getProduct().getPrice()
-                    .multiply(BigDecimal.valueOf(item.getQuantity()));
-            itemResponse.setSubtotal(subtotal);
+                BigDecimal subtotal = item.getProduct().getPrice()
+                        .multiply(BigDecimal.valueOf(item.getQuantity()));
+                itemResponse.setSubtotal(subtotal);
 
-            response.getItems().add(itemResponse);
+                response.getItems().add(itemResponse);
 
-            totalItems += item.getQuantity();
-            totalPrice = totalPrice.add(subtotal);
+                totalItems += item.getQuantity();
+                totalPrice = totalPrice.add(subtotal);
+            }
         }
 
         response.setTotalItems(totalItems);

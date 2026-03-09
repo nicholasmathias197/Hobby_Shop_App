@@ -4,6 +4,7 @@ import lombok.Data;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.HashSet;
 import java.util.Set;
 
 @Data
@@ -13,7 +14,7 @@ public class CartResponse {
     private String sessionId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-    private Set<CartItemResponse> items;
+    private Set<CartItemResponse> items = new HashSet<>();  // Initialize here!
     private Integer totalItems;
     private BigDecimal totalPrice;
 
