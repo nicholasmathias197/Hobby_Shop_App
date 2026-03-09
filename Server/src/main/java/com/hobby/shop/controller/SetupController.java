@@ -15,6 +15,15 @@ public class SetupController {
 
     private final RoleRepository roleRepository;
 
+    // ============= INITIALIZATION ENDPOINTS =============
+
+    /**
+     * Initialize default roles (USER and ADMIN)
+     * POST /api/setup/init-roles
+     * Should be called once during application setup or deployment
+     * Creates roles if they don't already exist
+     * @return Success message
+     */
     @PostMapping("/init-roles")
     public ResponseEntity<String> initializeRoles() {
 

@@ -13,6 +13,14 @@ import java.util.Map;
 @RequestMapping("/api/health")
 public class HealthController {
 
+    // ============= HEALTH CHECK ENDPOINT =============
+
+    /**
+     * Simple health check endpoint for monitoring
+     * GET /api/health
+     * Used by load balancers, monitoring tools, and CI/CD pipelines
+     * @return ApiResponse with status UP and service information
+     */
     @GetMapping
     public ResponseEntity<ApiResponse> healthCheck() {
         Map<String, String> status = new HashMap<>();

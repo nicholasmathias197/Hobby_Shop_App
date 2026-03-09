@@ -16,7 +16,7 @@ PUT    /api/cart/items/{id}    # Update cart item
 DELETE /api/cart/items/{id}    # Remove from cart
 POST   /api/orders             # Create order
 GET    /api/orders             # Get user's orders
-GET    /api/orders/{id}        # Get order details
+GET    /api/orders/{orderNumber} # Get order details
 GET    /api/customers/profile  # Get customer profile
 PUT    /api/customers/profile  # Update customer profile
 

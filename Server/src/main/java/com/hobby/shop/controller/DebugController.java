@@ -19,6 +19,14 @@ public class DebugController {
 
     private final RoleRepository roleRepository;
 
+    // ============= DEBUG ENDPOINTS =============
+
+    /**
+     * Debug endpoint to check role configuration
+     * GET /api/debug/check-roles
+     * Useful for troubleshooting authentication/authorization issues
+     * @return Map containing role information and existence checks
+     */
     @GetMapping("/check-roles")
     public ResponseEntity<Map<String, Object>> checkRoles() {
         Map<String, Object> response = new HashMap<>();

@@ -22,13 +22,25 @@ public class CustomerController {
     private final CustomerService customerService;
     private final SecurityUtils securityUtils;
 
-    // Customer profile endpoints
+    // ============= CUSTOMER PROFILE ENDPOINTS (Self-Service) =============
+
+    /**
+     * Get current authenticated user's profile
+     * GET /api/customers/profile
+     * @return Customer profile response
+     */
     @GetMapping("/profile")
     public ResponseEntity<CustomerResponse> getCurrentUserProfile() {
         String email = securityUtils.getCurrentUserEmail();
         return ResponseEntity.ok(customerService.getCustomerByEmail(email));
     }
 
+    /**
+     * Update current authenticated user's profile
+     * PUT /api/customers/profile
+     * @param request Profile update request
+     * @return Updated customer response
+     */
     @PutMapping("/profile")
     public ResponseEntity<CustomerResponse> updateCurrentUserProfile(
             @Valid @RequestBody CustomerUpdateRequest request) {
@@ -37,6 +49,13 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.updateCustomer(customer.getId(), request));
     }
 
+    /**
+     * Change password for current authenticated user
+     * POST /api/customers/profile/change-password?oldPassword={old}&newPassword={new}
+     * @param oldPassword Current password for verification
+     * @param newPassword New password to set
+     * @return OK response on success
+     */
     @PostMapping("/profile/change-password")
     public ResponseEntity<Void> changePassword(
             @RequestParam String oldPassword,
@@ -47,7 +66,14 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
-    // Admin endpoints
+    // ============= ADMIN ENDPOINTS =============
+
+    /**
+     * Get paginated list of all customers (admin only)
+     * GET /api/customers
+     * @param pageable Pagination information (default: size=20, sort by createdAt DESC)
+     * @return Paginated list of customer responses
+     */
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<CustomerResponse>> getAllCustomers(
@@ -55,18 +81,37 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.getAllCustomers(pageable));
     }
 
+    /**
+     * Get customer by ID (admin only)
+     * GET /api/customers/{id}
+     * @param id Customer ID
+     * @return Customer response
+     */
     @GetMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CustomerResponse> getCustomerById(@PathVariable Long id) {
         return ResponseEntity.ok(customerService.getCustomerById(id));
     }
 
+    /**
+     * Get customer by email (admin only)
+     * GET /api/customers/email/{email}
+     * @param email Customer email
+     * @return Customer response
+     */
     @GetMapping("/email/{email}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CustomerResponse> getCustomerByEmail(@PathVariable String email) {
         return ResponseEntity.ok(customerService.getCustomerByEmail(email));
     }
 
+    /**
+     * Update any customer by ID (admin only)
+     * PUT /api/customers/{id}
+     * @param id Customer ID
+     * @param request Customer update request
+     * @return Updated customer response
+     */
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CustomerResponse> updateCustomer(
@@ -75,6 +120,12 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.updateCustomer(id, request));
     }
 
+    /**
+     * Delete a customer (soft delete) (admin only)
+     * DELETE /api/customers/{id}
+     * @param id Customer ID
+     * @return No content response
+     */
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
@@ -82,6 +133,13 @@ public class CustomerController {
         return ResponseEntity.noContent().build();
     }
 
+    /**
+     * Enable or disable a customer account (admin only)
+     * PUT /api/customers/{id}/toggle-status?enabled={true/false}
+     * @param id Customer ID
+     * @param enabled Desired account status
+     * @return Updated customer response
+     */
     @PutMapping("/{id}/toggle-status")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CustomerResponse> toggleCustomerStatus(
@@ -90,6 +148,13 @@ public class CustomerController {
         return ResponseEntity.ok(customerService.toggleCustomerStatus(id, enabled));
     }
 
+    /**
+     * Add a role to a customer (admin only)
+     * POST /api/customers/{customerId}/roles/{roleId}
+     * @param customerId Customer ID
+     * @param roleId Role ID to add
+     * @return OK response
+     */
     @PostMapping("/{customerId}/roles/{roleId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> addRoleToCustomer(
@@ -99,6 +164,13 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
+    /**
+     * Remove a role from a customer (admin only)
+     * DELETE /api/customers/{customerId}/roles/{roleId}
+     * @param customerId Customer ID
+     * @param roleId Role ID to remove
+     * @return OK response
+     */
     @DeleteMapping("/{customerId}/roles/{roleId}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> removeRoleFromCustomer(
@@ -108,12 +180,24 @@ public class CustomerController {
         return ResponseEntity.ok().build();
     }
 
+    // ============= STATISTICS ENDPOINTS (Admin Only) =============
+
+    /**
+     * Get total number of customers (admin only)
+     * GET /api/customers/statistics/total
+     * @return Total customer count
+     */
     @GetMapping("/statistics/total")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> getTotalCustomerCount() {
         return ResponseEntity.ok(customerService.getTotalCustomerCount());
     }
 
+    /**
+     * Get number of active customers (admin only)
+     * GET /api/customers/statistics/active
+     * @return Active customer count
+     */
     @GetMapping("/statistics/active")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Long> getActiveCustomerCount() {

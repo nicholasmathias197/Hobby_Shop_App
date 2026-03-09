@@ -27,6 +27,15 @@ public class CartController {
     private final HttpServletRequest request;
     private final HttpServletResponse response;
 
+    // ============= CART MANAGEMENT ENDPOINTS =============
+
+    /**
+     * Get current user's cart (authenticated or guest)
+     * GET /api/cart
+     * For authenticated users: fetches cart by email
+     * For guests: fetches cart by session ID (creates new session if needed)
+     * @return Cart response with items and totals
+     */
     @GetMapping
     public ResponseEntity<CartResponse> getUserCart() {
         if (securityUtils.isAuthenticated()) {
@@ -40,6 +49,12 @@ public class CartController {
         }
     }
 
+    /**
+     * Add item to cart (authenticated or guest)
+     * POST /api/cart/items
+     * @param request Cart item details (product ID, quantity)
+     * @return Updated cart response
+     */
     @PostMapping("/items")
     public ResponseEntity<CartResponse> addItemToCart(@Valid @RequestBody CartItemRequest request) {
         log.info("Adding item to cart. Request: {}", request);
@@ -55,6 +70,13 @@ public class CartController {
         }
     }
 
+    /**
+     * Update quantity of a specific cart item
+     * PUT /api/cart/items/{cartItemId}?quantity={quantity}
+     * @param cartItemId Cart item ID
+     * @param quantity New quantity
+     * @return Updated cart response
+     */
     @PutMapping("/items/{cartItemId}")
     public ResponseEntity<CartResponse> updateCartItemQuantity(
             @PathVariable Long cartItemId,
@@ -68,6 +90,12 @@ public class CartController {
         }
     }
 
+    /**
+     * Remove a specific item from cart
+     * DELETE /api/cart/items/{cartItemId}
+     * @param cartItemId Cart item ID to remove
+     * @return Updated cart response
+     */
     @DeleteMapping("/items/{cartItemId}")
     public ResponseEntity<CartResponse> removeItemFromCart(@PathVariable Long cartItemId) {
         if (securityUtils.isAuthenticated()) {
@@ -79,6 +107,11 @@ public class CartController {
         }
     }
 
+    /**
+     * Clear all items from cart
+     * DELETE /api/cart
+     * @return No content response
+     */
     @DeleteMapping
     public ResponseEntity<Void> clearCart() {
         if (securityUtils.isAuthenticated()) {
@@ -91,13 +124,11 @@ public class CartController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/merge")
-    public ResponseEntity<CartResponse> mergeCarts(@RequestParam String sessionId) {
-        String email = securityUtils.getCurrentUserEmail();
-        log.info("Merging session cart {} with user cart for {}", sessionId, email);
-        return ResponseEntity.ok(cartService.mergeCarts(email, sessionId));
-    }
-
+    /**
+     * Get total number of items in cart
+     * GET /api/cart/count
+     * @return Item count
+     */
     @GetMapping("/count")
     public ResponseEntity<Integer> getCartItemCount() {
         if (securityUtils.isAuthenticated()) {
@@ -109,6 +140,29 @@ public class CartController {
         }
     }
 
+    // ============= CART MERGING =============
+
+    /**
+     * Merge guest cart with authenticated user's cart (happens after login)
+     * POST /api/cart/merge?sessionId={sessionId}
+     * @param sessionId Guest session ID to merge from
+     * @return Merged cart response
+     */
+    @PostMapping("/merge")
+    public ResponseEntity<CartResponse> mergeCarts(@RequestParam String sessionId) {
+        String email = securityUtils.getCurrentUserEmail();
+        log.info("Merging session cart {} with user cart for {}", sessionId, email);
+        return ResponseEntity.ok(cartService.mergeCarts(email, sessionId));
+    }
+
+    // ============= HELPER METHODS =============
+
+    /**
+     * Get existing session ID from cookie/header or create a new one
+     * Priority: Cookie > Header > Generate new
+     * Sets cookie in response for new sessions
+     * @return Session ID string
+     */
     private String getOrCreateSessionId() {
         // Try to get from cookie
         Cookie[] cookies = request.getCookies();
