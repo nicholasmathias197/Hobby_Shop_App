@@ -13,6 +13,12 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.http.HttpStatus;
+
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 @Configuration
 @EnableWebSecurity
@@ -38,7 +44,6 @@ public class SecurityConfig {
         return authConfig.getAuthenticationManager();
     }
 
-
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable())
@@ -51,10 +56,32 @@ public class SecurityConfig {
                         .requestMatchers("/api/health/**").permitAll()
                         .requestMatchers("/api/cart/**").permitAll() // Allow guest cart
                         .anyRequest().authenticated()
+                )
+                // Add exception handling
+                .exceptionHandling(exception -> exception
+                        // Handle authentication errors (no token/invalid token) - returns 401
+                        .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
+                        // Handle authorization errors (token present but insufficient role) - returns 403
+                        .accessDeniedHandler(customAccessDeniedHandler())
                 );
 
         http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
+    }
+
+    @Bean
+    public AccessDeniedHandler customAccessDeniedHandler() {
+        return (request, response, accessDeniedException) -> {
+            response.setStatus(HttpStatus.FORBIDDEN.value());
+            response.setContentType("application/json");
+            response.getWriter().write(
+                    "{\"timestamp\":\"" + java.time.LocalDateTime.now() + "\"," +
+                            "\"status\":403," +
+                            "\"error\":\"Forbidden\"," +
+                            "\"message\":\"Access denied: You don't have permission to access this resource\"," +
+                            "\"path\":\"" + request.getRequestURI() + "\"}"
+            );
+        };
     }
 }

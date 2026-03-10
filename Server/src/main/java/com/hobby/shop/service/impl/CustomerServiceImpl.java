@@ -2,6 +2,7 @@ package com.hobby.shop.service.impl;
 
 import com.hobby.shop.dto.request.CustomerUpdateRequest;
 import com.hobby.shop.dto.response.CustomerResponse;
+import com.hobby.shop.dto.response.CustomerStatisticsResponse;
 import com.hobby.shop.exception.BadRequestException;
 import com.hobby.shop.exception.ResourceNotFoundException;
 import com.hobby.shop.mapper.CustomerMapper;
@@ -164,14 +165,31 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public long getTotalCustomerCount() {
-        return customerRepository.count();
+    public long getActiveCustomerCount() {
+        // This now returns ONLY customers with enabled = true
+        return customerRepository.countByEnabledTrue();
     }
 
     @Override
-    public long getActiveCustomerCount() {
-        // This would require a custom query method
-        // For now, return total count or implement custom repository method
-        return customerRepository.count();
+    public long getInactiveCustomerCount() {
+        // This returns customers with enabled = false
+        return customerRepository.countByEnabledFalse();
+    }
+
+    @Override
+    public CustomerStatisticsResponse getCustomerStatistics() {
+        long total = customerRepository.count();
+        long enabled = customerRepository.countByEnabledTrue();  // Active customers
+        long disabled = customerRepository.countByEnabledFalse(); // Inactive customers
+
+        log.info("Customer statistics - Total: {}, Active (enabled): {}, Inactive (disabled): {}",
+                total, enabled, disabled);
+
+        return new CustomerStatisticsResponse(total, enabled, disabled);
+    }
+
+    @Override
+    public long getTotalCustomerCount() {
+        return 0;
     }
 }

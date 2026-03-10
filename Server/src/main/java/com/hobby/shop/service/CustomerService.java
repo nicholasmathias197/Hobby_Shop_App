@@ -2,6 +2,7 @@ package com.hobby.shop.service;
 
 import com.hobby.shop.dto.request.CustomerUpdateRequest;
 import com.hobby.shop.dto.response.CustomerResponse;
+import com.hobby.shop.dto.response.CustomerStatisticsResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -19,7 +20,10 @@ public interface CustomerService {
     void addRoleToCustomer(Long customerId, Long roleId);
     void removeRoleFromCustomer(Long customerId, Long roleId);
 
+    long getInactiveCustomerCount();
+
     // Statistics
-    long getTotalCustomerCount();
-    long getActiveCustomerCount();
+    CustomerStatisticsResponse getCustomerStatistics();
+    long getTotalCustomerCount();  // keep for backward compatibility
+    long getActiveCustomerCount(); // keep for backward compatibility
 }

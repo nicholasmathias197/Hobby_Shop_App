@@ -1,8 +1,7 @@
 package com.hobby.shop.controller;
 
-import com.hobby.shop.dto.request.OrderRequest;
+import com.hobby.shop.dto.request.*;
 import com.hobby.shop.dto.response.OrderResponse;
-
 import com.hobby.shop.service.OrderService;
 import com.hobby.shop.util.SecurityUtils;
 import jakarta.validation.Valid;
@@ -70,9 +69,10 @@ public class OrderController {
     @PutMapping("/{orderId}/cancel")
     public ResponseEntity<OrderResponse> cancelOrder(
             @PathVariable Long orderId,
-            @RequestParam(required = false) String reason) {
+            @Valid @RequestBody(required = false) CancelOrderRequest request) {
 
         String email = securityUtils.getCurrentUserEmail();
+        String reason = request != null ? request.getReason() : null;
         log.info("User {} cancelling order ID: {}", email, orderId);
         return ResponseEntity.ok(orderService.cancelOrder(email, orderId, reason));
     }
@@ -129,11 +129,10 @@ public class OrderController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> updateOrderStatus(
             @PathVariable Long orderId,
-            @RequestParam String status,
-            @RequestParam(required = false) String comment) {
+            @Valid @RequestBody OrderStatusUpdateRequest request) {
 
-        log.info("Admin updating order {} status to: {}", orderId, status);
-        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, status, comment));
+        log.info("Admin updating order {} status to: {}", orderId, request.getStatus());
+        return ResponseEntity.ok(orderService.updateOrderStatus(orderId, request.getStatus(), request.getComment()));
     }
 
     /**
@@ -144,10 +143,10 @@ public class OrderController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> updatePaymentStatus(
             @PathVariable Long orderId,
-            @RequestParam String paymentStatus) {
+            @Valid @RequestBody PaymentStatusUpdateRequest request) {
 
-        log.info("Admin updating payment for order {} to: {}", orderId, paymentStatus);
-        return ResponseEntity.ok(orderService.updatePaymentStatus(orderId, paymentStatus));
+        log.info("Admin updating payment for order {} to: {}", orderId, request.getPaymentStatus());
+        return ResponseEntity.ok(orderService.updatePaymentStatus(orderId, request.getPaymentStatus()));
     }
 
     /**
@@ -158,9 +157,9 @@ public class OrderController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<OrderResponse> updateTrackingNumber(
             @PathVariable Long orderId,
-            @RequestParam String trackingNumber) {
+            @Valid @RequestBody TrackingNumberUpdateRequest request) {
 
-        log.info("Admin updating tracking for order {} to: {}", orderId, trackingNumber);
-        return ResponseEntity.ok(orderService.updateTrackingNumber(orderId, trackingNumber));
+        log.info("Admin updating tracking for order {} to: {}", orderId, request.getTrackingNumber());
+        return ResponseEntity.ok(orderService.updateTrackingNumber(orderId, request.getTrackingNumber()));
     }
 }
