@@ -1,0 +1,2533 @@
+{
+  "info": {
+    "_postman_id": "7df84906-74e1-4c75-a89f-ba8828cbfd21",
+    "name": "Hobby Shop",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52734288",
+    "_collection_link": "https://go.postman.co/collection/52734288-7df84906-74e1-4c75-a89f-ba8828cbfd21?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Public Endpoints",
+      "item": [
+        {
+          "name": "Get All Products",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/products",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/products/{id}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Featured Products",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/products",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By Brand ID ",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/products/brand/{id}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products",
+                "brand",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Product By Category ID ",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/products/category/1",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products",
+                "category",
+                "1"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Categories",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/categories",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get All Brands",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/brands",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "brands"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Login/Register",
+      "item": [
+        {
+          "name": "Register User",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Log what we're sending\r",
+                  "const sessionId = pm.environment.get(\"sessionId\");\r",
+                  "console.log(\"📤 REGISTER REQUEST:\");\r",
+                  "console.log(\"   Session ID from env:\", sessionId);\r",
+                  "console.log(\"   X-Session-ID header:\", pm.request.headers.get('X-Session-ID'));\r",
+                  "console.log(\"   Email:\", JSON.parse(pm.request.body.raw).email);"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "console.log(\"📥 REGISTER RESPONSE:\");\r",
+                  "console.log(\"   User ID:\", response.id);\r",
+                  "console.log(\"   Email:\", response.email);\r",
+                  "console.log(\"   Token received:\", response.token ? \"✅ YES\" : \"❌ NO\");\r",
+                  "\r",
+                  "// Save token\r",
+                  "if (response.token) {\r",
+                  "    pm.environment.set(\"jwtToken\", response.token);\r",
+                  "    console.log(\"✅ JWT Token saved\");\r",
+                  "}\r",
+                  "\r",
+                  "// IMMEDIATELY check if merge happened\r",
+                  "if (response.token) {\r",
+                  "    setTimeout(() => {\r",
+                  "        pm.sendRequest({\r",
+                  "            url: 'http://localhost:8080/api/cart',\r",
+                  "            method: 'GET',\r",
+                  "            header: {\r",
+                  "                'Authorization': 'Bearer ' + response.token\r",
+                  "            }\r",
+                  "        }, function (err, cartRes) {\r",
+                  "            if (err) {\r",
+                  "                console.log(\"❌ Error checking cart:\", err);\r",
+                  "                return;\r",
+                  "            }\r",
+                  "            \r",
+                  "            const cart = cartRes.json();\r",
+                  "            console.log(\"🛒 CART AFTER REGISTRATION:\");\r",
+                  "            console.log(\"   Cart ID:\", cart.id);\r",
+                  "            console.log(\"   Customer ID:\", cart.customerId);\r",
+                  "            console.log(\"   Session ID:\", cart.sessionId);\r",
+                  "            console.log(\"   Items count:\", cart.items.length);\r",
+                  "            \r",
+                  "            if (cart.items && cart.items.length > 0) {\r",
+                  "                console.log(\"✅✅✅ MERGE SUCCESSFUL!\");\r",
+                  "                cart.items.forEach(item => {\r",
+                  "                    console.log(`   - ${item.productName} x${item.quantity}`);\r",
+                  "                });\r",
+                  "            } else {\r",
+                  "                console.log(\"❌❌❌ MERGE FAILED - Cart empty\");\r",
+                  "                \r",
+                  "                // Try manual merge to test\r",
+                  "                console.log(\"🔄 Attempting manual merge...\");\r",
+                  "                pm.sendRequest({\r",
+                  "                    url: 'http://localhost:8080/api/cart/merge?sessionId=' + pm.environment.get(\"sessionId\"),\r",
+                  "                    method: 'POST',\r",
+                  "                    header: {\r",
+                  "                        'Authorization': 'Bearer ' + response.token\r",
+                  "                    }\r",
+                  "                }, function (err2, mergeRes) {\r",
+                  "                    if (err2) {\r",
+                  "                        console.log(\"❌ Manual merge error:\", err2);\r",
+                  "                        return;\r",
+                  "                    }\r",
+                  "                    \r",
+                  "                    console.log(\"📤 Manual merge response status:\", mergeRes.code);\r",
+                  "                    \r",
+                  "                    if (mergeRes.code === 200) {\r",
+                  "                        console.log(\"✅ Manual merge SUCCESSFUL!\");\r",
+                  "                        \r",
+                  "                        // Check cart again\r",
+                  "                        pm.sendRequest({\r",
+                  "                            url: 'http://localhost:8080/api/cart',\r",
+                  "                            method: 'GET',\r",
+                  "                            header: {\r",
+                  "                                'Authorization': 'Bearer ' + response.token\r",
+                  "                            }\r",
+                  "                        }, function (err3, finalCartRes) {\r",
+                  "                            const finalCart = finalCartRes.json();\r",
+                  "                            console.log(\"🛒 FINAL CART AFTER MANUAL MERGE:\");\r",
+                  "                            console.log(\"   Items count:\", finalCart.items.length);\r",
+                  "                            \r",
+                  "                            if (finalCart.items.length > 0) {\r",
+                  "                                console.log(\"✅✅✅ MANUAL MERGE WORKED!\");\r",
+                  "                                console.log(\"   This means AUTO-MERGE in registration is failing\");\r",
+                  "                            }\r",
+                  "                        });\r",
+                  "                    }\r",
+                  "                });\r",
+                  "            }\r",
+                  "        });\r",
+                  "    }, 1000);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "X-Session-ID",
+                "value": "{{sessionId}}",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"john.doe@example.com\",\r\n    \"password\": \"SecurePass123!\",\r\n    \"firstName\": \"John\",\r\n    \"lastName\": \"Doe\",\r\n    \"phone\": \"+1-555-123-4567\",\r\n    \"address\": \"123 Main Street\",\r\n    \"city\": \"New York\",\r\n    \"state\": \"NY\",\r\n    \"postalCode\": \"10001\",\r\n    \"country\": \"USA\",\r\n    \"role\": \"USER\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Login",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Get the registered email\r",
+                  "const email = pm.environment.get(\"registeredEmail\");\r",
+                  "if (!email) {\r",
+                  "    console.log(\"❌ No registered email found! Run Register first.\");\r",
+                  "} else {\r",
+                  "    console.log(\"✅ Logging in as:\", email);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "console.log(\"🔑 Login response:\");\r",
+                  "\r",
+                  "if (response.token) {\r",
+                  "    // THIS is the token you should use for authenticated requests\r",
+                  "    pm.environment.set(\"jwtToken\", response.token);\r",
+                  "    console.log(\"✅ MAIN JWT Token saved (use this for all authenticated requests):\", \r",
+                  "                response.token.substring(0, 20) + \"...\");\r",
+                  "}\r",
+                  "\r",
+                  "// Save user info\r",
+                  "if (response.id) {\r",
+                  "    pm.environment.set(\"userId\", response.id);\r",
+                  "    console.log(\"✅ User ID:\", response.id);\r",
+                  "}\r",
+                  "\r",
+                  "pm.test(\"Login successful\", function() {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    pm.expect(response.token).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"user@example.com\",\r\n    \"password\": \"password123\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Guest Cart",
+      "item": [
+        {
+          "name": "Add Item To Cart Guest",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Capture session ID from cookie\r",
+                  "const cookies = pm.cookies.toObject();\r",
+                  "if (cookies['CART_SESSION_ID']) {\r",
+                  "    pm.environment.set(\"sessionId\", cookies['CART_SESSION_ID']);\r",
+                  "    console.log(\"✅ Session ID saved: \" + cookies['CART_SESSION_ID']);\r",
+                  "}\r",
+                  "\r",
+                  "// Clear any old tokens\r",
+                  "pm.environment.unset(\"jwtToken\");\r",
+                  "pm.environment.unset(\"userJwt\");\r",
+                  "console.log(\"🧹 Cleared old tokens\");"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "followAuthorizationHeader": false
+          },
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"productId\": 1,\r\n    \"quantity\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/cart/items",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cart",
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View Guest Cart",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "console.log(\"Guest cart verification:\", response);\r",
+                  "\r",
+                  "if (response.items && response.items.length > 0) {\r",
+                  "    console.log(\"✅ Guest cart has\", response.items.length, \"items\");\r",
+                  "    pm.environment.set(\"cartHasItems\", \"true\");\r",
+                  "} else {\r",
+                  "    console.log(\"❌ Guest cart is EMPTY!\");\r",
+                  "    pm.environment.set(\"cartHasItems\", \"false\");\r",
+                  "}\r",
+                  "\r",
+                  "// Check if session ID matches\r",
+                  "const sessionId = pm.environment.get(\"sessionId\");\r",
+                  "console.log(\"Session ID from env:\", sessionId);\r",
+                  "console.log(\"Session ID in cart:\", response.sessionId);\r",
+                  "\r",
+                  "if (sessionId && response.sessionId && sessionId === response.sessionId) {\r",
+                  "    console.log(\"✅ Session IDs match\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true,
+            "followAuthorizationHeader": false
+          },
+          "request": {
+            "method": "GET",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/cart",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Guest Cart",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n{\r\n    \"quantity\": 3\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/cart/items/{cartItemID}?quantity={quantity} ",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cart",
+                "items",
+                "{cartItemID}"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "{quantity} "
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Item Guest Cart",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"quantity\": 0\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/cart/items/{cartItemID}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cart",
+                "items",
+                "{cartItemID}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Remove Item From Guest Cart",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"quantity\": 2\r\n}"
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/cart/items/{cartItemID}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cart",
+                "items",
+                "{cartItemID}"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Guest Orders",
+      "item": [
+        {
+          "name": "Guest Order Lookup",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/orders/guest/lookup?email={guest-email}&orderNumber={orderNumber} ",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "orders",
+                "guest",
+                "lookup"
+              ],
+              "query": [
+                {
+                  "key": "email",
+                  "value": "{guest-email}",
+                  "type": "text"
+                },
+                {
+                  "key": "orderNumber",
+                  "value": "{orderNumber} ",
+                  "type": "text"
+                }
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "UserCart",
+      "item": [
+        {
+          "name": "Add Item As User",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"productId\": 1,\r\n    \"quantity\": 1\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/cart/items",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cart",
+                "items"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "View User Cart",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Verify we have token\r",
+                  "const token = pm.environment.get(\"jwtToken\");\r",
+                  "if (!token) {\r",
+                  "    console.log(\"❌ No JWT token found! Register first\");\r",
+                  "} else {\r",
+                  "    console.log(\"✅ Using JWT token\");\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/cart",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cart"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Users Cart",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n \"quantity\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/cart/items/{cartItemID}?quantity={quantity} ",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cart",
+                "items",
+                "{cartItemID}"
+              ],
+              "query": [
+                {
+                  "key": "quantity",
+                  "value": "{quantity} "
+                }
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Item Users Cart",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{ \r\n    \"quantity\": 0\r\n    }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/cart/items/7",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cart",
+                "items",
+                "7"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Registered User Cart Before Checkout",
+          "protocolProfileBehavior": {
+            "disableBodyPruning": true
+          },
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [
+              {
+                "key": "",
+                "value": "",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": ""
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/cart",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "cart"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "User Orders",
+      "item": [
+        {
+          "name": "Get All User Orders",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "console.log(\"📋 ALL ORDERS FOR USER:\");\r",
+                  "\r",
+                  "// The response is likely paginated\r",
+                  "if (response.content) {\r",
+                  "    console.log(\"   Total Orders:\", response.content.length);\r",
+                  "    console.log(\"   Page:\", response.pageNumber + 1, \"of\", response.totalPages);\r",
+                  "    console.log(\"   Total Elements:\", response.totalElements);\r",
+                  "    \r",
+                  "    if (response.content.length > 0) {\r",
+                  "        response.content.forEach((order, index) => {\r",
+                  "            console.log(`\\n   ORDER ${index + 1}:`);\r",
+                  "            console.log(`      Order Number: ${order.orderNumber}`);\r",
+                  "            console.log(`      Status: ${order.status}`);\r",
+                  "            console.log(`      Date: ${order.orderDate}`);\r",
+                  "            console.log(`      Total: $${order.totalAmount}`);\r",
+                  "            console.log(`      Items: ${order.items ? order.items.length : 0}`);\r",
+                  "            \r",
+                  "            // Show first few items\r",
+                  "            if (order.items && order.items.length > 0) {\r",
+                  "                order.items.slice(0, 2).forEach(item => {\r",
+                  "                    console.log(`         - ${item.productName} x${item.quantity}`);\r",
+                  "                });\r",
+                  "                if (order.items.length > 2) {\r",
+                  "                    console.log(`         ... and ${order.items.length - 2} more items`);\r",
+                  "                }\r",
+                  "            }\r",
+                  "        });\r",
+                  "    } else {\r",
+                  "        console.log(\"   No orders found for this user\");\r",
+                  "    }\r",
+                  "} else {\r",
+                  "    // If response is not paginated (just an array)\r",
+                  "    console.log(\"   Total Orders:\", response.length);\r",
+                  "    if (response.length > 0) {\r",
+                  "        response.forEach((order, index) => {\r",
+                  "            console.log(`   ${index + 1}. ${order.orderNumber} - ${order.status} - $${order.totalAmount}`);\r",
+                  "        });\r",
+                  "    }\r",
+                  "}\r",
+                  "\r",
+                  "// Test assertions\r",
+                  "pm.test(\"Orders retrieved successfully\", function() {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// Save first order number if needed\r",
+                  "if (response.content && response.content.length > 0) {\r",
+                  "    pm.environment.set(\"firstOrderNumber\", response.content[0].orderNumber);\r",
+                  "    console.log(\"\\n✅ First order number saved:\", response.content[0].orderNumber);\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/orders",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "orders"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get User Order by Order Number",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{token}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/orders/{orderNumber}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "orders",
+                "{orderNumber}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Cancel User Order",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/orders/4/cancel",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "orders",
+                "4",
+                "cancel"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "UserCustomerControl",
+      "item": [
+        {
+          "name": "Get Profile Info",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/profile",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Profile Info",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"firstName\": \"John Updated\",\r\n    \"lastName\": \"Doe Updated\",\r\n    \"phone\": \"555-5678\",\r\n    \"address\": \"456 Oak Ave\",\r\n    \"city\": \"Los Angeles\",\r\n    \"postalCode\": \"90210\",\r\n    \"country\": \"USA\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/customers/profile",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "profile"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Password",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                {
+                  "key": "Old Password",
+                  "value": "Password123",
+                  "type": "text",
+                  "uuid": "ae33c960-0a5a-4104-b1ef-1af0127df979"
+                },
+                {
+                  "key": "New Password",
+                  "value": "NewSecurePass456",
+                  "type": "text",
+                  "uuid": "9545282a-2871-49db-ade5-ae72c9c23b3e"
+                }
+              ]
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/customers/profile/change-password",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "profile",
+                "change-password"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "item": [
+        {
+          "name": "Health Check",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/health",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "health"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Debug",
+      "item": [
+        {
+          "name": "Check Roles ADMIN REQUIRED",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/debug/check-roles",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "debug",
+                "check-roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Debug Ping",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/debug/ping",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "debug",
+                "ping"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Database Check",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/debug/db-check",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "debug",
+                "db-check"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        {
+          "name": "Admin Login",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const response = pm.response.json();\r",
+                  "console.log(\"🔑 Login response:\");\r",
+                  "\r",
+                  "if (response.token) {\r",
+                  "    // THIS is the token you should use for authenticated requests\r",
+                  "    pm.environment.set(\"jwtToken\", response.token);\r",
+                  "    console.log(\"✅ MAIN JWT Token saved (use this for all authenticated requests):\", \r",
+                  "                response.token.substring(0, 20) + \"...\");\r",
+                  "}\r",
+                  "\r",
+                  "// Save user info\r",
+                  "if (response.id) {\r",
+                  "    pm.environment.set(\"userId\", response.id);\r",
+                  "    console.log(\"✅ User ID:\", response.id);\r",
+                  "}\r",
+                  "\r",
+                  "pm.test(\"Login successful\", function() {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "    pm.expect(response.token).to.not.be.null;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"admin@hobbyshop.com\",\r\n    \"password\": \"password123\"\r\n  }",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/auth/login",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Register Admin",
+          "request": {
+            "auth": {
+              "type": "noauth"
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"newadmin@example.com\",\r\n    \"password\": \"password123\",\r\n    \"firstName\": \"New\",\r\n    \"lastName\": \"Admin\",\r\n    \"phone\": \"555-0103\",\r\n    \"address\": \"789 Admin Blvd\",\r\n    \"city\": \"Adminville\",\r\n    \"postalCode\": \"54321\",\r\n    \"country\": \"USA\",\r\n    \"role\": \"ADMIN\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/auth/register",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "auth",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Request Session & Login as Admin",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "exec": [
+                  "// Clear all tokens before the request\r",
+                  "console.log('🧹 Resetting session - clearing all tokens...');\r",
+                  "\r",
+                  "// List of all possible token variables\r",
+                  "const tokenVars = ['token', 'admin_token', 'user_token', 'jwt_token', 'access_token', 'bearer_token'];\r",
+                  "\r",
+                  "// Clear all tokens\r",
+                  "tokenVars.forEach(varName => {\r",
+                  "    pm.environment.unset(varName);\r",
+                  "    console.log(`   Cleared: ${varName}`);\r",
+                  "});\r",
+                  "\r",
+                  "// Set a flag\r",
+                  "pm.environment.set('session_reset', 'true');\r",
+                  "console.log('✅ All tokens cleared');"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Auto-login as admin after clearing tokens\r",
+                  "console.log('🔑 Attempting to login as admin...');\r",
+                  "\r",
+                  "// Make a login request\r",
+                  "pm.sendRequest({\r",
+                  "    url: pm.environment.get('base_url') + '/api/auth/login',\r",
+                  "    method: 'POST',\r",
+                  "    header: {\r",
+                  "        'Content-Type': 'application/json'\r",
+                  "    },\r",
+                  "    body: {\r",
+                  "        mode: 'raw',\r",
+                  "        raw: JSON.stringify({\r",
+                  "            email: 'admin@example.com',  // CHANGE THIS to your admin email\r",
+                  "            password: 'Admin123!'         // CHANGE THIS to your admin password\r",
+                  "        })\r",
+                  "    }\r",
+                  "}, function (err, res) {\r",
+                  "    if (err) {\r",
+                  "        console.error('❌ Auto-login failed:', err);\r",
+                  "    } else {\r",
+                  "        if (res.code === 200) {\r",
+                  "            const response = res.json();\r",
+                  "            \r",
+                  "            // Save the new token\r",
+                  "            pm.environment.set('admin_token', response.token);\r",
+                  "            pm.environment.set('token', response.token);\r",
+                  "            \r",
+                  "            console.log('✅ Auto-login successful!');\r",
+                  "            console.log('📧 Email:', response.email);\r",
+                  "            console.log('👑 Roles:', response.roles);\r",
+                  "            \r",
+                  "            // Verify admin role\r",
+                  "            if (response.roles && response.roles.includes('ADMIN')) {\r",
+                  "                console.log('✅ Admin role confirmed');\r",
+                  "                pm.environment.set('is_admin', 'true');\r",
+                  "            } else {\r",
+                  "                console.warn('⚠️ User does not have ADMIN role!');\r",
+                  "            }\r",
+                  "        } else {\r",
+                  "            console.error('❌ Login failed with status:', res.code);\r",
+                  "            console.error('Response:', res.text());\r",
+                  "        }\r",
+                  "    }\r",
+                  "});\r",
+                  "\r",
+                  "// Test that the new token works\r",
+                  "pm.test(\"Session reset and admin login successful\", function() {\r",
+                  "    pm.expect(pm.environment.get('admin_token')).to.not.be.empty;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "localhost:8080/api/health ",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "health "
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AdminCustomerControl",
+      "item": [
+        {
+          "name": "Get All Customers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer by ID",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/{id}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Customer By Email",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/email/{email}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "email",
+                "{email}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Any Customer",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"updated.email@example.com\",\r\n    \"firstName\": \"Admin Updated\",\r\n    \"lastName\": \"Smith\",\r\n    \"phone\": \"555-9999\",\r\n    \"address\": \"789 Admin St\",\r\n    \"city\": \"Chicago\",\r\n    \"postalCode\": \"60601\",\r\n    \"country\": \"USA\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/customers/{id}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "New Request(Soft Delete)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/4",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "4"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Disable a Customers Account",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"enabled\": false\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/customers/4/toggle-status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "4",
+                "toggle-status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Change Customer Access Level",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"roleId\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/customers/4/roles",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "4",
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Admin Rights",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"roleId\": 2\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/customers/4/roles",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "4",
+                "roles"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AdminBrandControl",
+      "item": [
+        {
+          "name": "Create New Brand",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Kotobukiya\", \r\n    \"description\": \"Kotobukiya is a Japanese company that specializes in the production of high-quality action figures and figurines\",\r\n    \"logoUrl\": \"https://www.kotobukiya.com/images/logo.png\",\r\n    \"website\": \"https://www.kotobukiya.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/brands",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "brands"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Brand",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Kotobukiya Update\", \r\n    \"description\": \"Kotobukiya is a producer of Many quality Models\",\r\n    \"logoUrl\": \"https://www.kotobukiya.com/images/logo.png\",\r\n    \"website\": \"https://www.kotobukiya.com\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/brands/{id}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "brands",
+                "{id}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Brand(Soft Delete)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/brands/6",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "brands",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AdminCategoryControl",
+      "item": [
+        {
+          "name": "Create New Category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Action Figures\",\r\n    \"description\": \"A collection of action figures for various characters.\",\r\n    \"imageUrl\": \"https://example.com/action-figures.jpg\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/categories",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "categories"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Action Figures Update\",\r\n    \"description\": \"Update Action Figures\",\r\n    \"imageUrl\": \"https://example.com/action-figures.jpg\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/categories/6",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "categories",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Category (Soft Delete)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/categories/6",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "categories",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Activate Category",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"Action Figures\",\r\n    \"isActive\": true, \r\n    \"description\": null,\r\n    \"imageUrl\": null\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/categories/6",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "categories",
+                "6"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AdminOrderControl",
+      "item": [
+        {
+          "name": "Get All Orders",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/orders/all",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "orders",
+                "all"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Orders by Status (PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/orders/status/SHIPPED",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "orders",
+                "status",
+                "SHIPPED"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Order Status (PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "\r\n{\r\n    \"status\": \"PROCESSING\",\r\n    \"comment\": \"Payment confirmed, preparing order\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/orders/{orderID}/status",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "orders",
+                "{orderID}",
+                "status"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Payment Status (PAID, FAILED, REFUNDED, PENDING)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"paymentStatus\": \"PAID\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/orders/{orderId}/payment",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "orders",
+                "{orderId}",
+                "payment"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Tracking Number",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"trackingNumber\": \"UPS1Z82W720199273894\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/orders/{orderId}/tracking",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "orders",
+                "{orderId}",
+                "tracking"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "AdminProductControl",
+      "item": [
+        {
+          "name": "Create New Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"brandId\": 1,\r\n    \"brandName\": \"Bandai\",\r\n    \"categoryId\": 1,\r\n    \"categoryName\": \"Gundam Models\",\r\n    \"colorCode\": null,\r\n    \"description\": \"Master Grade Turn A Gundam \",\r\n    \"imageUrl\": null,\r\n    \"isActive\": true,\r\n    \"isFeatured\": false,\r\n    \"name\": \"MG 1/100 Turn A Gundam \",\r\n    \"paintType\": null,\r\n    \"price\": 49.99,\r\n    \"scale\": \"1/100\",\r\n    \"sku\": \"BAN-MG-100-TA\",\r\n    \"stockQuantity\": 25,\r\n    \"toolType\": null\r\n\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/products",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update Product",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n   \"brandId\": 1,\r\n    \"brandName\": \"Bandai\",\r\n    \"categoryId\": 1,\r\n    \"categoryName\": \"Gundam Models\",\r\n    \"createdAt\": \"2026-03-10T14:42:13\",\r\n    \"description\": null,\r\n    \"id\": 17,\r\n    \"imageUrl\": null,\r\n    \"isActive\": true,\r\n    \"isFeatured\": null,\r\n    \"name\": \"MG 1/100 Turn A Gundam \",\r\n    \"paintType\": null,\r\n    \"price\": 59.99,\r\n    \"scale\": null,\r\n    \"sku\": \"BAN-MG-100-TA\",\r\n    \"stockQuantity\": 25,\r\n    \"toolType\": null\r\n    \r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://localhost:8080/api/products/17",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products",
+                "17"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Product (Soft Delete)",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/products/17",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products",
+                "17"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Admin Stats",
+      "item": [
+        {
+          "name": "All Customer Stats",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/statistics",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "statistics"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Active Customers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/statistics/active",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "statistics",
+                "active"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Inactive Customers",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/customers/statistics/inactive",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "customers",
+                "statistics",
+                "inactive"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    }
+  ]
+}
