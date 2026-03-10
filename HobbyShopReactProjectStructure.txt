@@ -1,90 +1,70 @@
 src/
 ├── assets/
 │   ├── images/
-│   ├── styles/
-│   │   ├── global.css
-│   │   └── variables.css
-│   └── fonts/
+│   └── styles/
+│       ├── global.css
+│       └── variables.css
 │
 ├── components/
 │   ├── layout/
 │   │   ├── MainLayout.jsx
 │   │   ├── Navbar.jsx
 │   │   ├── Footer.jsx
-│   │   └── index.js          # Barrel export file
+│   │   └── index.js          # Groups related layout components
 │   │
 │   ├── common/
 │   │   ├── ProductCard.jsx
 │   │   ├── ProductGrid.jsx
 │   │   ├── CartItemRow.jsx
 │   │   ├── FilterSidebar.jsx
-│   │   └── index.js
+│   │   └── index.js          # Groups shared UI components
 │   │
-│   └── ui/                    # Optional: reusable UI components
+│   └── ui/                    # Optional: basic reusable components
 │       ├── Button.jsx
 │       ├── Input.jsx
-│       ├── Modal.jsx
 │       └── index.js
 │
 ├── pages/
-│   ├── HomePage/
+│   ├── HomePage/              # Folder - has sub-components
 │   │   ├── HomePage.jsx
-│   │   ├── HeroBanner.jsx     # Page-specific components
+│   │   ├── HeroBanner.jsx
 │   │   ├── FeaturedProducts.jsx
-│   │   └── index.js
+│   │   └── index.js           # Exports HomePage
 │   │
-│   ├── ProductsPage/
-│   │   ├── ProductsPage.jsx
-│   │   └── index.js
+│   ├── ProductsPage.jsx        # Single file - no folder
+│   ├── ProductDetailPage.jsx   # Single file - no folder
+│   ├── CartPage.jsx            # Single file - no folder
 │   │
-│   ├── ProductDetailPage/
-│   │   ├── ProductDetailPage.jsx
-│   │   └── index.js
-│   │
-│   ├── CartPage/
-│   │   ├── CartPage.jsx
-│   │   └── index.js
-│   │
-│   ├── CheckoutPage/
+│   ├── CheckoutPage/           # Folder - has sub-components
 │   │   ├── CheckoutPage.jsx
 │   │   ├── ShippingForm.jsx
 │   │   ├── OrderSummary.jsx
 │   │   └── index.js
 │   │
-│   ├── OrdersPage/
-│   │   ├── OrdersPage.jsx
-│   │   └── index.js
+│   ├── OrdersPage.jsx          # Single file - no folder
+│   ├── OrderDetailPage.jsx     # Single file - no folder
 │   │
-│   ├── OrderDetailPage/
-│   │   ├── OrderDetailPage.jsx
-│   │   └── index.js
-│   │
-│   ├── ProfilePage/
+│   ├── ProfilePage/            # Folder - has sub-components
 │   │   ├── ProfilePage.jsx
 │   │   ├── ProfileForm.jsx
 │   │   └── index.js
 │   │
-│   ├── LoginPage/
-│   │   ├── LoginPage.jsx
-│   │   └── index.js
-│   │
-│   └── RegisterPage/
-│       ├── RegisterPage.jsx
-│       └── index.js
+│   ├── LoginPage.jsx           # Single file - no folder
+│   └── RegisterPage.jsx        # Single file - no folder
 │
-├── admin/                      # Admin-specific pages
-│   ├── AdminDashboard/
+├── admin/                       # Admin section
+│   ├── AdminDashboard/          # Folder - has sub-components
 │   │   ├── AdminDashboard.jsx
 │   │   ├── StatsCards.jsx
 │   │   └── index.js
 │   │
-│   ├── AdminProductsPage/
+│   ├── AdminProductsPage/       # Folder - has sub-components
 │   │   ├── AdminProductsPage.jsx
 │   │   ├── ProductTable.jsx
-│   │   ├── ProductForm.jsx     # Create/Edit modal or page
+│   │   ├── ProductForm.jsx
 │   │   └── index.js
 │   │
-│   └── AdminOrdersPage/
+│   └── AdminOrdersPage/         # Folder - has sub-components
 │       ├── AdminOrdersPage.jsx
 │       ├── OrdersTable.jsx
 │       ├── OrderStatusDropdown.jsx
@@ -93,33 +73,32 @@ src/
 ├── contexts/
 │   ├── AuthContext.jsx
 │   ├── CartContext.jsx
-│   └── index.js                # Combine and export contexts
+│   └── index.js              # Optional: convenient for multiple contexts
 │
 ├── hooks/
-│   ├── useAuth.js              # Custom hook for auth
-│   ├── useCart.js              # Custom hook for cart
-│   ├── useProducts.js          # Product data fetching
-│   └── useOrders.js            # Order data fetching
+│   ├── useAuth.js
+│   ├── useCart.js
+│   ├── useProducts.js
+│   └── useOrders.js
 │
 ├── services/
-│   ├── api.js                   # Axios instance setup
-│   ├── authService.js           # Auth API calls
-│   ├── productService.js        # Product API calls
-│   ├── cartService.js           # Cart API calls
-│   ├── orderService.js          # Order API calls
-│   └── userService.js           # User profile API calls
+│   ├── api.js
+│   ├── authService.js
+│   ├── productService.js
+│   ├── cartService.js
+│   ├── orderService.js
+│   └── userService.js
 │
 ├── utils/
-│   ├── constants.js             # App constants
-│   ├── helpers.js               # Utility functions
-│   ├── validators.js            # Form validation
-│   └── formatters.js            # Price, date formatting
+│   ├── constants.js
+│   ├── helpers.js
+│   ├── validators.js
+│   └── formatters.js
 │
 ├── routes/
-│   ├── AppRoutes.jsx            # Main routing configuration
-│   ├── ProtectedRoute.jsx       # Authentication wrapper
-│   ├── AdminRoute.jsx           # Admin authorization wrapper
-│   └── index.js                 # Export all route components
+│   ├── AppRoutes.jsx
+│   ├── ProtectedRoute.jsx
+│   └── AdminRoute.jsx
 │
 ├── App.jsx
 ├── App.css
