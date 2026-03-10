@@ -1,9 +1,10 @@
+// src/routes/AppRoutes.jsx
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { MainLayout } from '../components/layout';
+import MainLayout from '../components/layout/MainLayout';  // Import directly, not from index
 
 // Public pages
-import HomePage from '../pages/HomePage';
+import HomePage from '../pages/HomePage/HomePage';  // Updated path
 import ProductsPage from '../pages/ProductsPage';
 import ProductDetailPage from '../pages/ProductDetailPage';
 import CartPage from '../pages/CartPage';
@@ -11,15 +12,15 @@ import LoginPage from '../pages/LoginPage';
 import RegisterPage from '../pages/RegisterPage';
 
 // Protected pages
-import CheckoutPage from '../pages/CheckoutPage';
+import CheckoutPage from '../pages/CheckoutPage/CheckoutPage' // Updated path
 import OrdersPage from '../pages/OrdersPage';
 import OrderDetailPage from '../pages/OrderDetailPage';
-import ProfilePage from '../pages/ProfilePage';
+import ProfilePage from '../pages/ProfilePage/ProfilePage';  // Updated path
 
 // Admin pages
-import AdminDashboard from '../admin/AdminDashboard';
-import AdminProductsPage from '../admin/AdminProductsPage';
-import AdminOrdersPage from '../admin/AdminOrdersPage';
+import AdminDashboard from '../admin/AdminDashboard/AdminDashboard';  // Updated path
+import AdminProductsPage from '../admin/AdminProductsPage/AdminProductsPage';  // Updated path
+import AdminOrdersPage from '../admin/AdminOrdersPage/AdminOrdersPage';  // Updated path
 
 // Route guards
 import ProtectedRoute from './ProtectedRoute';
