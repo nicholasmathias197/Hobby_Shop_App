@@ -1,35 +1,103 @@
+// src/pages/HomePage/FeaturedProducts.jsx
 import React, { useState, useEffect } from 'react';
-import { getFeaturedProducts } from '../../services/productService';
+import { Link } from 'react-router-dom';
+import { getFeaturedProductsArray } from '../../services/productService';
 import ProductGrid from '../../components/common/ProductGrid';
 import { useCart } from '../../hooks/useCart';
+import { Button } from '../../components/ui';
 
 const FeaturedProducts = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { addToCart } = useCart();
 
   useEffect(() => {
-    loadFeaturedProducts();
+    const fetchFeatured = async () => {
+      try {
+        const featuredArray = await getFeaturedProductsArray(0, 8);
+        console.log('Featured products loaded:', featuredArray.length);
+        setProducts(featuredArray);
+        setError(null);
+      } catch (error) {
+        console.error('Error loading featured products:', error);
+        setError('Failed to load featured products');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchFeatured();
   }, []);
 
-  const loadFeaturedProducts = async () => {
-    try {
-      const data = await getFeaturedProducts();
-      setProducts(data);
-    } catch (error) {
-      console.error('Error loading featured products:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  if (loading) {
+    return (
+      <section style={{ marginBottom: '3rem' }}>
+        <h2 style={{ marginBottom: '1.5rem' }}>Featured Products</h2>
+        <div style={{ textAlign: 'center', padding: '2rem' }}>
+          <div className="spinner"></div>
+          <p>Loading featured products...</p>
+        </div>
+      </section>
+    );
+  }
 
-  if (loading) return <div>Loading featured products...</div>;
+  if (error) {
+    return (
+      <section style={{ marginBottom: '3rem' }}>
+        <h2 style={{ marginBottom: '1.5rem' }}>Featured Products</h2>
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '2rem',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '4px'
+        }}>
+          <p style={{ color: '#dc3545' }}>{error}</p>
+          <Button variant="secondary" onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
+        </div>
+      </section>
+    );
+  }
+
+  if (products.length === 0) {
+    return (
+      <section style={{ marginBottom: '3rem' }}>
+        <h2 style={{ marginBottom: '1.5rem' }}>Featured Products</h2>
+        <div style={{ 
+          textAlign: 'center', 
+          padding: '3rem',
+          backgroundColor: '#f8f9fa',
+          borderRadius: '4px'
+        }}>
+          <p>No featured products available at the moment.</p>
+          <Link to="/products">
+            <Button variant="primary" style={{ marginTop: '1rem' }}>
+              Browse All Products
+            </Button>
+          </Link>
+        </div>
+      </section>
+    );
+  }
 
   return (
-    <div>
-      <h2 style={{ marginBottom: '1rem' }}>Featured Products</h2>
+    <section style={{ marginBottom: '3rem' }}>
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center',
+        marginBottom: '1.5rem'
+      }}>
+        <h2>Featured Products</h2>
+        <Link to="/products?featured=true" style={{ color: '#007bff', textDecoration: 'none' }}>
+          View All Featured →
+        </Link>
+      </div>
+      
       <ProductGrid products={products} onAddToCart={addToCart} />
-    </div>
+    </section>
   );
 };
 
