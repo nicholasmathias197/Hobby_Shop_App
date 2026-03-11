@@ -1,3 +1,4 @@
+// src/contexts/AuthProvider.jsx
 import React, { useState, useEffect } from 'react';
 import { AuthContext } from './AuthContext';
 import { login as apiLogin, register as apiRegister, getProfile } from '../services/authService';

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from '../../components/ui';
-import { getCategories, getBrands } from '../../services/productService';
+import { getCategoriesArray } from '../../services/categoryService';  // Changed from productService
+import { getBrandsArray } from '../../services/brandService';        // Changed from productService
 
 const ProductForm = ({ product, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -42,8 +43,8 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
   const loadFormData = async () => {
     try {
       const [categoriesData, brandsData] = await Promise.all([
-        getCategories(),
-        getBrands()
+        getCategoriesArray(),  // Now using correct service
+        getBrandsArray()       // Now using correct service
       ]);
       setCategories(categoriesData);
       setBrands(brandsData);

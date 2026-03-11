@@ -4,7 +4,7 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import MainLayout from '../components/layout/MainLayout';
 
 // ============= PUBLIC PAGE IMPORTS =============
-import HomePage from '../pages/HomePage/Homepage';
+import HomePage from '../pages/HomePage/HomePage';
 import ProductsPage from '../pages/ProductsPage';
 import ProductDetailPage from '../pages/ProductDetailPage';
 import BrandPage from '../pages/BrandPage';

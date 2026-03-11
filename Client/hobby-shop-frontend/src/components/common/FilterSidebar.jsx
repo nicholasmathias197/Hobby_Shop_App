@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { getCategories, getBrands } from '../../services/productService';
+import { getCategoriesArray } from '../../services/categoryService';
+import { getBrandsArray } from '../../services/brandService';
 
 const FilterSidebar = ({ onFilterChange }) => {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({
     categoryId: '',
     brandId: '',
@@ -14,72 +14,82 @@ const FilterSidebar = ({ onFilterChange }) => {
   });
 
   useEffect(() => {
-    let isMounted = true; // Prevent state updates if component unmounts
-
     const loadFilters = async () => {
       try {
         const [categoriesData, brandsData] = await Promise.all([
-          getCategories(),
-          getBrands()
+          getCategoriesArray(),
+          getBrandsArray()
         ]);
-        
-        if (isMounted) {
-          setCategories(categoriesData);
-          setBrands(brandsData);
-          setLoading(false);
-        }
+        setCategories(categoriesData || []);
+        setBrands(brandsData || []);
       } catch (error) {
         console.error('Error loading filters:', error);
-        if (isMounted) {
-          setLoading(false);
-        }
       }
     };
-
     loadFilters();
-
-    return () => {
-      isMounted = false; // Cleanup function to prevent memory leaks
-    };
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     const newFilters = { ...filters, [name]: value };
     setFilters(newFilters);
-    onFilterChange(newFilters);
+    onFilterChange?.(newFilters);
   };
 
-  if (loading) {
-    return <div>Loading filters...</div>;
-  }
+  const handleClear = () => {
+    const cleared = {
+      categoryId: '',
+      brandId: '',
+      minPrice: '',
+      maxPrice: '',
+      search: ''
+    };
+    setFilters(cleared);
+    onFilterChange?.(cleared);
+  };
 
   return (
     <div style={{
-      padding: '1rem',
+      padding: '1.5rem',
       border: '1px solid #ddd',
-      borderRadius: '4px'
+      borderRadius: '8px',
+      backgroundColor: '#f8f9fa'
     }}>
-      <h3>Filters</h3>
+      <h3 style={{ marginBottom: '1.5rem' }}>Filters</h3>
       
-      <div style={{ marginBottom: '1rem' }}>
-        <label>Search:</label>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+          Search
+        </label>
         <input
           type="text"
           name="search"
           value={filters.search}
           onChange={handleChange}
-          style={{ width: '100%', padding: '0.5rem' }}
+          placeholder="Search products..."
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            borderRadius: '4px',
+            border: '1px solid #ddd'
+          }}
         />
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label>Category:</label>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+          Category
+        </label>
         <select
           name="categoryId"
           value={filters.categoryId}
           onChange={handleChange}
-          style={{ width: '100%', padding: '0.5rem' }}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            borderRadius: '4px',
+            border: '1px solid #ddd'
+          }}
         >
           <option value="">All Categories</option>
           {categories.map(category => (
@@ -90,13 +100,20 @@ const FilterSidebar = ({ onFilterChange }) => {
         </select>
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label>Brand:</label>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+          Brand
+        </label>
         <select
           name="brandId"
           value={filters.brandId}
           onChange={handleChange}
-          style={{ width: '100%', padding: '0.5rem' }}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            borderRadius: '4px',
+            border: '1px solid #ddd'
+          }}
         >
           <option value="">All Brands</option>
           {brands.map(brand => (
@@ -107,8 +124,10 @@ const FilterSidebar = ({ onFilterChange }) => {
         </select>
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label>Price Range:</label>
+      <div style={{ marginBottom: '1.5rem' }}>
+        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
+          Price Range
+        </label>
         <div style={{ display: 'flex', gap: '0.5rem' }}>
           <input
             type="number"
@@ -116,7 +135,12 @@ const FilterSidebar = ({ onFilterChange }) => {
             placeholder="Min"
             value={filters.minPrice}
             onChange={handleChange}
-            style={{ width: '50%', padding: '0.5rem' }}
+            style={{
+              width: '50%',
+              padding: '0.75rem',
+              borderRadius: '4px',
+              border: '1px solid #ddd'
+            }}
           />
           <input
             type="number"
@@ -124,10 +148,31 @@ const FilterSidebar = ({ onFilterChange }) => {
             placeholder="Max"
             value={filters.maxPrice}
             onChange={handleChange}
-            style={{ width: '50%', padding: '0.5rem' }}
+            style={{
+              width: '50%',
+              padding: '0.75rem',
+              borderRadius: '4px',
+              border: '1px solid #ddd'
+            }}
           />
         </div>
       </div>
+
+      <button
+        onClick={handleClear}
+        style={{
+          width: '100%',
+          padding: '0.75rem',
+          backgroundColor: '#6c757d',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          fontSize: '1rem'
+        }}
+      >
+        Clear Filters
+      </button>
     </div>
   );
 };

@@ -6,9 +6,9 @@ import FeaturedProducts from './FeaturedProducts';
 import CategoryShowcase from './CategoryShowcase';
 import { getAllProductsArray } from '../../services/productService';
 import { getActiveCategoriesArray } from '../../services/categoryService';
-import ProductGrid from '../components/common/ProductGrid';
-import { useCart } from '../hooks/useCart';
-import { Button } from '../components/ui';
+import ProductGrid from "/src/components/common/ProductGrid.jsx";
+import { useCart } from '../../hooks/useCart'; 
+import { Button } from '../../components/ui';    
 
 const HomePage = () => {
   const [products, setProducts] = useState([]);

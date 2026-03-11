@@ -43,6 +43,13 @@ export const cancelOrder = async (orderId, reason = null) => {
   );
   return response.data;
 };
+//Get order by customer id
+export const getOrdersByCustomer = async (customerId, page = 0, size = 10) => {
+  const response = await api.get(`/orders/customer/${customerId}`, {
+    params: { page, size }
+  });
+  return response.data;
+};
 
 // ============= GUEST ORDER LOOKUP =============
 

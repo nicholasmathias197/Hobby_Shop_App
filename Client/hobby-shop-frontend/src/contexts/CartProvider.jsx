@@ -1,12 +1,7 @@
+// src/contexts/CartProvider.jsx
 import React, { useState, useEffect } from 'react';
 import { CartContext } from './CartContext';
-import { 
-  getCart, 
-  addItemToCart, 
-  updateCartItem, 
-  removeCartItem,
-  clearCart as apiClearCart 
-} from '../services/cartService';
+import { getCart, addItemToCart, updateCartItem, removeCartItem, clearCart as apiClearCart } from '../services/cartService';
 import { useAuth } from '../hooks/useAuth';
 
 export const CartProvider = ({ children }) => {
