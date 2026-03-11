@@ -8,12 +8,28 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 @Repository
 public interface ProductReviewRepository extends JpaRepository<ProductReview, Long> {
+
     Page<ProductReview> findByProductId(Long productId, Pageable pageable);
 
-    @Query("SELECT AVG(r.rating) FROM ProductReview r WHERE r.product.id = :productId")
-    Double getAverageRatingForProduct(@Param("productId") Long productId);
+    List<ProductReview> findByProductId(Long productId);
+
+    Optional<ProductReview> findByProductIdAndCustomerId(Long productId, Long customerId);
 
     boolean existsByProductIdAndCustomerId(Long productId, Long customerId);
+
+    void deleteByProductId(Long productId);
+
+    @Query("SELECT AVG(pr.rating) FROM ProductReview pr WHERE pr.product.id = :productId")
+    Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);
+
+    @Query("SELECT COUNT(pr) FROM ProductReview pr WHERE pr.product.id = :productId")
+    Long countByProductId(@Param("productId") Long productId);
+
+    @Query("SELECT pr.rating, COUNT(pr) FROM ProductReview pr WHERE pr.product.id = :productId GROUP BY pr.rating ORDER BY pr.rating DESC")
+    List<Object[]> getRatingDistribution(@Param("productId") Long productId);
 }
