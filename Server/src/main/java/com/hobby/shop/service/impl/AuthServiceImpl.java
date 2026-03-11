@@ -30,6 +30,17 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the AuthService interface.
+ * Handles all authentication-related operations including user registration,
+ * admin registration, password management, and email verification.
+ *
+ * This service manages user creation, role assignment, and provides JWT
+ * token generation upon successful registration.
+ *
+ * @author Hobby Shop Team
+ * @version 1.0
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -40,19 +51,34 @@ public class AuthServiceImpl implements AuthService {
     private final RoleRepository roleRepository;
     private final CustomerMapper customerMapper;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager; // Add this
-    private final JwtUtils jwtUtils; // Add this
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtils jwtUtils;
 
+    /**
+     * Registers a new user in the system.
+     *
+     * Process flow:
+     * 1. Validates that the email is not already registered
+     * 2. Creates a new customer entity from the request
+     * 3. Encodes the password for security
+     * 4. Assigns the default USER role
+     * 5. Saves the customer to the database
+     * 6. Automatically authenticates the user and generates a JWT token
+     *
+     * @param request the registration request containing user details
+     * @return RegisterResponse containing user details and JWT token
+     * @throws BadRequestException if email is already registered
+     */
     @Override
     public RegisterResponse registerUser(RegisterRequest request) {
         log.info("Registering new user with email: {}", request.getEmail());
 
-        // Check if email already exists
+        // Check if email already exists in the system
         if (customerRepository.existsByEmail(request.getEmail())) {
             throw new BadRequestException("Email " + request.getEmail() + " is already registered");
         }
 
-        // Create new customer
+        // Create new customer from request
         Customer customer = customerMapper.toEntity(request);
         customer.setPassword(passwordEncoder.encode(request.getPassword()));
 
@@ -64,10 +90,11 @@ public class AuthServiceImpl implements AuthService {
         roles.add(userRole);
         customer.setRoles(roles);
 
+        // Save customer to database
         Customer savedCustomer = customerRepository.save(customer);
         log.info("User registered successfully with ID: {}", savedCustomer.getId());
 
-        // Automatically authenticate the user and generate JWT
+        // Automatically authenticate the user after registration
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
@@ -95,6 +122,16 @@ public class AuthServiceImpl implements AuthService {
         );
     }
 
+    /**
+     * Registers a new admin user in the system.
+     *
+     * Similar to user registration but assigns both USER and ADMIN roles.
+     * This method is typically restricted to existing administrators.
+     *
+     * @param request the registration request containing admin details
+     * @return CustomerResponse containing admin details
+     * @throws BadRequestException if email is already registered
+     */
     @Override
     public CustomerResponse registerAdmin(RegisterRequest request) {
         log.info("Registering new admin with email: {}", request.getEmail());
@@ -122,19 +159,29 @@ public class AuthServiceImpl implements AuthService {
         Customer savedCustomer = customerRepository.save(customer);
         log.info("Admin registered successfully with ID: {}", savedCustomer.getId());
 
-        // For admin, we might also want to auto-login or return token
-        // You can add similar auto-login here if desired
-
         return customerMapper.toResponse(savedCustomer);
     }
 
+    /**
+     * Verifies a user's email address using a token.
+     *
+     * @param token the verification token sent to the user's email
+     * @return true if verification successful, false otherwise
+     */
     @Override
     public boolean verifyEmail(String token) {
         // Implementation for email verification
         log.info("Verifying email with token: {}", token);
+        // TODO: Implement actual email verification logic
         return true;
     }
 
+    /**
+     * Initiates the password reset process for a user.
+     *
+     * @param email the email address of the user requesting password reset
+     * @throws ResourceNotFoundException if no user found with the given email
+     */
     @Override
     public void requestPasswordReset(String email) {
         log.info("Password reset requested for email: {}", email);
@@ -143,14 +190,31 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
 
         log.info("Password reset email would be sent to: {}", email);
+        // TODO: Implement actual password reset email sending
     }
 
+    /**
+     * Resets a user's password using a reset token.
+     *
+     * @param token the password reset token
+     * @param newPassword the new password to set
+     */
     @Override
     public void resetPassword(String token, String newPassword) {
         log.info("Resetting password with token: {}", token);
         log.info("Password would be reset for token: {}", token);
+        // TODO: Implement actual password reset logic
     }
 
+    /**
+     * Changes a user's password when they know their current password.
+     *
+     * @param userId the ID of the user changing password
+     * @param oldPassword the current password for verification
+     * @param newPassword the new password to set
+     * @throws ResourceNotFoundException if user not found
+     * @throws BadRequestException if old password is incorrect
+     */
     @Override
     public void changePassword(Long userId, String oldPassword, String newPassword) {
         log.info("Changing password for user ID: {}", userId);

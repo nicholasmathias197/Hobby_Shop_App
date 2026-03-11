@@ -19,6 +19,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Implementation of the CustomerService interface.
+ * Provides comprehensive customer management functionality including CRUD operations,
+ * role management, password changes, and customer statistics.
+ *
+ * This service handles both customer data management and administrative functions
+ * for user administration.
+ *
+ * @author Hobby Shop Team
+ * @version 1.0
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -30,6 +41,13 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
     private final PasswordEncoder passwordEncoder;
 
+    /**
+     * Retrieves a customer by their ID.
+     *
+     * @param id the customer ID to search for
+     * @return CustomerResponse containing customer details
+     * @throws ResourceNotFoundException if customer not found
+     */
     @Override
     public CustomerResponse getCustomerById(Long id) {
         Customer customer = customerRepository.findById(id)
@@ -38,6 +56,13 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toResponse(customer);
     }
 
+    /**
+     * Retrieves a customer by their email address.
+     *
+     * @param email the email address to search for
+     * @return CustomerResponse containing customer details
+     * @throws ResourceNotFoundException if customer not found
+     */
     @Override
     public CustomerResponse getCustomerByEmail(String email) {
         Customer customer = customerRepository.findByEmail(email)
@@ -46,6 +71,21 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toResponse(customer);
     }
 
+    /**
+     * Updates customer information.
+     *
+     * Process flow:
+     * 1. Finds the customer by ID
+     * 2. Validates email uniqueness if being changed
+     * 3. Updates only the provided fields
+     * 4. Saves the updated customer
+     *
+     * @param id the ID of the customer to update
+     * @param request the update request containing fields to update
+     * @return CustomerResponse with updated information
+     * @throws ResourceNotFoundException if customer not found
+     * @throws BadRequestException if new email is already in use
+     */
     @Override
     public CustomerResponse updateCustomer(Long id, CustomerUpdateRequest request) {
         log.info("Updating customer with ID: {}", id);
@@ -59,7 +99,7 @@ public class CustomerServiceImpl implements CustomerService {
             throw new BadRequestException("Email " + request.getEmail() + " is already in use");
         }
 
-        // Update fields
+        // Update fields conditionally (only if provided)
         if (request.getFirstName() != null) customer.setFirstName(request.getFirstName());
         if (request.getLastName() != null) customer.setLastName(request.getLastName());
         if (request.getEmail() != null) customer.setEmail(request.getEmail());
@@ -75,6 +115,13 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toResponse(updatedCustomer);
     }
 
+    /**
+     * Soft-deletes a customer by disabling their account.
+     * The customer record remains in the database but is marked as inactive.
+     *
+     * @param id the ID of the customer to delete
+     * @throws ResourceNotFoundException if customer not found
+     */
     @Override
     public void deleteCustomer(Long id) {
         log.info("Deleting (disabling) customer with ID: {}", id);
@@ -88,6 +135,15 @@ public class CustomerServiceImpl implements CustomerService {
         log.info("Customer disabled successfully with ID: {}", id);
     }
 
+    /**
+     * Changes a customer's password after verifying the old password.
+     *
+     * @param id the ID of the customer
+     * @param oldPassword the current password for verification
+     * @param newPassword the new password to set
+     * @throws ResourceNotFoundException if customer not found
+     * @throws BadRequestException if old password is incorrect
+     */
     @Override
     public void changePassword(Long id, String oldPassword, String newPassword) {
         log.info("Changing password for customer with ID: {}", id);
@@ -107,12 +163,26 @@ public class CustomerServiceImpl implements CustomerService {
         log.info("Password changed successfully for customer ID: {}", id);
     }
 
+    /**
+     * Retrieves a paginated list of all customers.
+     *
+     * @param pageable pagination information
+     * @return Page of CustomerResponse objects
+     */
     @Override
     public Page<CustomerResponse> getAllCustomers(Pageable pageable) {
         return customerRepository.findAll(pageable)
                 .map(customerMapper::toResponse);
     }
 
+    /**
+     * Enables or disables a customer account.
+     *
+     * @param id the ID of the customer
+     * @param enabled true to enable, false to disable
+     * @return CustomerResponse with updated status
+     * @throws ResourceNotFoundException if customer not found
+     */
     @Override
     public CustomerResponse toggleCustomerStatus(Long id, boolean enabled) {
         log.info("Toggling customer status: {} for ID: {}", enabled, id);
@@ -128,6 +198,13 @@ public class CustomerServiceImpl implements CustomerService {
         return customerMapper.toResponse(updatedCustomer);
     }
 
+    /**
+     * Adds a role to a customer.
+     *
+     * @param customerId the ID of the customer
+     * @param roleId the ID of the role to add
+     * @throws ResourceNotFoundException if customer or role not found
+     */
     @Override
     public void addRoleToCustomer(Long customerId, Long roleId) {
         log.info("Adding role ID: {} to customer ID: {}", roleId, customerId);
@@ -146,6 +223,13 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    /**
+     * Removes a role from a customer.
+     *
+     * @param customerId the ID of the customer
+     * @param roleId the ID of the role to remove
+     * @throws ResourceNotFoundException if customer or role not found
+     */
     @Override
     public void removeRoleFromCustomer(Long customerId, Long roleId) {
         log.info("Removing role ID: {} from customer ID: {}", roleId, customerId);
@@ -164,23 +248,36 @@ public class CustomerServiceImpl implements CustomerService {
         }
     }
 
+    /**
+     * Gets the count of active (enabled) customers.
+     *
+     * @return the number of active customers
+     */
     @Override
     public long getActiveCustomerCount() {
-        // This now returns ONLY customers with enabled = true
         return customerRepository.countByEnabledTrue();
     }
 
+    /**
+     * Gets the count of inactive (disabled) customers.
+     *
+     * @return the number of inactive customers
+     */
     @Override
     public long getInactiveCustomerCount() {
-        // This returns customers with enabled = false
         return customerRepository.countByEnabledFalse();
     }
 
+    /**
+     * Gets comprehensive customer statistics including total, active, and inactive counts.
+     *
+     * @return CustomerStatisticsResponse containing all statistics
+     */
     @Override
     public CustomerStatisticsResponse getCustomerStatistics() {
         long total = customerRepository.count();
-        long enabled = customerRepository.countByEnabledTrue();  // Active customers
-        long disabled = customerRepository.countByEnabledFalse(); // Inactive customers
+        long enabled = customerRepository.countByEnabledTrue();
+        long disabled = customerRepository.countByEnabledFalse();
 
         log.info("Customer statistics - Total: {}, Active (enabled): {}, Inactive (disabled): {}",
                 total, enabled, disabled);
@@ -188,8 +285,13 @@ public class CustomerServiceImpl implements CustomerService {
         return new CustomerStatisticsResponse(total, enabled, disabled);
     }
 
+    /**
+     * Gets the total number of customers (including both active and inactive).
+     *
+     * @return the total customer count
+     */
     @Override
     public long getTotalCustomerCount() {
-        return 0;
+        return customerRepository.count();
     }
 }

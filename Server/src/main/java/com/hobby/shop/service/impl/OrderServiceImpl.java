@@ -24,6 +24,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the OrderService interface.
+ * Manages all order-related operations for both authenticated users and guests.
+ *
+ * This service handles:
+ * - Order creation with stock validation
+ * - Order retrieval for users and guests
+ * - Order cancellation and status updates
+ * - Admin order management (status updates, payment tracking, shipping)
+ * - Stock management during order lifecycle
+ *
+ * @author Hobby Shop Team
+ * @version 1.0
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -38,6 +52,25 @@ public class OrderServiceImpl implements OrderService {
     private final ProductService productService;
     private final OrderNumberGenerator orderNumberGenerator;
 
+    // ==================== USER ORDER METHODS ====================
+
+    /**
+     * Creates a new order for an authenticated user.
+     *
+     * Process flow:
+     * 1. Validates user exists
+     * 2. Validates order has items and sufficient stock
+     * 3. Creates order and order items
+     * 4. Calculates totals (subtotal, tax, shipping)
+     * 5. Updates product stock
+     * 6. Creates order status history
+     *
+     * @param email the email of the authenticated user
+     * @param request the order request containing items and shipping details
+     * @return OrderResponse of the created order
+     * @throws ResourceNotFoundException if user or products not found
+     * @throws BadRequestException if order has no items or insufficient stock
+     */
     @Override
     public OrderResponse createOrder(String email, OrderRequest request) {
         log.info("Creating order for authenticated user: {}", email);
@@ -51,7 +84,7 @@ public class OrderServiceImpl implements OrderService {
             throw new BadRequestException("Order must contain at least one item");
         }
 
-        // Validate stock for all items
+        // Validate stock for all items before processing order
         validateStockForItems(request.getItems());
 
         // Create order
@@ -68,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
         // Save order items
         orderItemRepository.saveAll(orderItems);
 
-        // Update product stock
+        // Update product stock (reduce inventory)
         updateProductStock(orderItems);
 
         // Create order status history
@@ -79,6 +112,16 @@ public class OrderServiceImpl implements OrderService {
         return mapToOrderResponse(order);
     }
 
+    /**
+     * Retrieves an order by its order number for an authenticated user.
+     * Security check ensures the order belongs to the requesting user.
+     *
+     * @param email the email of the authenticated user
+     * @param orderNumber the unique order number
+     * @return OrderResponse of the requested order
+     * @throws ResourceNotFoundException if order not found
+     * @throws UnauthorizedException if order doesn't belong to user
+     */
     @Override
     public OrderResponse getOrderByNumber(String email, String orderNumber) {
         log.info("Fetching order {} for user: {}", orderNumber, email);
@@ -97,6 +140,14 @@ public class OrderServiceImpl implements OrderService {
         return mapToOrderResponse(order);
     }
 
+    /**
+     * Retrieves all orders for an authenticated user with pagination.
+     *
+     * @param email the email of the authenticated user
+     * @param pageable pagination information
+     * @return Page of OrderResponse objects for the user
+     * @throws ResourceNotFoundException if user not found
+     */
     @Override
     public Page<OrderResponse> getUserOrders(String email, Pageable pageable) {
         log.info("Fetching all orders for user: {}", email);
@@ -108,6 +159,19 @@ public class OrderServiceImpl implements OrderService {
                 .map(this::mapToOrderResponse);
     }
 
+    /**
+     * Cancels an order for an authenticated user.
+     * Only orders in PENDING or PROCESSING status can be cancelled.
+     * When cancelled, product stock is restored.
+     *
+     * @param email the email of the authenticated user
+     * @param orderId the ID of the order to cancel
+     * @param reason the reason for cancellation
+     * @return OrderResponse of the cancelled order
+     * @throws ResourceNotFoundException if user or order not found
+     * @throws UnauthorizedException if order doesn't belong to user
+     * @throws BadRequestException if order cannot be cancelled in its current state
+     */
     @Override
     public OrderResponse cancelOrder(String email, Long orderId, String reason) {
         log.info("User {} cancelling order ID: {}", email, orderId);
@@ -124,7 +188,7 @@ public class OrderServiceImpl implements OrderService {
             throw new UnauthorizedException("You don't have permission to cancel this order");
         }
 
-        // Check if order can be cancelled
+        // Check if order can be cancelled (only pending or processing)
         if (!canCancelOrder(order)) {
             throw new BadRequestException("Order cannot be cancelled in its current state: " + order.getStatus());
         }
@@ -143,6 +207,18 @@ public class OrderServiceImpl implements OrderService {
         return mapToOrderResponse(order);
     }
 
+    // ==================== GUEST ORDER METHODS ====================
+
+    /**
+     * Retrieves an order for a guest user using order number and email.
+     * Used for guests to look up their orders without authentication.
+     *
+     * @param orderNumber the unique order number
+     * @param guestEmail the email used when placing the order
+     * @return OrderResponse of the requested order
+     * @throws ResourceNotFoundException if order not found
+     * @throws UnauthorizedException if email doesn't match order
+     */
     @Override
     public OrderResponse getGuestOrder(String orderNumber, String guestEmail) {
         log.info("Guest looking up order: {} for email: {}", orderNumber, guestEmail);
@@ -164,8 +240,15 @@ public class OrderServiceImpl implements OrderService {
         return mapToOrderResponse(order);
     }
 
-    // ============= ADMIN METHODS =============
+    // ==================== ADMIN ORDER METHODS ====================
 
+    /**
+     * Retrieves all orders in the system with pagination.
+     * Admin-only operation.
+     *
+     * @param pageable pagination information
+     * @return Page of all OrderResponse objects
+     */
     @Override
     public Page<OrderResponse> getAllOrders(Pageable pageable) {
         log.info("Admin fetching all orders");
@@ -173,6 +256,14 @@ public class OrderServiceImpl implements OrderService {
                 .map(this::mapToOrderResponse);
     }
 
+    /**
+     * Retrieves orders filtered by status with pagination.
+     * Admin-only operation.
+     *
+     * @param status the order status to filter by
+     * @param pageable pagination information
+     * @return Page of OrderResponse objects with the specified status
+     */
     @Override
     public Page<OrderResponse> getOrdersByStatus(String status, Pageable pageable) {
         log.info("Admin fetching orders with status: {}", status);
@@ -180,6 +271,16 @@ public class OrderServiceImpl implements OrderService {
                 .map(this::mapToOrderResponse);
     }
 
+    /**
+     * Updates the status of an order.
+     * Admin-only operation.
+     *
+     * @param orderId the ID of the order to update
+     * @param status the new status
+     * @param comment optional comment about the status change
+     * @return OrderResponse of the updated order
+     * @throws ResourceNotFoundException if order not found
+     */
     @Override
     public OrderResponse updateOrderStatus(Long orderId, String status, String comment) {
         log.info("Admin updating order {} status to: {}", orderId, status);
@@ -198,6 +299,15 @@ public class OrderServiceImpl implements OrderService {
         return mapToOrderResponse(order);
     }
 
+    /**
+     * Updates the payment status of an order.
+     * Admin-only operation.
+     *
+     * @param orderId the ID of the order to update
+     * @param paymentStatus the new payment status
+     * @return OrderResponse of the updated order
+     * @throws ResourceNotFoundException if order not found
+     */
     @Override
     public OrderResponse updatePaymentStatus(Long orderId, String paymentStatus) {
         log.info("Admin updating payment status for order {} to: {}", orderId, paymentStatus);
@@ -214,6 +324,16 @@ public class OrderServiceImpl implements OrderService {
         return mapToOrderResponse(order);
     }
 
+    /**
+     * Updates the tracking number for an order.
+     * If the order is in PROCESSING status, it automatically marks it as SHIPPED.
+     * Admin-only operation.
+     *
+     * @param orderId the ID of the order to update
+     * @param trackingNumber the shipping tracking number
+     * @return OrderResponse of the updated order
+     * @throws ResourceNotFoundException if order not found
+     */
     @Override
     public OrderResponse updateTrackingNumber(Long orderId, String trackingNumber) {
         log.info("Admin updating tracking number for order {} to: {}", orderId, trackingNumber);
@@ -235,8 +355,16 @@ public class OrderServiceImpl implements OrderService {
         return mapToOrderResponse(order);
     }
 
-    // ============= PRIVATE HELPER METHODS =============
+    // ==================== PRIVATE HELPER METHODS ====================
 
+    /**
+     * Builds an Order entity from the request.
+     *
+     * @param request the order request
+     * @param customer the customer (null for guest orders)
+     * @param guestEmail the guest email (null for user orders)
+     * @return populated Order entity
+     */
     private Order buildOrderFromRequest(OrderRequest request, Customer customer, String guestEmail) {
         Order order = new Order();
         order.setOrderNumber(orderNumberGenerator.generateOrderNumber());
@@ -255,6 +383,14 @@ public class OrderServiceImpl implements OrderService {
         return order;
     }
 
+    /**
+     * Creates OrderItem entities from the request items.
+     *
+     * @param order the parent order
+     * @param itemRequests the item requests from the order
+     * @return list of OrderItem entities
+     * @throws ResourceNotFoundException if product not found
+     */
     private List<OrderItem> createOrderItemsFromRequest(Order order, List<OrderRequest.OrderItemRequest> itemRequests) {
         List<OrderItem> orderItems = new ArrayList<>();
 
@@ -277,6 +413,12 @@ public class OrderServiceImpl implements OrderService {
         return orderItems;
     }
 
+    /**
+     * Calculates order totals including subtotal, tax, and final total.
+     *
+     * @param order the order entity
+     * @param items the order items
+     */
     private void calculateOrderTotals(Order order, List<OrderItem> items) {
         BigDecimal subtotal = items.stream()
                 .map(OrderItem::getSubtotal)
@@ -294,6 +436,12 @@ public class OrderServiceImpl implements OrderService {
                 .add(order.getShippingCost()));
     }
 
+    /**
+     * Validates that all items in the order have sufficient stock.
+     *
+     * @param items the items to validate
+     * @throws BadRequestException if any item has insufficient stock
+     */
     private void validateStockForItems(List<OrderRequest.OrderItemRequest> items) {
         for (OrderRequest.OrderItemRequest item : items) {
             Product product = productRepository.findById(item.getProductId())
@@ -308,6 +456,11 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    /**
+     * Updates product stock after order placement (reduces inventory).
+     *
+     * @param items the ordered items
+     */
     private void updateProductStock(List<OrderItem> items) {
         for (OrderItem item : items) {
             if (item.getProduct() != null) {
@@ -319,6 +472,11 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    /**
+     * Restores product stock when an order is cancelled.
+     *
+     * @param items the items from the cancelled order
+     */
     private void restoreProductStock(List<OrderItem> items) {
         for (OrderItem item : items) {
             if (item.getProduct() != null) {
@@ -330,10 +488,25 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    /**
+     * Creates an order status history entry (system-generated).
+     *
+     * @param order the order
+     * @param status the status
+     * @param comment the comment
+     */
     private void createOrderStatusHistory(Order order, String status, String comment) {
         createOrderStatusHistory(order, status, comment, "SYSTEM");
     }
 
+    /**
+     * Creates an order status history entry with specified changer.
+     *
+     * @param order the order
+     * @param status the status
+     * @param comment the comment
+     * @param changedBy who changed the status (SYSTEM, USER, ADMIN)
+     */
     private void createOrderStatusHistory(Order order, String status, String comment, String changedBy) {
         OrderStatusHistory history = new OrderStatusHistory();
         history.setOrder(order);
@@ -345,11 +518,23 @@ public class OrderServiceImpl implements OrderService {
         log.debug("Created status history for order {}: {} - {}", order.getOrderNumber(), status, comment);
     }
 
+    /**
+     * Checks if an order can be cancelled based on its current status.
+     *
+     * @param order the order to check
+     * @return true if order can be cancelled, false otherwise
+     */
     private boolean canCancelOrder(Order order) {
         return AppConstants.ORDER_STATUS_PENDING.equals(order.getStatus()) ||
                 AppConstants.ORDER_STATUS_PROCESSING.equals(order.getStatus());
     }
 
+    /**
+     * Maps an Order entity to an OrderResponse DTO.
+     *
+     * @param order the Order entity
+     * @return OrderResponse with all order details
+     */
     private OrderResponse mapToOrderResponse(Order order) {
         OrderResponse response = new OrderResponse();
         response.setId(order.getId());
@@ -382,6 +567,12 @@ public class OrderServiceImpl implements OrderService {
         return response;
     }
 
+    /**
+     * Maps an OrderItem entity to an OrderItemResponse DTO.
+     *
+     * @param item the OrderItem entity
+     * @return OrderItemResponse with item details
+     */
     private OrderResponse.OrderItemResponse mapToOrderItemResponse(OrderItem item) {
         OrderResponse.OrderItemResponse response = new OrderResponse.OrderItemResponse();
         response.setId(item.getId());

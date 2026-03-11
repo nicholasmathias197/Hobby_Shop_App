@@ -22,6 +22,21 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 
+/**
+ * Implementation of the ProductService interface.
+ * Manages all product-related operations including CRUD, searching, filtering,
+ * stock management, and product reviews integration.
+ *
+ * This service handles:
+ * - Product creation, update, and soft deletion
+ * - Product retrieval with average ratings
+ * - Product search and filtering by various criteria
+ * - Stock validation and updates
+ * - Featured products management
+ *
+ * @author Hobby Shop Team
+ * @version 1.0
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -34,6 +49,20 @@ public class ProductServiceImpl implements ProductService {
     private final ProductReviewRepository reviewRepository;
     private final ProductMapper productMapper;
 
+    /**
+     * Creates a new product.
+     *
+     * Process flow:
+     * 1. Validates SKU uniqueness
+     * 2. Maps request to Product entity
+     * 3. Associates category and brand if provided
+     * 4. Saves product to database
+     *
+     * @param request the product creation request
+     * @return ProductResponse of the created product
+     * @throws BadRequestException if SKU already exists
+     * @throws ResourceNotFoundException if category or brand not found
+     */
     @Override
     public ProductResponse createProduct(ProductRequest request) {
         log.info("Creating new product with SKU: {}", request.getSku());
@@ -44,12 +73,14 @@ public class ProductServiceImpl implements ProductService {
 
         Product product = productMapper.toEntity(request);
 
+        // Associate category if provided
         if (request.getCategoryId() != null) {
             Category category = categoryRepository.findById(request.getCategoryId())
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + request.getCategoryId()));
             product.setCategory(category);
         }
 
+        // Associate brand if provided
         if (request.getBrandId() != null) {
             Brand brand = brandRepository.findById(request.getBrandId())
                     .orElseThrow(() -> new ResourceNotFoundException("Brand not found with id: " + request.getBrandId()));
@@ -62,6 +93,15 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toResponse(savedProduct);
     }
 
+    /**
+     * Updates an existing product.
+     *
+     * @param id the ID of the product to update
+     * @param request the update request
+     * @return ProductResponse with updated information
+     * @throws ResourceNotFoundException if product not found
+     * @throws BadRequestException if trying to change to an existing SKU
+     */
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest request) {
         log.info("Updating product with ID: {}", id);
@@ -77,12 +117,14 @@ public class ProductServiceImpl implements ProductService {
 
         productMapper.updateEntity(product, request);
 
+        // Update category if provided
         if (request.getCategoryId() != null) {
             Category category = categoryRepository.findById(request.getCategoryId())
                     .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + request.getCategoryId()));
             product.setCategory(category);
         }
 
+        // Update brand if provided
         if (request.getBrandId() != null) {
             Brand brand = brandRepository.findById(request.getBrandId())
                     .orElseThrow(() -> new ResourceNotFoundException("Brand not found with id: " + request.getBrandId()));
@@ -95,6 +137,14 @@ public class ProductServiceImpl implements ProductService {
         return productMapper.toResponse(updatedProduct);
     }
 
+    /**
+     * Soft-deletes a product by marking it as inactive.
+     * The product record remains in the database but is no longer available
+     * for purchase or display in public-facing views.
+     *
+     * @param id the ID of the product to delete
+     * @throws ResourceNotFoundException if product not found
+     */
     @Override
     public void deleteProduct(Long id) {
         log.info("Deleting product with ID: {}", id);
@@ -107,6 +157,14 @@ public class ProductServiceImpl implements ProductService {
         log.info("Product deactivated successfully with ID: {}", id);
     }
 
+    /**
+     * Retrieves a product by its ID.
+     * Includes the average rating from product reviews.
+     *
+     * @param id the product ID to search for
+     * @return ProductResponse containing product details and average rating
+     * @throws ResourceNotFoundException if product not found
+     */
     @Override
     public ProductResponse getProductById(Long id) {
         Product product = productRepository.findById(id)
@@ -119,6 +177,14 @@ public class ProductServiceImpl implements ProductService {
         return response;
     }
 
+    /**
+     * Retrieves a product by its SKU (Stock Keeping Unit).
+     * Includes the average rating from product reviews.
+     *
+     * @param sku the SKU to search for
+     * @return ProductResponse containing product details and average rating
+     * @throws ResourceNotFoundException if product not found
+     */
     @Override
     public ProductResponse getProductBySku(String sku) {
         Product product = productRepository.findBySku(sku)
@@ -131,6 +197,13 @@ public class ProductServiceImpl implements ProductService {
         return response;
     }
 
+    /**
+     * Retrieves all active products with pagination.
+     * Includes average ratings for each product.
+     *
+     * @param pageable pagination information
+     * @return Page of active ProductResponse objects with ratings
+     */
     @Override
     public Page<ProductResponse> getAllProducts(Pageable pageable) {
         return productRepository.findByIsActiveTrue(pageable)
@@ -142,6 +215,13 @@ public class ProductServiceImpl implements ProductService {
                 });
     }
 
+    /**
+     * Retrieves products by category with pagination.
+     *
+     * @param categoryId the category ID to filter by
+     * @param pageable pagination information
+     * @return Page of products in the specified category
+     */
     @Override
     public Page<ProductResponse> getProductsByCategory(Long categoryId, Pageable pageable) {
         return productRepository.findByCategoryIdAndIsActiveTrue(categoryId, pageable)
@@ -153,6 +233,13 @@ public class ProductServiceImpl implements ProductService {
                 });
     }
 
+    /**
+     * Retrieves products by brand with pagination.
+     *
+     * @param brandId the brand ID to filter by
+     * @param pageable pagination information
+     * @return Page of products from the specified brand
+     */
     @Override
     public Page<ProductResponse> getProductsByBrand(Long brandId, Pageable pageable) {
         return productRepository.findByBrandIdAndIsActiveTrue(brandId, pageable)
@@ -164,6 +251,13 @@ public class ProductServiceImpl implements ProductService {
                 });
     }
 
+    /**
+     * Retrieves featured products with pagination.
+     * Featured products are typically highlighted on the homepage.
+     *
+     * @param pageable pagination information
+     * @return Page of featured products
+     */
     @Override
     public Page<ProductResponse> getFeaturedProducts(Pageable pageable) {
         return productRepository.findByIsFeaturedTrueAndIsActiveTrue(pageable)
@@ -175,6 +269,13 @@ public class ProductServiceImpl implements ProductService {
                 });
     }
 
+    /**
+     * Searches for products by search term (searches in name and description).
+     *
+     * @param searchTerm the term to search for
+     * @param pageable pagination information
+     * @return Page of products matching the search term
+     */
     @Override
     public Page<ProductResponse> searchProducts(String searchTerm, Pageable pageable) {
         return productRepository.findProductsByFilters(null, null, null, null, searchTerm, pageable)
@@ -186,6 +287,17 @@ public class ProductServiceImpl implements ProductService {
                 });
     }
 
+    /**
+     * Filters products by multiple criteria.
+     *
+     * @param categoryId filter by category (optional)
+     * @param brandId filter by brand (optional)
+     * @param minPrice minimum price filter (optional)
+     * @param maxPrice maximum price filter (optional)
+     * @param searchTerm search in name/description (optional)
+     * @param pageable pagination information
+     * @return Page of products matching all provided filters
+     */
     @Override
     public Page<ProductResponse> filterProducts(Long categoryId, Long brandId,
                                                 BigDecimal minPrice, BigDecimal maxPrice,
@@ -199,6 +311,15 @@ public class ProductServiceImpl implements ProductService {
                 });
     }
 
+    /**
+     * Checks if a product has sufficient stock for a requested quantity.
+     * Used primarily by cart operations before adding items.
+     *
+     * @param productId the ID of the product to check
+     * @param quantity the requested quantity
+     * @return true if sufficient stock exists, false otherwise
+     * @throws ResourceNotFoundException if product not found
+     */
     @Override
     public boolean checkStock(Long productId, Integer quantity) {
         Product product = productRepository.findById(productId)
@@ -207,6 +328,15 @@ public class ProductServiceImpl implements ProductService {
         return product.getStockQuantity() >= quantity;
     }
 
+    /**
+     * Updates product stock after an order is placed.
+     * Reduces inventory by the ordered quantity.
+     *
+     * @param productId the ID of the product
+     * @param quantity the quantity to reduce
+     * @throws ResourceNotFoundException if product not found
+     * @throws BadRequestException if insufficient stock
+     */
     @Override
     public void updateStock(Long productId, Integer quantity) {
         Product product = productRepository.findById(productId)

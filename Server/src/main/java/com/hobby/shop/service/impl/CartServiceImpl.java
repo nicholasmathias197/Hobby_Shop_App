@@ -17,6 +17,19 @@ import java.math.BigDecimal;
 import java.util.HashSet;
 import java.util.Optional;
 
+/**
+ * Implementation of the CartService interface.
+ * Manages shopping cart operations for both authenticated users and guest sessions.
+ *
+ * This service handles:
+ * - Cart creation and retrieval for users and guests
+ * - Adding, updating, and removing items from carts
+ * - Cart merging when guests log in
+ * - Stock validation during cart operations
+ *
+ * @author Hobby Shop Team
+ * @version 1.0
+ */
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -29,6 +42,16 @@ public class CartServiceImpl implements CartService {
     private final ProductRepository productRepository;
     private final ProductService productService;
 
+    // ==================== USER CART METHODS ====================
+
+    /**
+     * Retrieves the cart for an authenticated user.
+     * If the user doesn't have a cart, a new one is created.
+     *
+     * @param email the email of the authenticated user
+     * @return CartResponse containing cart details
+     * @throws ResourceNotFoundException if user not found
+     */
     @Override
     public CartResponse getCartByUser(String email) {
         Customer customer = customerRepository.findByEmail(email)
@@ -40,6 +63,16 @@ public class CartServiceImpl implements CartService {
         return mapToCartResponse(cart);
     }
 
+    /**
+     * Adds an item to an authenticated user's cart.
+     * If the product already exists in the cart, the quantity is increased.
+     *
+     * @param email the email of the authenticated user
+     * @param request the cart item request containing product ID and quantity
+     * @return CartResponse with updated cart
+     * @throws ResourceNotFoundException if user or product not found
+     * @throws BadRequestException if product is inactive or insufficient stock
+     */
     @Override
     public CartResponse addItemToUserCart(String email, CartItemRequest request) {
         Customer customer = customerRepository.findByEmail(email)
@@ -51,6 +84,17 @@ public class CartServiceImpl implements CartService {
         return addItemToCart(cart, request);
     }
 
+    /**
+     * Updates the quantity of an item in a user's cart.
+     * If quantity becomes zero or negative, the item is removed.
+     *
+     * @param email the email of the authenticated user
+     * @param cartItemId the ID of the cart item to update
+     * @param quantity the new quantity
+     * @return CartResponse with updated cart
+     * @throws ResourceNotFoundException if user, cart, or cart item not found
+     * @throws BadRequestException if item doesn't belong to user or insufficient stock
+     */
     @Override
     @Transactional
     public CartResponse updateCartItemQuantity(String email, Long cartItemId, Integer quantity) {
@@ -66,6 +110,7 @@ public class CartServiceImpl implements CartService {
         CartItem cartItem = cartItemRepository.findById(cartItemId)
                 .orElseThrow(() -> new ResourceNotFoundException("Cart item not found with id: " + cartItemId));
 
+        // Verify item belongs to user's cart
         if (!cartItem.getCart().getId().equals(cart.getId())) {
             throw new BadRequestException("Cart item does not belong to this user");
         }
@@ -76,7 +121,7 @@ public class CartServiceImpl implements CartService {
             cartItemRepository.delete(cartItem);
             cartItemRepository.flush();
         } else {
-            // Check stock availability
+            // Check stock availability before updating quantity
             if (!productService.checkStock(cartItem.getProduct().getId(), quantity)) {
                 throw new BadRequestException("Insufficient stock for product: " + cartItem.getProduct().getName());
             }
@@ -92,6 +137,15 @@ public class CartServiceImpl implements CartService {
         return mapToCartResponse(cart);
     }
 
+    /**
+     * Removes an item from a user's cart.
+     *
+     * @param email the email of the authenticated user
+     * @param cartItemId the ID of the cart item to remove
+     * @return CartResponse with updated cart
+     * @throws ResourceNotFoundException if user, cart, or cart item not found
+     * @throws BadRequestException if item doesn't belong to user
+     */
     @Override
     @Transactional
     public CartResponse removeItemFromUserCart(String email, Long cartItemId) {
@@ -112,6 +166,7 @@ public class CartServiceImpl implements CartService {
             log.info("Found cart item: ID={}, Product={}, Quantity={}",
                     cartItem.getId(), cartItem.getProduct().getName(), cartItem.getQuantity());
 
+            // Verify item belongs to user's cart
             if (!cartItem.getCart().getId().equals(cart.getId())) {
                 log.error("Cart item {} does not belong to cart {}", cartItemId, cart.getId());
                 throw new BadRequestException("Cart item does not belong to this user");
@@ -151,6 +206,12 @@ public class CartServiceImpl implements CartService {
         }
     }
 
+    /**
+     * Clears all items from a user's cart.
+     *
+     * @param email the email of the authenticated user
+     * @throws ResourceNotFoundException if user not found
+     */
     @Override
     @Transactional
     public void clearUserCart(String email) {
@@ -165,6 +226,15 @@ public class CartServiceImpl implements CartService {
         });
     }
 
+    // ==================== SESSION CART METHODS ====================
+
+    /**
+     * Retrieves the cart for a guest session.
+     * If the session doesn't have a cart, a new one is created.
+     *
+     * @param sessionId the session ID for the guest
+     * @return CartResponse containing cart details
+     */
     @Override
     public CartResponse getCartBySession(String sessionId) {
         Cart cart = cartRepository.findBySessionId(sessionId)
@@ -173,6 +243,15 @@ public class CartServiceImpl implements CartService {
         return mapToCartResponse(cart);
     }
 
+    /**
+     * Adds an item to a guest session cart.
+     *
+     * @param sessionId the session ID for the guest
+     * @param request the cart item request
+     * @return CartResponse with updated cart
+     * @throws ResourceNotFoundException if product not found
+     * @throws BadRequestException if product is inactive or insufficient stock
+     */
     @Override
     public CartResponse addItemToSessionCart(String sessionId, CartItemRequest request) {
         Cart cart = cartRepository.findBySessionId(sessionId)
@@ -181,6 +260,16 @@ public class CartServiceImpl implements CartService {
         return addItemToCart(cart, request);
     }
 
+    /**
+     * Updates the quantity of an item in a guest session cart.
+     *
+     * @param sessionId the session ID for the guest
+     * @param cartItemId the ID of the cart item to update
+     * @param quantity the new quantity
+     * @return CartResponse with updated cart
+     * @throws ResourceNotFoundException if cart or cart item not found
+     * @throws BadRequestException if item doesn't belong to session or insufficient stock
+     */
     @Override
     @Transactional
     public CartResponse updateSessionCartItemQuantity(String sessionId, Long cartItemId, Integer quantity) {
@@ -219,6 +308,15 @@ public class CartServiceImpl implements CartService {
         return mapToCartResponse(cart);
     }
 
+    /**
+     * Removes an item from a guest session cart.
+     *
+     * @param sessionId the session ID for the guest
+     * @param cartItemId the ID of the cart item to remove
+     * @return CartResponse with updated cart
+     * @throws ResourceNotFoundException if cart or cart item not found
+     * @throws BadRequestException if item doesn't belong to session
+     */
     @Override
     @Transactional
     public CartResponse removeItemFromSessionCart(String sessionId, Long cartItemId) {
@@ -278,6 +376,11 @@ public class CartServiceImpl implements CartService {
         }
     }
 
+    /**
+     * Clears all items from a guest session cart.
+     *
+     * @param sessionId the session ID for the guest
+     */
     @Override
     @Transactional
     public void clearSessionCart(String sessionId) {
@@ -289,6 +392,21 @@ public class CartServiceImpl implements CartService {
         });
     }
 
+    // ==================== CART MERGING ====================
+
+    /**
+     * Merges a guest session cart into a user's cart when the guest logs in.
+     *
+     * Process flow:
+     * 1. Get or create user cart
+     * 2. If session cart exists, merge its items into user cart
+     * 3. Delete the session cart after merging
+     *
+     * @param email the email of the authenticated user
+     * @param sessionId the guest session ID
+     * @return CartResponse of the merged user cart
+     * @throws ResourceNotFoundException if user not found
+     */
     @Override
     @Transactional
     public CartResponse mergeCarts(String email, String sessionId) {
@@ -333,6 +451,13 @@ public class CartServiceImpl implements CartService {
         return mapToCartResponse(userCart);
     }
 
+    /**
+     * Gets the total number of items in a cart.
+     *
+     * @param cartIdentifier either email (for users) or sessionId (for guests)
+     * @param isUser true if cartIdentifier is an email, false if it's a sessionId
+     * @return total quantity of items in the cart
+     */
     @Override
     public int getCartItemCount(String cartIdentifier, boolean isUser) {
         Optional<Cart> cartOpt;
@@ -351,8 +476,14 @@ public class CartServiceImpl implements CartService {
                 .sum()).orElse(0);
     }
 
-    // Private helper methods
+    // ==================== PRIVATE HELPER METHODS ====================
 
+    /**
+     * Creates a new cart for an authenticated user.
+     *
+     * @param customer the customer to associate with the cart
+     * @return the newly created Cart entity
+     */
     private Cart createNewCartForUser(Customer customer) {
         Cart cart = new Cart();
         cart.setCustomer(customer);
@@ -360,6 +491,12 @@ public class CartServiceImpl implements CartService {
         return cartRepository.save(cart);
     }
 
+    /**
+     * Creates a new cart for a guest session.
+     *
+     * @param sessionId the session ID to associate with the cart
+     * @return the newly created Cart entity
+     */
     private Cart createNewCartForSession(String sessionId) {
         Cart cart = new Cart();
         cart.setSessionId(sessionId);
@@ -367,6 +504,15 @@ public class CartServiceImpl implements CartService {
         return cartRepository.save(cart);
     }
 
+    /**
+     * Adds an item to a cart with validation.
+     *
+     * @param cart the cart to add the item to
+     * @param request the item request containing product ID and quantity
+     * @return CartResponse with updated cart
+     * @throws ResourceNotFoundException if product not found
+     * @throws BadRequestException if product is inactive or insufficient stock
+     */
     private CartResponse addItemToCart(Cart cart, CartItemRequest request) {
         Product product = productRepository.findById(request.getProductId())
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + request.getProductId()));
@@ -387,7 +533,7 @@ public class CartServiceImpl implements CartService {
                 .findFirst();
 
         if (existingItem.isPresent()) {
-            // Update quantity
+            // Update quantity if product exists
             CartItem item = existingItem.get();
             item.setQuantity(item.getQuantity() + request.getQuantity());
             cartItemRepository.save(item);
@@ -409,6 +555,13 @@ public class CartServiceImpl implements CartService {
         return mapToCartResponse(cart);
     }
 
+    /**
+     * Maps a Cart entity to a CartResponse DTO.
+     * Calculates total items and total price.
+     *
+     * @param cart the Cart entity to map
+     * @return CartResponse containing cart details and calculated totals
+     */
     private CartResponse mapToCartResponse(Cart cart) {
         CartResponse response = new CartResponse();
         response.setId(cart.getId());
