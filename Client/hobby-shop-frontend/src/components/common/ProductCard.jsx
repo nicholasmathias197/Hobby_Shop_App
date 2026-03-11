@@ -9,7 +9,7 @@ const ProductCard = ({ product, onAddToCart }) => {
 
   return (
     <div style={{
-      border: '1px solid #e0e0e0',
+      border: '1px solid rgba(0, 217, 255, 0.3)',
       borderRadius: '8px',
       overflow: 'hidden',
       backgroundColor: 'white',
@@ -31,7 +31,7 @@ const ProductCard = ({ product, onAddToCart }) => {
       <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
         <div style={{ 
           height: '200px', 
-          backgroundColor: '#f8f9fa',
+          backgroundColor: 'rgba(0, 217, 255, 0.3)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',

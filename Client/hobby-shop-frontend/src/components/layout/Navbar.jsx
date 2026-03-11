@@ -1,84 +1,416 @@
-import React from 'react';
+// src/components/layout/Navbar.jsx (Dropdown Version)
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../hooks/useCart';
+// Import your logo - adjust the path based on where you place it
+import companyLogo from '../../assets/images/logo.png'; // Option 1: from assets
+// OR use public folder path (uncomment if using public folder)
+// const companyLogo = '/images/logo.png';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
   const { cart } = useCart();
+  const [showAdminMenu, setShowAdminMenu] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
 
   const cartItemsCount = cart?.items?.length || 0;
 
   return (
-    <nav style={{
+    <nav className="navbar" style={{
       backgroundColor: '#343a40',
-      padding: '1rem',
-      color: 'white'
+      padding: '0.75rem 2rem',
+      color: 'white',
+      position: 'sticky',
+      top: 0,
+      zIndex: 1000,
+      boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      width: '100%'
     }}>
       <div style={{
-        maxWidth: '1200px',
+        maxWidth: '1400px',
         margin: '0 auto',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        width: '100%'
       }}>
-        <Link to="/" style={{ color: 'white', textDecoration: 'none', fontSize: '1.5rem' }}>
-          Hobby Shop
+        {/* Logo and Title - Left Side */}
+        <Link to="/" style={{ 
+          color: 'white', 
+          textDecoration: 'none', 
+          display: 'flex',
+          alignItems: 'center',
+          gap: '1rem',
+          flexShrink: 0
+        }}>
+          <img 
+            src={companyLogo} 
+            alt="U197 Hobbies" 
+            style={{ 
+              height: '50px',
+              width: '50px',
+              borderRadius: '50%',
+              objectFit: 'cover',
+              border: '2px solid #00d9ff',
+              boxShadow: '0 0 20px rgba(0, 217, 255, 0.6)'
+            }} 
+          />
+          <span style={{ 
+            fontSize: '2.2rem', 
+            fontWeight: '800',
+            background: 'linear-gradient(to right, #00d9ff, #0099ff)',
+            WebkitBackgroundClip: 'text',
+            backgroundClip: 'text',
+            color: 'transparent',
+            letterSpacing: '1px'
+          }}>U197 Hobbies</span>
         </Link>
         
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'center' }}>
-          <Link to="/products" style={{ color: 'white', textDecoration: 'none' }}>
+        {/* Navigation Links - Center/Right */}
+        <div style={{ 
+          display: 'flex', 
+          gap: '2rem', 
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          justifyContent: 'flex-end',
+          flex: 1
+        }}>
+          {/* Main Navigation Links */}
+          <Link to="/" style={{ 
+            color: 'white', 
+            textDecoration: 'none', 
+            fontSize: '1.1rem',
+            fontWeight: '500',
+            padding: '0.5rem 0',
+            borderBottom: '2px solid transparent',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => e.target.style.borderBottomColor = '#00d9ff'}
+          onMouseLeave={(e) => e.target.style.borderBottomColor = 'transparent'}
+          >
+            Home
+          </Link>
+          <Link to="/products" style={{ 
+            color: 'white', 
+            textDecoration: 'none', 
+            fontSize: '1.1rem',
+            fontWeight: '500',
+            padding: '0.5rem 0',
+            borderBottom: '2px solid transparent',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => e.target.style.borderBottomColor = '#00d9ff'}
+          onMouseLeave={(e) => e.target.style.borderBottomColor = 'transparent'}
+          >
             Products
           </Link>
-          
-          {isAdmin() && (
-            <div style={{ display: 'flex', gap: '1rem' }}>
-              <Link to="/admin/dashboard" style={{ color: 'white', textDecoration: 'none' }}>
-                Dashboard
-              </Link>
-              <Link to="/admin/products" style={{ color: 'white', textDecoration: 'none' }}>
-                Manage Products
-              </Link>
-              <Link to="/admin/orders" style={{ color: 'white', textDecoration: 'none' }}>
-                Manage Orders
-              </Link>
-            </div>
-          )}
-          
-          <Link to="/cart" style={{ color: 'white', textDecoration: 'none' }}>
-            Cart ({cartItemsCount})
+          <Link to="/category/1" style={{ 
+            color: 'white', 
+            textDecoration: 'none', 
+            fontSize: '1.1rem',
+            fontWeight: '500',
+            padding: '0.5rem 0',
+            borderBottom: '2px solid transparent',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => e.target.style.borderBottomColor = '#00d9ff'}
+          onMouseLeave={(e) => e.target.style.borderBottomColor = 'transparent'}
+          >
+            Gundam Models
+          </Link>
+          <Link to="/category/2" style={{ 
+            color: 'white', 
+            textDecoration: 'none', 
+            fontSize: '1.1rem',
+            fontWeight: '500',
+            padding: '0.5rem 0',
+            borderBottom: '2px solid transparent',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => e.target.style.borderBottomColor = '#00d9ff'}
+          onMouseLeave={(e) => e.target.style.borderBottomColor = 'transparent'}
+          >
+            Tools
+          </Link>
+          <Link to="/category/3" style={{ 
+            color: 'white', 
+            textDecoration: 'none', 
+            fontSize: '1.1rem',
+            fontWeight: '500',
+            padding: '0.5rem 0',
+            borderBottom: '2px solid transparent',
+            transition: 'all 0.3s ease'
+          }}
+          onMouseEnter={(e) => e.target.style.borderBottomColor = '#00d9ff'}
+          onMouseLeave={(e) => e.target.style.borderBottomColor = 'transparent'}
+          >
+            Paints
           </Link>
           
+          {/* Search Icon */}
+          <div style={{ position: 'relative' }}>
+            <button
+              onClick={() => setShowSearch(!showSearch)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'white',
+                fontSize: '1.3rem',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                padding: '0.5rem',
+                transition: 'transform 0.2s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
+              onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+            >
+              🔍
+            </button>
+            
+            {/* Search Dropdown */}
+            {showSearch && (
+              <div style={{
+                position: 'absolute',
+                top: '100%',
+                right: 0,
+                marginTop: '0.5rem',
+                backgroundColor: 'white',
+                borderRadius: '8px',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                minWidth: '300px',
+                zIndex: 1001,
+                padding: '0.75rem'
+              }}>
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem',
+                    border: '2px solid #00d9ff',
+                    borderRadius: '6px',
+                    fontSize: '1rem',
+                    outline: 'none'
+                  }}
+                  autoFocus
+                />
+              </div>
+            )}
+          </div>
+          
+          {/* Cart Icon */}
+          <Link to="/cart" style={{ 
+            color: 'white', 
+            textDecoration: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '0.25rem',
+            fontSize: '1.3rem',
+            padding: '0.5rem',
+            position: 'relative',
+            transition: 'transform 0.2s ease'
+          }}
+          onMouseEnter={(e) => e.target.style.transform = 'scale(1.1)'}
+          onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
+          >
+            🛒
+            {cartItemsCount > 0 && (
+              <span style={{
+                position: 'absolute',
+                top: '-5px',
+                right: '-5px',
+                backgroundColor: '#dc3545',
+                color: 'white',
+                borderRadius: '50%',
+                padding: '0.15rem 0.4rem',
+                fontSize: '0.7rem',
+                fontWeight: 'bold',
+                minWidth: '18px',
+                textAlign: 'center'
+              }}>
+                {cartItemsCount}
+              </span>
+            )}
+          </Link>
+          
+          {/* Profile/Login Section */}
           {isAuthenticated() ? (
-            <>
-              <Link to="/profile" style={{ color: 'white', textDecoration: 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <Link to="/profile" style={{ 
+                color: 'white', 
+                textDecoration: 'none',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                fontSize: '1.1rem',
+                padding: '0.5rem',
+                borderRadius: '4px',
+                transition: 'background-color 0.3s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
+                <span style={{ fontSize: '1.3rem' }}>👤</span>
                 {user?.firstName || 'Profile'}
               </Link>
-              <Link to="/orders" style={{ color: 'white', textDecoration: 'none' }}>
+              <Link to="/orders" style={{ 
+                color: 'white', 
+                textDecoration: 'none', 
+                fontSize: '1.1rem',
+                padding: '0.5rem',
+                borderRadius: '4px',
+                transition: 'background-color 0.3s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
                 Orders
               </Link>
               <button 
                 onClick={logout}
                 style={{
                   background: 'none',
-                  border: '1px solid white',
-                  color: 'white',
-                  padding: '0.25rem 0.5rem',
-                  cursor: 'pointer'
+                  border: '2px solid #dc3545',
+                  color: '#dc3545',
+                  padding: '0.4rem 1rem',
+                  borderRadius: '4px',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  fontWeight: '600',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#dc3545';
+                  e.target.style.color = 'white';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = 'transparent';
+                  e.target.style.color = '#dc3545';
                 }}
               >
                 Logout
               </button>
-            </>
+            </div>
           ) : (
-            <>
-              <Link to="/login" style={{ color: 'white', textDecoration: 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              <Link to="/login" style={{ 
+                backgroundColor: '#007bff',
+                color: 'white',
+                padding: '0.5rem 1.5rem',
+                borderRadius: '4px',
+                textDecoration: 'none',
+                fontSize: '1.1rem',
+                fontWeight: '600',
+                transition: 'all 0.3s ease'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.backgroundColor = '#0056b3';
+                e.target.style.transform = 'translateY(-2px)';
+                e.target.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.backgroundColor = '#007bff';
+                e.target.style.transform = 'translateY(0)';
+                e.target.style.boxShadow = 'none';
+              }}
+              >
                 Login
               </Link>
-              <Link to="/register" style={{ color: 'white', textDecoration: 'none' }}>
+              <Link to="/register" style={{ 
+                color: 'white', 
+                textDecoration: 'none', 
+                fontSize: '1.1rem',
+                padding: '0.5rem',
+                borderRadius: '4px',
+                transition: 'background-color 0.3s ease'
+              }}
+              onMouseEnter={(e) => e.target.style.backgroundColor = 'rgba(255,255,255,0.1)'}
+              onMouseLeave={(e) => e.target.style.backgroundColor = 'transparent'}
+              >
                 Register
               </Link>
-            </>
+            </div>
+          )}
+          
+          {/* Admin Dropdown */}
+          {isAdmin() && (
+            <div style={{ position: 'relative' }}>
+              <button
+                onClick={() => setShowAdminMenu(!showAdminMenu)}
+                style={{
+                  backgroundColor: '#28a745',
+                  color: 'white',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '4px',
+                  border: 'none',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontWeight: '600',
+                  fontSize: '1rem',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.backgroundColor = '#218838';
+                  e.target.style.transform = 'translateY(-2px)';
+                  e.target.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.backgroundColor = '#28a745';
+                  e.target.style.transform = 'translateY(0)';
+                  e.target.style.boxShadow = 'none';
+                }}
+              >
+                <span>👑</span>
+                Admin {showAdminMenu ? '▲' : '▼'}
+              </button>
+              
+              {showAdminMenu && (
+                <div style={{
+                  position: 'absolute',
+                  top: '100%',
+                  right: 0,
+                  marginTop: '0.5rem',
+                  backgroundColor: 'white',
+                  borderRadius: '8px',
+                  boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                  minWidth: '220px',
+                  zIndex: 1001
+                }}>
+                  {[
+                    { to: '/admin/dashboard', icon: '📊', label: 'Dashboard' },
+                    { to: '/admin/products', icon: '📦', label: 'Products' },
+                    { to: '/admin/brands', icon: '🏷️', label: 'Brands' },
+                    { to: '/admin/categories', icon: '📂', label: 'Categories' },
+                    { to: '/admin/orders', icon: '🛒', label: 'Orders' },
+                    { to: '/admin/customers', icon: '👥', label: 'Customers' }
+                  ].map((item, index) => (
+                    <Link
+                      key={index}
+                      to={item.to}
+                      style={{
+                        display: 'block',
+                        padding: '0.75rem 1rem',
+                        color: '#333',
+                        textDecoration: 'none',
+                        borderBottom: index < 5 ? '1px solid #eee' : 'none',
+                        fontSize: '0.95rem',
+                        transition: 'background-color 0.3s ease'
+                      }}
+                      onMouseEnter={(e) => e.target.style.backgroundColor = '#f8f9fa'}
+                      onMouseLeave={(e) => e.target.style.backgroundColor = 'white'}
+                      onClick={() => setShowAdminMenu(false)}
+                    >
+                      <span style={{ marginRight: '0.5rem' }}>{item.icon}</span>
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>

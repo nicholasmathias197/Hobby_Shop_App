@@ -74,7 +74,7 @@ const BrandPage = () => {
     <div>
       {/* Brand Header */}
       <div style={{
-        backgroundColor: '#f8f9fa',
+        backgroundColor: 'rgba(0,217,255,0.1)',
         padding: '2rem',
         borderRadius: '4px',
         marginBottom: '2rem',

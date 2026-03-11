@@ -37,7 +37,7 @@ const OrderDetailPage = () => {
       }}>
         <div style={{
           padding: '1rem',
-          backgroundColor: '#f8f9fa',
+          backgroundColor: '#000408',
           borderRadius: '4px'
         }}>
           <h3>Order Information</h3>
@@ -51,7 +51,7 @@ const OrderDetailPage = () => {
 
         <div style={{
           padding: '1rem',
-          backgroundColor: '#f8f9fa',
+          backgroundColor: '#010408',
           borderRadius: '4px'
         }}>
           <h3>Shipping Address</h3>

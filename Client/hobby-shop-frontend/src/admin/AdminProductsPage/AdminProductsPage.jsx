@@ -1,45 +1,40 @@
+// src/admin/AdminProductsPage/AdminProductsPage.jsx
 import React, { useState, useEffect } from 'react';
-import { getAllProducts, createProduct, updateProduct, deleteProduct } from '../../services/productService';
+import { getAllProducts, deleteProduct } from '../../services/productService';
 import ProductTable from './ProductTable';
-import ProductForm from './ProductForm';
 import { Button } from '../../components/ui';
 
 const AdminProductsPage = () => {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     loadProducts();
-  }, []);
+  }, [currentPage]);
 
   const loadProducts = async () => {
     try {
-      const data = await getAllProducts();
-      setProducts(data);
+      const response = await getAllProducts(currentPage, 10);
+      console.log('Products response:', response);
+      
+      // Ensure we're setting an array
+      setProducts(response?.content || []);
+      setTotalPages(response?.totalPages || 0);
     } catch (error) {
       console.error('Error loading products:', error);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreate = () => {
-    setEditingProduct(null);
-    setShowForm(true);
-  };
-
-  const handleEdit = (product) => {
-    setEditingProduct(product);
-    setShowForm(true);
-  };
-
-  const handleDelete = async (productId) => {
+  const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this product?')) {
       try {
-        await deleteProduct(productId);
-        await loadProducts();
+        await deleteProduct(id);
+        loadProducts(); // Refresh the list
       } catch (error) {
         console.error('Error deleting product:', error);
         alert('Failed to delete product');
@@ -47,59 +42,63 @@ const AdminProductsPage = () => {
     }
   };
 
-  const handleSubmit = async (formData) => {
-    try {
-      if (editingProduct) {
-        await updateProduct(editingProduct.id, formData);
-      } else {
-        await createProduct(formData);
-      }
-      setShowForm(false);
-      setEditingProduct(null);
-      await loadProducts();
-    } catch (error) {
-      console.error('Error saving product:', error);
-      alert('Failed to save product');
-    }
+  const handleEdit = (product) => {
+    // Navigate to edit page
+    window.location.href = `/admin/products/edit/${product.id}`;
   };
 
   if (loading) return <div>Loading products...</div>;
 
   return (
     <div>
-      <div style={{
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: '2rem'
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'space-between', 
+        alignItems: 'center', 
+        marginBottom: '2rem' 
       }}>
-        <h1>Manage Products</h1>
-        <Button variant="success" onClick={handleCreate}>
-          Create New Product
+        <h1>Product Management</h1>
+        <Button 
+          variant="success" 
+          onClick={() => window.location.href = '/admin/products/new'}
+        >
+          Add New Product
         </Button>
       </div>
 
-      {showForm ? (
+      <ProductTable 
+        products={products} 
+        onEdit={handleEdit} 
+        onDelete={handleDelete} 
+      />
+
+      {/* Pagination */}
+      {totalPages > 1 && (
         <div style={{
-          marginBottom: '2rem',
-          border: '1px solid #ddd',
-          borderRadius: '4px'
+          marginTop: '2rem',
+          display: 'flex',
+          gap: '0.5rem',
+          justifyContent: 'center',
+          alignItems: 'center'
         }}>
-          <ProductForm
-            product={editingProduct}
-            onSubmit={handleSubmit}
-            onCancel={() => {
-              setShowForm(false);
-              setEditingProduct(null);
-            }}
-          />
+          <Button
+            variant="secondary"
+            onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+            disabled={currentPage === 0}
+          >
+            Previous
+          </Button>
+          <span>
+            Page {currentPage + 1} of {totalPages}
+          </span>
+          <Button
+            variant="secondary"
+            onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
+            disabled={currentPage === totalPages - 1}
+          >
+            Next
+          </Button>
         </div>
-      ) : (
-        <ProductTable
-          products={products}
-          onEdit={handleEdit}
-          onDelete={handleDelete}
-        />
       )}
     </div>
   );

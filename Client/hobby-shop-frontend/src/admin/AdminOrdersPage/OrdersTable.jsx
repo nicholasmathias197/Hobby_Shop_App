@@ -1,6 +1,23 @@
 import React from 'react';
+import { Button } from '../../components/ui';
 
 const OrdersTable = ({ orders, onStatusChange, onViewDetails }) => {
+  // Ensure orders is an array
+  const ordersArray = Array.isArray(orders) ? orders : [];
+  
+  if (ordersArray.length === 0) {
+    return (
+      <div style={{ 
+        textAlign: 'center', 
+        padding: '2rem',
+        backgroundColor: '#f8f9fa',
+        borderRadius: '4px'
+      }}>
+        <p>No orders found.</p>
+      </div>
+    );
+  }
+
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
       <thead>
@@ -15,7 +32,7 @@ const OrdersTable = ({ orders, onStatusChange, onViewDetails }) => {
         </tr>
       </thead>
       <tbody>
-        {orders.map(order => (
+        {ordersArray.map(order => (
           <tr key={order.id} style={{ borderBottom: '1px solid #ddd' }}>
             <td style={{ padding: '1rem' }}>{order.orderNumber}</td>
             <td style={{ padding: '1rem' }}>
@@ -24,7 +41,7 @@ const OrdersTable = ({ orders, onStatusChange, onViewDetails }) => {
             <td style={{ padding: '1rem' }}>
               {new Date(order.orderDate).toLocaleDateString()}
             </td>
-            <td style={{ padding: '1rem' }}>${order.totalAmount}</td>
+            <td style={{ padding: '1rem' }}>${order.totalAmount?.toFixed(2)}</td>
             <td style={{ padding: '1rem' }}>
               <select
                 value={order.status}
@@ -57,19 +74,12 @@ const OrdersTable = ({ orders, onStatusChange, onViewDetails }) => {
               </span>
             </td>
             <td style={{ padding: '1rem' }}>
-              <button
+              <Button
+                variant="primary"
                 onClick={() => onViewDetails(order)}
-                style={{
-                  padding: '0.25rem 0.5rem',
-                  backgroundColor: '#007bff',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
               >
                 View Details
-              </button>
+              </Button>
             </td>
           </tr>
         ))}

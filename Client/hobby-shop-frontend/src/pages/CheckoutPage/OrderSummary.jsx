@@ -7,7 +7,7 @@ const OrderSummary = () => {
   return (
     <div style={{
       padding: '1rem',
-      backgroundColor: '#f8f9fa',
+      backgroundColor: 'rgba(0,217,255,0.1)',
       borderRadius: '4px'
     }}>
       <h3>Order Summary</h3>

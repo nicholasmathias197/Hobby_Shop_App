@@ -1,11 +1,29 @@
 import React from 'react';
+import { Button } from '../../components/ui';
 
 const ProductTable = ({ products, onEdit, onDelete }) => {
+  // Ensure products is an array
+  const productsArray = Array.isArray(products) ? products : [];
+  
+  if (productsArray.length === 0) {
+    return (
+      <div style={{ 
+        textAlign: 'center', 
+        padding: '2rem',
+        backgroundColor: '#f8f9fa',
+        borderRadius: '4px'
+      }}>
+        <p>No products found.</p>
+      </div>
+    );
+  }
+
   return (
     <table style={{ width: '100%', borderCollapse: 'collapse' }}>
       <thead>
         <tr style={{ backgroundColor: '#f8f9fa' }}>
           <th style={{ padding: '1rem', textAlign: 'left' }}>ID</th>
+          <th style={{ padding: '1rem', textAlign: 'left' }}>Image</th>
           <th style={{ padding: '1rem', textAlign: 'left' }}>Name</th>
           <th style={{ padding: '1rem', textAlign: 'left' }}>Brand</th>
           <th style={{ padding: '1rem', textAlign: 'left' }}>Category</th>
@@ -16,13 +34,29 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
         </tr>
       </thead>
       <tbody>
-        {products.map(product => (
+        {productsArray.map(product => (
           <tr key={product.id} style={{ borderBottom: '1px solid #ddd' }}>
             <td style={{ padding: '1rem' }}>{product.id}</td>
-            <td style={{ padding: '1rem' }}>{product.name}</td>
-            <td style={{ padding: '1rem' }}>{product.brandName}</td>
-            <td style={{ padding: '1rem' }}>{product.categoryName}</td>
-            <td style={{ padding: '1rem' }}>${product.price}</td>
+            <td style={{ padding: '1rem' }}>
+              {product.imageUrl ? (
+                <img 
+                  src={product.imageUrl} 
+                  alt={product.name}
+                  style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
+                />
+              ) : (
+                <div style={{
+                  width: '50px',
+                  height: '50px',
+                  backgroundColor: '#e9ecef',
+                  borderRadius: '4px'
+                }} />
+              )}
+            </td>
+            <td style={{ padding: '1rem', fontWeight: 'bold' }}>{product.name}</td>
+            <td style={{ padding: '1rem' }}>{product.brandName || '-'}</td>
+            <td style={{ padding: '1rem' }}>{product.categoryName || '-'}</td>
+            <td style={{ padding: '1rem' }}>${product.price?.toFixed(2)}</td>
             <td style={{ padding: '1rem' }}>{product.stockQuantity}</td>
             <td style={{ padding: '1rem' }}>
               <span style={{
@@ -36,33 +70,19 @@ const ProductTable = ({ products, onEdit, onDelete }) => {
               </span>
             </td>
             <td style={{ padding: '1rem' }}>
-              <button
+              <Button
+                variant="primary"
                 onClick={() => onEdit(product)}
-                style={{
-                  padding: '0.25rem 0.5rem',
-                  backgroundColor: '#ffc107',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer',
-                  marginRight: '0.5rem'
-                }}
+                style={{ marginRight: '0.5rem' }}
               >
                 Edit
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="danger"
                 onClick={() => onDelete(product.id)}
-                style={{
-                  padding: '0.25rem 0.5rem',
-                  backgroundColor: '#dc3545',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '4px',
-                  cursor: 'pointer'
-                }}
               >
                 Delete
-              </button>
+              </Button>
             </td>
           </tr>
         ))}

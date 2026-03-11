@@ -1,3 +1,4 @@
+// src/pages/LoginPage.jsx
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
@@ -18,7 +19,6 @@ const LoginPage = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
-    setError('');
   };
 
   const handleSubmit = async (e) => {
@@ -27,10 +27,37 @@ const LoginPage = () => {
     setError('');
 
     try {
-      await login(formData.email, formData.password);
+      console.log('1. Starting login process for:', formData.email);
+      console.log('2. Current localStorage before login:', {
+        token: localStorage.getItem('token'),
+        sessionId: localStorage.getItem('sessionId')
+      });
+      
+      const response = await login(formData.email, formData.password);
+      
+      console.log('3. Login response received:', response);
+      console.log('4. Token in response:', response.token);
+      console.log('5. User data in response:', {
+        id: response.id,
+        email: response.email,
+        firstName: response.firstName,
+        lastName: response.lastName,
+        roles: response.roles
+      });
+      
+      console.log('6. localStorage after login:', {
+        token: localStorage.getItem('token'),
+        sessionId: localStorage.getItem('sessionId')
+      });
+      
       navigate('/');
     } catch (error) {
-      setError(error.response?.data?.message || 'Invalid email or password');
+      console.error('❌ Login error:', error);
+      console.error('Error response data:', error.response?.data);
+      console.error('Error status:', error.response?.status);
+      console.error('Error headers:', error.response?.headers);
+      
+      setError(error.response?.data?.message || error.message || 'Invalid email or password');
     } finally {
       setLoading(false);
     }

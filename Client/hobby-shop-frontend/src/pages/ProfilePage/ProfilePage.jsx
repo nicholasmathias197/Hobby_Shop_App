@@ -17,13 +17,15 @@ const ProfilePage = () => {
       
       <div style={{
         padding: '1rem',
-        backgroundColor: '#f8f9fa',
+        backgroundColor: 'rgba(0,217,255,0.1)',
         borderRadius: '4px',
         marginBottom: '2rem'
       }}>
         <h3>Account Information</h3>
         <p><strong>Email:</strong> {user?.email}</p>
-        <p><strong>Role:</strong> {user?.role}</p>
+        <p><strong>Name:</strong> {user?.firstName} {user?.lastName}</p>
+        <p><strong>Member Since:</strong> {user?.memberSince && new Date(user.memberSince).toLocaleDateString()}</p>
+        
       </div>
 
       <ProfileForm user={user} onUpdate={handleUpdate} />

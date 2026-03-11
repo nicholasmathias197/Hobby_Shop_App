@@ -46,7 +46,7 @@ const ProductDetailPage = () => {
           <div style={{
             width: '100%',
             height: '400px',
-            backgroundColor: '#f8f9fa',
+            backgroundColor: '#030a11',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',

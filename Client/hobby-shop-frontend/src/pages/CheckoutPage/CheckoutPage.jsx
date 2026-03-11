@@ -83,7 +83,7 @@ const CheckoutPage = () => {
       {isGuest && (
         <div style={{
           padding: '1rem',
-          backgroundColor: '#fff3cd',
+          backgroundColor: 'rgba(0,217,255,0.1)',
           color: '#856404',
           borderRadius: '4px',
           marginBottom: '1rem'

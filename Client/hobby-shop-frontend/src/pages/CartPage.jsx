@@ -49,7 +49,7 @@ const CartPage = () => {
       <div style={{
         marginTop: '2rem',
         padding: '1rem',
-        backgroundColor: '#f8f9fa',
+        backgroundColor: '#01070e',
         borderRadius: '4px',
         textAlign: 'right'
       }}>

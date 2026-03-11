@@ -1,23 +1,32 @@
+// src/admin/AdminOrdersPage/AdminOrdersPage.jsx
 import React, { useState, useEffect } from 'react';
 import { getAllOrders, updateOrderStatus, updatePaymentStatus, updateTrackingNumber } from '../../services/orderService';
 import OrdersTable from './OrdersTable';
+import { Button } from '../../components/ui';
 
 const AdminOrdersPage = () => {
   const [orders, setOrders] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [totalPages, setTotalPages] = useState(0);
 
   useEffect(() => {
     loadOrders();
-  }, []);
+  }, [currentPage]);
 
   const loadOrders = async () => {
     try {
-      const data = await getAllOrders();
-      setOrders(data);
+      const response = await getAllOrders(currentPage, 10);
+      console.log('Orders response:', response);
+      
+      // Ensure we're setting an array
+      setOrders(response?.content || []);
+      setTotalPages(response?.totalPages || 0);
     } catch (error) {
       console.error('Error loading orders:', error);
+      setOrders([]);
     } finally {
       setLoading(false);
     }
@@ -159,19 +168,12 @@ const AdminOrdersPage = () => {
           </table>
 
           <div style={{ marginTop: '1rem' }}>
-            <button
+            <Button
+              variant="secondary"
               onClick={() => setShowDetails(false)}
-              style={{
-                padding: '0.5rem 1rem',
-                backgroundColor: '#6c757d',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer'
-              }}
             >
               Close Details
-            </button>
+            </Button>
           </div>
         </div>
       )}
@@ -181,6 +183,35 @@ const AdminOrdersPage = () => {
         onStatusChange={handleStatusChange}
         onViewDetails={handleViewDetails}
       />
+
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <div style={{
+          marginTop: '2rem',
+          display: 'flex',
+          gap: '0.5rem',
+          justifyContent: 'center',
+          alignItems: 'center'
+        }}>
+          <Button
+            variant="secondary"
+            onClick={() => setCurrentPage(p => Math.max(0, p - 1))}
+            disabled={currentPage === 0}
+          >
+            Previous
+          </Button>
+          <span>
+            Page {currentPage + 1} of {totalPages}
+          </span>
+          <Button
+            variant="secondary"
+            onClick={() => setCurrentPage(p => Math.min(totalPages - 1, p + 1))}
+            disabled={currentPage === totalPages - 1}
+          >
+            Next
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

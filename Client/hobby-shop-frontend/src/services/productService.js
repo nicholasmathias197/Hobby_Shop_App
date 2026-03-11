@@ -20,10 +20,18 @@ export const getAllProducts = async (page = 0, size = 20) => {
  * Get products array only (convenience for home page)
  */
 export const getAllProductsArray = async (page = 0, size = 20) => {
-  const response = await api.get('/products', {
-    params: { page, size }
-  });
-  return extractContentArray(response.data);
+  try {
+    const response = await api.get('/products', {
+      params: { page, size }
+    });
+    console.log('getAllProductsArray raw data:', response.data);
+    const result = extractContentArray(response.data);
+    console.log('getAllProductsArray extracted:', result);
+    return result;
+  } catch (error) {
+    console.error('Error in getAllProductsArray:', error);
+    return []; // Return empty array on error
+  }
 };
 
 /**
@@ -63,10 +71,18 @@ export const getFeaturedProducts = async (page = 0, size = 10) => {
  * Get featured products array only
  */
 export const getFeaturedProductsArray = async (page = 0, size = 10) => {
-  const response = await api.get('/products/featured', {
-    params: { page, size }
-  });
-  return extractContentArray(response.data);
+  try {
+    const response = await api.get('/products/featured', {
+      params: { page, size }
+    });
+    console.log('getFeaturedProductsArray raw:', response.data);
+    const result = extractContentArray(response.data);
+    console.log('getFeaturedProductsArray extracted:', result);
+    return result;
+  } catch (error) {
+    console.error('Error in getFeaturedProductsArray:', error);
+    return [];
+  }
 };
 
 /**

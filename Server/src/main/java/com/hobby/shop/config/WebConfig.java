@@ -9,15 +9,10 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        registry.addMapping("/api/**")
-                .allowedOrigins(
-                        "http://localhost:3000",
-                        "http://localhost:4200",
-                        "http://localhost:5173",  // Vite default port
-                        "http://localhost:5174",  // Alternative Vite port
-                        "http://localhost:5175"   // Another alternative
-                )
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+        // This is now handled by SecurityConfig, but we'll keep it as a backup
+        registry.addMapping("/**")
+                .allowedOrigins("http://localhost:5173", "http://localhost:5174", "http://localhost:3000", "http://localhost:4200")
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD")
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .maxAge(3600);

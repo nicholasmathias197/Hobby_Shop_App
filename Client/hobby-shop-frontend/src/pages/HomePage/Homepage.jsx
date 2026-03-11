@@ -171,32 +171,7 @@ const HomePage = () => {
         </section>
       )}
       
-      {/* Newsletter Signup */}
-      <section style={{
-        backgroundColor: '#f8f9fa',
-        padding: '3rem',
-        borderRadius: '4px',
-        textAlign: 'center',
-        marginBottom: '2rem'
-      }}>
-        <h2 style={{ marginBottom: '1rem' }}>Stay Updated</h2>
-        <p style={{ marginBottom: '1.5rem' }}>
-          Subscribe to our newsletter for new products and exclusive offers!
-        </p>
-        <form style={{ maxWidth: '500px', margin: '0 auto', display: 'flex', gap: '0.5rem' }}>
-          <input
-            type="email"
-            placeholder="Enter your email"
-            style={{
-              flex: 1,
-              padding: '0.75rem',
-              border: '1px solid #ddd',
-              borderRadius: '4px'
-            }}
-          />
-          <Button type="submit" variant="primary">Subscribe</Button>
-        </form>
-      </section>
+  
     </div>
   );
 };
