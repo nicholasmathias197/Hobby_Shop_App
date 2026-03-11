@@ -250,39 +250,49 @@ VALUES ('Bandai', 'Manufacturer of Gundam model kits', 'https://www.bandai.com')
        ('Testors', 'Model paints and supplies', 'https://www.testors.com');
 
 -- Insert sample products (Gundam Models)
-INSERT INTO products (sku, name, description, price, stock_quantity, category_id, brand_id, scale, is_featured)
+INSERT INTO products (sku, name, description, price, stock_quantity, category_id, brand_id, scale, is_featured, image_url)
 VALUES ('BAN-RG-001', 'RG 1/144 RX-78-2 Gundam', 'Real Grade version of the iconic RX-78-2 Gundam', 29.99, 15, 1, 1,
-        '1/144', TRUE),
+        '1/144', TRUE,'https://www.dalong.net/reviews/hg/h191/p/h191.jpg'),
        ('BAN-MG-001', 'MG 1/100 Freedom Gundam 2.0', 'Master Grade Freedom Gundam Ver. 2.0', 54.99, 8, 1, 1, '1/100',
-        TRUE),
+        TRUE, 'https://www.dalong.net/reviews/mg/m192/p/m192.jpg'),
        ('BAN-PG-001', 'PG 1/60 Unleashed RX-78-2', 'Perfect Grade Unleashed RX-78-2 Gundam', 299.99, 3, 1, 1, '1/60',
-        TRUE),
-       ('BAN-HG-001', 'HG 1/144 Wing Gundam', 'High Grade Wing Gundam TV version', 18.99, 25, 1, 1, '1/144', FALSE);
+        TRUE,'https://m.media-amazon.com/images/I/71fXBvrpKQL.jpg'),
+       ('BAN-HG-001', 'HG 1/144 Wing Gundam', 'High Grade Wing Gundam TV version', 18.99, 25, 1, 1, '1/144', FALSE,
+        'https://www.dalong.net/reviews/hg/h162/p/h162.jpg');
 
 -- Insert sample products (Tamiya Paints)
 INSERT INTO products (sku, name, description, price, stock_quantity, category_id, brand_id, color_code, paint_type,
-                      is_featured)
+                      is_featured,image_url)
 VALUES ('TAM-XF-1', 'Tamiya XF-1 Flat Black', 'Acrylic paint - Flat Black 10ml', 3.99, 50, 2, 2, 'XF-1', 'Acrylic',
-        TRUE),
+        TRUE,'https://m.media-amazon.com/images/I/61YMcBaWyTL.jpg'),
        ('TAM-XF-2', 'Tamiya XF-2 Flat White', 'Acrylic paint - Flat White 10ml', 3.99, 45, 2, 2, 'XF-2', 'Acrylic',
-        FALSE),
-       ('TAM-X-7', 'Tamiya X-7 Red', 'Gloss acrylic paint - Red 10ml', 3.99, 30, 2, 2, 'X-7', 'Acrylic', FALSE),
-       ('TAM-TS-21', 'Tamiya TS-21 Gold', 'Spray paint - Gold', 8.99, 20, 2, 2, 'TS-21', 'Lacquer', TRUE);
+        FALSE,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSoYMzq6A42aqwyj-MuOg1sZj0qblez0-4BYA&s'),
+       ('TAM-X-7', 'Tamiya X-7 Red', 'Gloss acrylic paint - Red 10ml', 3.99, 30, 2, 2, 'X-7', 'Acrylic', FALSE,
+        'https://m.media-amazon.com/images/I/41v8RIpBmvL._AC_UF894,1000_QL80_.jpg'),
+       ('TAM-TS-21', 'Tamiya TS-21 Gold', 'Spray paint - Gold', 8.99, 20, 2, 2, 'TS-21', 'Lacquer', TRUE,
+        'https://m.media-amazon.com/images/I/71rItSTY3IL.jpg');
 
 -- Insert sample products (Mr. Color Paints)
-INSERT INTO products (sku, name, description, price, stock_quantity, category_id, brand_id, color_code, paint_type)
-VALUES ('MRC-C-001', 'Mr. Color C1 White', 'Lacquer paint - White', 4.50, 40, 2, 3, 'C1', 'Lacquer'),
-       ('MRC-C-002', 'Mr. Color C2 Black', 'Lacquer paint - Black', 4.50, 40, 2, 3, 'C2', 'Lacquer'),
-       ('MRC-C-058', 'Mr. Color C58 Orange Yellow', 'Lacquer paint - Orange Yellow', 4.50, 25, 2, 3, 'C58', 'Lacquer'),
-       ('MRC-C-068', 'Mr. Color C68 Red Madder', 'Lacquer paint - Red Madder', 4.50, 25, 2, 3, 'C68', 'Lacquer');
+INSERT INTO products (sku, name, description, price, stock_quantity, category_id, brand_id, color_code, paint_type,is_featured,image_url)
+VALUES ('MRC-C-001', 'Mr. Color C1 White', 'Lacquer paint - White', 4.50, 40, 2, 3, 'C1', 'Lacquer',FALSE,
+        'https://images.amain.com/cdn-cgi/image/f=auto,width=950/images/large/guz/guzc001.jpg'),
+       ('MRC-C-002', 'Mr. Color C2 Black', 'Lacquer paint - Black', 4.50, 40, 2, 3, 'C2', 'Lacquer',FALSE,
+        'https://m.media-amazon.com/images/I/61G2xbuPPRL._AC_UF894,1000_QL80_.jpg'),
+       ('MRC-C-058', 'Mr. Color C58 Orange Yellow', 'Lacquer paint - Orange Yellow', 4.50, 25, 2, 3, 'C58', 'Lacquer',
+        FALSE,'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTnQrANN-jtt94ZBA51BpdGSo1UjIIMzSkRAA&s'),
+       ('MRC-C-068', 'Mr. Color C68 Red Madder', 'Lacquer paint - Red Madder', 4.50, 25, 2, 3, 'C68', 'Lacquer',FALSE,
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRaK_-94rX9TuAapRf3o44mnP13avX18B_zDQ&s');
 
 -- Insert sample products (Hobby Tools)
-INSERT INTO products (sku, name, description, price, stock_quantity, category_id, brand_id, tool_type, is_featured)
+INSERT INTO products (sku, name, description, price, stock_quantity, category_id, brand_id, tool_type, is_featured,image_url)
 VALUES ('GDH-PN-120', 'GodHand Ultimate Nipper', 'Premium side cutters for plastic models', 69.99, 10, 3, 4, 'Cutter',
-        TRUE),
-       ('TAM-TR-001', 'Tamiya Craft Glue Set', 'Basic modeling glue set', 12.99, 30, 3, 2, 'Adhesive', FALSE),
-       ('TAM-FL-001', 'Tamiya File Set', 'Set of 3 precision files', 9.99, 25, 3, 2, 'File', FALSE),
-       ('MRC-CL-001', 'Mr. Hobby Procon Airbrush', 'Double action airbrush', 89.99, 5, 5, 3, 'Airbrush', TRUE);
+        TRUE,'https://m.media-amazon.com/images/I/6137OEOw1yL._AC_UF894,1000_QL80_.jpg'),
+       ('TAM-TR-001', 'Tamiya Craft Glue Set', 'Basic modeling glue set', 12.99, 30, 3, 2, 'Adhesive', FALSE,
+        'https://m.media-amazon.com/images/I/71lSWstECJL._AC_UF894,1000_QL80_.jpg'),
+       ('TAM-FL-001', 'Tamiya File Set', 'Set of 3 precision files', 9.99, 25, 3, 2, 'File', FALSE,
+        'https://m.media-amazon.com/images/I/31O6uUU+9yL._AC_UF894,1000_QL80_.jpg'),
+       ('MRC-CL-001', 'Mr. Hobby Procon Airbrush', 'Double action airbrush', 89.99, 5, 5, 3, 'Airbrush', TRUE,
+        'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQg3bF0HMAYgZ6IUeHErks3X7uBMJOV_D57Q&s');
 
 -- Insert sample product reviews
 INSERT INTO product_reviews (product_id, customer_id, rating, comment, is_verified_purchase)

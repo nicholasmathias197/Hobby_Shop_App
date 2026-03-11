@@ -1,77 +1,73 @@
+// src/pages/HomePage/CategoryShowcase.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+
+// Import all category images directly
+import gundamModelsImg from '../../assets/images/gunpla.png';
+import toolsImg from '../../assets/images/tools.jpg';
+import paintsImg from '../../assets/images/paints.jpg';
+import accessoriesImg from '../../assets/images/accessories.jpg';
+import airbrushesImg from '../../assets/images/airbrushes.jpg';
+
+// Create a mapping of category names to imported images
+const categoryImages = {
+  'Gundam Models': gundamModelsImg,
+  'Tools': toolsImg,
+  'Paints': paintsImg,
+  'Accessories': accessoriesImg,
+  'Airbrush Supplies': airbrushesImg,
+  // Add more mappings as needed
+};
+
+// Default fallback image
+import defaultCategoryImg from '../../assets/images/logo.png';
 
 const CategoryShowcase = ({ categories }) => {
   if (!categories || categories.length === 0) {
     return null;
   }
 
+  const getCategoryImage = (category) => {
+    // First check if the category has an imageUrl from the database
+    if (category.imageUrl) {
+      return category.imageUrl;
+    }
+    
+    // Otherwise, use the local image based on category name
+    return categoryImages[category.name] || defaultCategoryImg;
+  };
+
   return (
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-      gap: '1rem'
-    }}>
-      {categories.map(category => (
-        <Link 
-          key={category.id} 
-          to={`/category/${category.id}`}
-          style={{ textDecoration: 'none', color: 'inherit' }}
-        >
-          <div style={{
-            border: '1px solid #ddd',
-            borderRadius: '4px',
-            padding: '1rem',
-            textAlign: 'center',
-            transition: 'transform 0.2s, box-shadow 0.2s',
-            cursor: 'pointer',
-            height: '100%',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-4px)';
-            e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.1)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = 'none';
-          }}
+    <div className="category-showcase">
+      <div className="category-grid">
+        {categories.map(category => (
+          <Link 
+            key={category.id} 
+            to={`/category/${category.id}`}
+            className="category-card-link"
           >
-            {category.imageUrl ? (
-              <img 
-                src={category.imageUrl} 
-                alt={category.name}
-                style={{ 
-                  width: '80px', 
-                  height: '80px', 
-                  objectFit: 'cover',
-                  borderRadius: '50%',
-                  marginBottom: '0.5rem'
-                }}
-              />
-            ) : (
-              <div style={{
-                width: '80px',
-                height: '80px',
-                backgroundColor: '#e9ecef',
-                borderRadius: '50%',
-                marginBottom: '0.5rem',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '2rem',
-                color: '#adb5bd'
-              }}>
-                {category.name.charAt(0)}
+            <div className="category-card">
+              <div className="category-image-container">
+                <img 
+                  src={getCategoryImage(category)} 
+                  alt={category.name}
+                  className="category-image"
+                  onError={(e) => {
+                    e.target.onerror = null;
+                    e.target.src = defaultCategoryImg;
+                  }}
+                />
               </div>
-            )}
-            <h3 style={{ fontSize: '1rem', margin: 0 }}>{category.name}</h3>
-          </div>
-        </Link>
-      ))}
+              <div className="category-info">
+                <h3 className="category-name">{category.name}</h3>
+                {category.productCount > 0 && (
+                  <p className="category-count">{category.productCount} products</p>
+                )}
+              </div>
+            </div>
+          </Link>
+        ))}
+      </div>
     </div>
   );
 };
