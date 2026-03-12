@@ -69,6 +69,7 @@ const NotFoundPage = () => (
 );
 
 const AppRoutes = () => {
+  console.log('Current pathname:', window.location.pathname);
   return (
     <Routes>
      {/* ============= PUBLIC ROUTES (No Authentication Required) ============= */}

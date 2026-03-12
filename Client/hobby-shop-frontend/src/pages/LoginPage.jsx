@@ -1,12 +1,31 @@
 // src/pages/LoginPage.jsx
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import { useCart } from '../hooks/useCart';
 import { Input, Button } from '../components/ui';
 
 const LoginPage = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { login } = useAuth();
+  const { refreshCart } = useCart();
+  
+  // Get redirect from query params or state
+  const searchParams = new URLSearchParams(location.search);
+  let redirect = searchParams.get('redirect') || '/';
+  
+  // Normalize the redirect path
+  if (redirect === 'checkout') {
+    redirect = '/checkout';
+  } else if (redirect === 'cart') {
+    redirect = '/cart';
+  } else if (redirect === 'profile') {
+    redirect = '/profile';
+  } else if (redirect === 'orders') {
+    redirect = '/orders';
+  }
+
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -19,6 +38,7 @@ const LoginPage = () => {
       ...formData,
       [e.target.name]: e.target.value
     });
+    setError('');
   };
 
   const handleSubmit = async (e) => {
@@ -27,83 +47,101 @@ const LoginPage = () => {
     setError('');
 
     try {
-      console.log('1. Starting login process for:', formData.email);
-      console.log('2. Current localStorage before login:', {
-        token: localStorage.getItem('token'),
-        sessionId: localStorage.getItem('sessionId')
-      });
+      console.log('🔐 Login attempt for:', formData.email);
+      console.log('Redirect target:', redirect);
       
-      const response = await login(formData.email, formData.password);
+      await login(formData.email, formData.password);
+      console.log('✅ Login successful');
       
-      console.log('3. Login response received:', response);
-      console.log('4. Token in response:', response.token);
-      console.log('5. User data in response:', {
-        id: response.id,
-        email: response.email,
-        firstName: response.firstName,
-        lastName: response.lastName,
-        roles: response.roles
-      });
+      // Wait for backend to process cart merge
+      await new Promise(resolve => setTimeout(resolve, 500));
       
-      console.log('6. localStorage after login:', {
-        token: localStorage.getItem('token'),
-        sessionId: localStorage.getItem('sessionId')
-      });
+      console.log('🔄 Refreshing cart...');
+      await refreshCart();
+      console.log('✅ Cart refreshed');
       
-      navigate('/');
+      // Navigate to the redirect path
+      navigate(redirect, { replace: true });
     } catch (error) {
       console.error('❌ Login error:', error);
-      console.error('Error response data:', error.response?.data);
-      console.error('Error status:', error.response?.status);
-      console.error('Error headers:', error.response?.headers);
-      
-      setError(error.response?.data?.message || error.message || 'Invalid email or password');
+      setError(error.response?.data?.message || 'Invalid email or password');
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ maxWidth: '400px', margin: '2rem auto' }}>
-      <h1 style={{ textAlign: 'center', marginBottom: '2rem' }}>Login</h1>
-      
-      {error && (
-        <div style={{
-          padding: '0.75rem',
-          backgroundColor: '#f8d7da',
-          color: '#721c24',
-          borderRadius: '4px',
-          marginBottom: '1rem'
-        }}>
-          {error}
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-header">
+          <h1>Welcome Back</h1>
+          <p className="login-subtitle">Sign in to continue your hobby journey</p>
         </div>
-      )}
 
-      <form onSubmit={handleSubmit}>
-        <Input
-          label="Email"
-          type="email"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <Input
-          label="Password"
-          type="password"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-        <Button type="submit" variant="primary" disabled={loading} fullWidth>
-          {loading ? 'Logging in...' : 'Login'}
-        </Button>
-      </form>
+        {redirect !== '/' && (
+          <div className="login-redirect-message">
+            <span className="info-icon">ℹ️</span>
+            <span>Please log in to {redirect === '/checkout' ? 'complete your purchase' : 'continue'}</span>
+          </div>
+        )}
+        
+        {error && (
+          <div className="alert alert-error">
+            {error}
+          </div>
+        )}
 
-      <p style={{ textAlign: 'center', marginTop: '1rem' }}>
-        Don't have an account? <Link to="/register">Register</Link>
-      </p>
+        <form onSubmit={handleSubmit} className="login-form">
+          <Input
+            label="Email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+            placeholder="Enter your email"
+          />
+          
+          <Input
+            label="Password"
+            type="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+            placeholder="Enter your password"
+          />
+
+          <div className="form-options">
+            <label className="remember-me">
+              <input type="checkbox" /> Remember me
+            </label>
+            <Link to="/forgot-password" className="forgot-password">
+              Forgot Password?
+            </Link>
+          </div>
+
+          <Button 
+            type="submit" 
+            variant="primary" 
+            disabled={loading} 
+            fullWidth
+            className="login-button"
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </Button>
+        </form>
+
+        <div className="login-footer">
+          <p>
+            Don't have an account? <Link to="/register" className="register-link">Create Account</Link>
+          </p>
+          <p className="guest-note">
+            <span className="guest-icon">🛒</span>
+            Shopping as a guest? Your cart will be saved when you log in.
+          </p>
+        </div>
+      </div>
     </div>
   );
 };

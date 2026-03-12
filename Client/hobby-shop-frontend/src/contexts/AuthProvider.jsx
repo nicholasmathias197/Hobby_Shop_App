@@ -9,18 +9,15 @@ export const AuthProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('token'));
 
   useEffect(() => {
-    console.log('AuthProvider mounted, token:', token);
     if (token) {
       loadUser();
     } else {
-      console.log('No token, setting loading to false');
       setLoading(false);
     }
   }, [token]);
 
   const loadUser = async () => {
     try {
-      console.log('Loading user profile with token:', token);
       const userData = await getProfile();
       console.log('User profile loaded:', userData);
       setUser(userData);
@@ -34,17 +31,15 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      console.log('🔐 AuthProvider.login called with:', email);
+      console.log('🔑 AuthProvider.login called with:', email);
       
       const response = await apiLogin(email, password);
-      console.log('✅ AuthProvider received response:', response);
+      console.log('✅ AuthProvider login response:', response);
       
       if (!response.token) {
-        console.error('❌ No token in response!');
-        throw new Error('No token received from server');
+        throw new Error('No token received');
       }
       
-      console.log('💾 Saving token to localStorage:', response.token.substring(0, 20) + '...');
       localStorage.setItem('token', response.token);
       setToken(response.token);
       
@@ -56,7 +51,6 @@ export const AuthProvider = ({ children }) => {
         roles: response.roles || [],
         role: response.roles?.[0]
       };
-      console.log('👤 Setting user data:', userData);
       setUser(userData);
       
       return response;
@@ -68,22 +62,42 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (userData) => {
     try {
+      console.log('🔑 AuthProvider.register called with email:', userData.email);
+      console.log('Session ID in localStorage:', localStorage.getItem('sessionId'));
+      
       const response = await apiRegister(userData);
-      console.log('Register response:', response);
+      console.log('✅ AuthProvider register response:', response);
+      
+      if (!response.token) {
+        throw new Error('No token received');
+      }
       
       localStorage.setItem('token', response.token);
       setToken(response.token);
-      setUser(response);
+      
+      const newUser = {
+        id: response.id,
+        email: response.email,
+        firstName: response.firstName,
+        lastName: response.lastName,
+        roles: response.roles || [],
+        role: response.roles?.[0]
+      };
+      setUser(newUser);
+      
+      // Don't clear sessionId yet - cart merge happens on backend
+      console.log('✅ User registered successfully, token saved');
+      
       return response;
     } catch (error) {
-      console.error('Register error:', error);
+      console.error('❌ AuthProvider.register error:', error);
       throw error;
     }
   };
 
   const logout = () => {
-    console.log('Logging out');
     localStorage.removeItem('token');
+    // Keep sessionId for guest cart
     setToken(null);
     setUser(null);
   };
@@ -93,35 +107,24 @@ export const AuthProvider = ({ children }) => {
   };
 
   const isAuthenticated = () => {
-    const auth = !!user && !!token;
-    console.log('isAuthenticated check:', { user: !!user, token: !!token, result: auth });
-    return auth;
+    return !!user && !!token;
   };
 
   const isAdmin = () => {
-    const hasAdminRole = user?.role === 'ADMIN' || user?.roles?.includes('ADMIN');
-    console.log('isAdmin check:', {
-      user,
-      role: user?.role,
-      roles: user?.roles,
-      hasAdminRole
-    });
-    return hasAdminRole;
-  };
-
-  const value = {
-    user,
-    loading,
-    login,
-    register,
-    logout,
-    updateUser,
-    isAuthenticated,
-    isAdmin
+    return user?.role === 'ADMIN' || user?.roles?.includes('ADMIN');
   };
 
   return (
-    <AuthContext.Provider value={value}>
+    <AuthContext.Provider value={{
+      user,
+      loading,
+      login,
+      register,
+      logout,
+      updateUser,
+      isAuthenticated,
+      isAdmin
+    }}>
       {children}
     </AuthContext.Provider>
   );

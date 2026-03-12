@@ -6,7 +6,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 public interface OrderService {
-
+    // Guest orders
+    OrderResponse createGuestOrder(String sessionId, OrderRequest request);
+    OrderResponse getGuestOrder(String orderNumber, String email);
     // Customer order operations (AUTHENTICATED USERS ONLY)
     OrderResponse createOrder(String email, OrderRequest request);
     OrderResponse getOrderByNumber(String email, String orderNumber); // Add email param for security
@@ -20,6 +22,5 @@ public interface OrderService {
     OrderResponse updatePaymentStatus(Long orderId, String paymentStatus);
     OrderResponse updateTrackingNumber(Long orderId, String trackingNumber);
 
-    // Guest operations (GUESTS CAN ONLY VIEW THEIR OWN ORDER WITH EMAIL VERIFICATION)
-    OrderResponse getGuestOrder(String orderNumber, String guestEmail);
+
 }

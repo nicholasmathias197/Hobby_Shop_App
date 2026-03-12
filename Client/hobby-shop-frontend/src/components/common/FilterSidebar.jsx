@@ -1,3 +1,4 @@
+// src/components/common/FilterSidebar.jsx
 import React, { useState, useEffect } from 'react';
 import { getCategoriesArray } from '../../services/categoryService';
 import { getBrandsArray } from '../../services/brandService';
@@ -49,47 +50,28 @@ const FilterSidebar = ({ onFilterChange }) => {
   };
 
   return (
-    <div style={{
-      padding: '1.5rem',
-      border: '1px solid #ddd',
-      borderRadius: '8px',
-      backgroundColor: '#f8f9fa'
-    }}>
-      <h3 style={{ marginBottom: '1.5rem' }}>Filters</h3>
+    <div className="filter-sidebar">
+      <h3>Filters</h3>
       
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-          Search
-        </label>
+      <div className="filter-group">
+        <label>Search</label>
         <input
           type="text"
           name="search"
           value={filters.search}
           onChange={handleChange}
           placeholder="Search products..."
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            borderRadius: '4px',
-            border: '1px solid #ddd'
-          }}
+          className="filter-input"
         />
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-          Category
-        </label>
+      <div className="filter-group">
+        <label>Category</label>
         <select
           name="categoryId"
           value={filters.categoryId}
           onChange={handleChange}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            borderRadius: '4px',
-            border: '1px solid #ddd'
-          }}
+          className="filter-select"
         >
           <option value="">All Categories</option>
           {categories.map(category => (
@@ -100,20 +82,13 @@ const FilterSidebar = ({ onFilterChange }) => {
         </select>
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-          Brand
-        </label>
+      <div className="filter-group">
+        <label>Brand</label>
         <select
           name="brandId"
           value={filters.brandId}
           onChange={handleChange}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            borderRadius: '4px',
-            border: '1px solid #ddd'
-          }}
+          className="filter-select"
         >
           <option value="">All Brands</option>
           {brands.map(brand => (
@@ -124,23 +99,16 @@ const FilterSidebar = ({ onFilterChange }) => {
         </select>
       </div>
 
-      <div style={{ marginBottom: '1.5rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: '500' }}>
-          Price Range
-        </label>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
+      <div className="filter-group">
+        <label>Price Range</label>
+        <div className="price-range">
           <input
             type="number"
             name="minPrice"
             placeholder="Min"
             value={filters.minPrice}
             onChange={handleChange}
-            style={{
-              width: '50%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: '1px solid #ddd'
-            }}
+            className="filter-input"
           />
           <input
             type="number"
@@ -148,28 +116,14 @@ const FilterSidebar = ({ onFilterChange }) => {
             placeholder="Max"
             value={filters.maxPrice}
             onChange={handleChange}
-            style={{
-              width: '50%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: '1px solid #ddd'
-            }}
+            className="filter-input"
           />
         </div>
       </div>
 
       <button
         onClick={handleClear}
-        style={{
-          width: '100%',
-          padding: '0.75rem',
-          backgroundColor: '#6c757d',
-          color: 'white',
-          border: 'none',
-          borderRadius: '4px',
-          cursor: 'pointer',
-          fontSize: '1rem'
-        }}
+        className="btn btn-secondary clear-filters-btn"
       >
         Clear Filters
       </button>

@@ -32,4 +32,6 @@ public interface ProductReviewRepository extends JpaRepository<ProductReview, Lo
 
     @Query("SELECT pr.rating, COUNT(pr) FROM ProductReview pr WHERE pr.product.id = :productId GROUP BY pr.rating ORDER BY pr.rating DESC")
     List<Object[]> getRatingDistribution(@Param("productId") Long productId);
+
+
 }

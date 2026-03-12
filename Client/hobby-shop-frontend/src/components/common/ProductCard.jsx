@@ -1,106 +1,83 @@
+// src/components/common/ProductCard.jsx
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { useCart } from '../../hooks/useCart';
 import { Button } from '../ui';
 
-const ProductCard = ({ product, onAddToCart }) => {
-  const handleAddToCart = () => {
-    onAddToCart(product, 1);
+const ProductCard = ({ product }) => {
+  const { addToCart } = useCart();
+
+  const handleAddToCart = (e) => {
+    e.preventDefault(); // Prevent Link navigation when clicking button
+    e.stopPropagation(); // Prevent event bubbling
+    addToCart(product, 1);
+  };
+
+  // Generate star rating display
+  const renderRating = () => {
+    const rating = product.averageRating || 0;
+    const fullStars = Math.floor(rating);
+    const hasHalfStar = rating % 1 >= 0.5;
+    const stars = [];
+
+    for (let i = 1; i <= 5; i++) {
+      if (i <= fullStars) {
+        stars.push(<span key={i} className="star filled">★</span>);
+      } else if (i === fullStars + 1 && hasHalfStar) {
+        stars.push(<span key={i} className="star half-filled">★</span>);
+      } else {
+        stars.push(<span key={i} className="star">★</span>);
+      }
+    }
+
+    return (
+      <div className="product-rating">
+        <div className="stars">{stars}</div>
+        {product.reviewCount > 0 && (
+          <span className="rating-count">({product.reviewCount})</span>
+        )}
+      </div>
+    );
   };
 
   return (
-    <div style={{
-      border: '1px solid rgba(0, 217, 255, 0.3)',
-      borderRadius: '8px',
-      overflow: 'hidden',
-      backgroundColor: 'white',
-      transition: 'transform 0.2s, box-shadow 0.2s',
-      cursor: 'pointer',
-      height: '100%',
-      display: 'flex',
-      flexDirection: 'column'
-    }}
-    onMouseEnter={(e) => {
-      e.currentTarget.style.transform = 'translateY(-4px)';
-      e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
-    }}
-    onMouseLeave={(e) => {
-      e.currentTarget.style.transform = 'translateY(0)';
-      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0,0,0,0.1)';
-    }}
-    >
-      <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-        <div style={{ 
-          height: '200px', 
-          backgroundColor: 'rgba(0, 217, 255, 0.3)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          overflow: 'hidden'
-        }}>
+    <div className="product-card">
+      <Link to={`/product/${product.id}`} className="product-card-link">
+        <div className="product-image-container">
           {product.imageUrl ? (
             <img 
               src={product.imageUrl} 
               alt={product.name}
-              style={{ 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'cover' 
-              }}
+              className="product-image"
               onError={(e) => {
                 e.target.onerror = null;
                 e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
               }}
             />
           ) : (
-            <div style={{
-              width: '100%',
-              height: '100%',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              backgroundColor: '#e9ecef',
-              color: '#6c757d',
-              fontSize: '1rem'
-            }}>
+            <div className="product-image-placeholder">
               No Image Available
             </div>
           )}
         </div>
       </Link>
       
-      <div style={{ padding: '1rem', flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Link to={`/product/${product.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-          <h3 style={{ 
-            margin: '0 0 0.5rem 0', 
-            fontSize: '1.1rem',
-            fontWeight: '600',
-            color: '#333',
-            lineHeight: '1.4'
-          }}>
+      <div className="product-info">
+        <Link to={`/product/${product.id}`} className="product-title-link">
+          <h3 className="product-title">
             {product.name}
           </h3>
         </Link>
         
-        <p style={{ 
-          color: '#666', 
-          fontSize: '0.9rem', 
-          marginBottom: '0.75rem',
-          flex: 1
-        }}>
+        <p className="product-meta">
           {product.brandName} • {product.categoryName}
         </p>
         
-        <div style={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center',
-          marginTop: 'auto'
-        }}>
-          <span style={{ 
-            fontSize: '1.25rem', 
-            fontWeight: 'bold', 
-            color: '#007bff' 
-          }}>
+        {/* Rating Stars */}
+        {renderRating()}
+        
+        <div className="product-footer">
+          <span className="product-price">
             ${product.price?.toFixed(2)}
           </span>
           
@@ -108,19 +85,14 @@ const ProductCard = ({ product, onAddToCart }) => {
             variant="primary" 
             onClick={handleAddToCart}
             disabled={product.stockQuantity === 0}
-            style={{ padding: '0.5rem 1rem' }}
+            className="product-add-to-cart"
           >
             {product.stockQuantity > 0 ? 'Add to Cart' : 'Out of Stock'}
           </Button>
         </div>
         
         {product.stockQuantity < 10 && product.stockQuantity > 0 && (
-          <p style={{ 
-            marginTop: '0.5rem', 
-            fontSize: '0.8rem', 
-            color: '#dc3545',
-            textAlign: 'right'
-          }}>
+          <p className="product-stock-warning">
             Only {product.stockQuantity} left in stock!
           </p>
         )}

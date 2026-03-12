@@ -2,6 +2,7 @@ package com.hobby.shop.controller;
 
 import com.hobby.shop.dto.request.*;
 import com.hobby.shop.dto.response.OrderResponse;
+import com.hobby.shop.exception.BadRequestException;
 import com.hobby.shop.service.OrderService;
 import com.hobby.shop.util.SecurityUtils;
 import jakarta.validation.Valid;
@@ -28,14 +29,28 @@ public class OrderController {
     // ============= AUTHENTICATED USER ENDPOINTS =============
 
     /**
-     * Create order for authenticated user
-     * POST /api/orders
+     * Create order for guest user
+     * POST /api/orders/guest
      */
-    @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest request) {
-        String email = securityUtils.getCurrentUserEmail();
-        log.info("Creating order for authenticated user: {}", email);
-        return new ResponseEntity<>(orderService.createOrder(email, request), HttpStatus.CREATED);
+    @PostMapping("/guest")
+    public ResponseEntity<OrderResponse> createGuestOrder(
+            @Valid @RequestBody OrderRequest request,
+            @RequestParam(required = false) String sessionId,
+            @RequestHeader(value = "X-Session-ID", required = false) String sessionIdHeader) {
+
+        // Determine session ID from either query param or header
+        String finalSessionId = sessionId;
+        if (finalSessionId == null || finalSessionId.isEmpty()) {
+            finalSessionId = sessionIdHeader;
+        }
+
+        if (finalSessionId == null || finalSessionId.isEmpty()) {
+            throw new BadRequestException("Session ID is required for guest checkout");
+        }
+
+        log.info("Creating guest order for session: {}", finalSessionId);
+        OrderResponse response = orderService.createGuestOrder(finalSessionId, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
     /**

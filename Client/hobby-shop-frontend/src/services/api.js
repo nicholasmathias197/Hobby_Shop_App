@@ -1,3 +1,4 @@
+// src/services/api.js
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080/api';
@@ -7,6 +8,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // CRITICAL: This allows cookies to be sent and received
 });
 
 // Request interceptor to add token and session ID
@@ -19,9 +21,18 @@ api.interceptors.request.use(
     
     // Add session ID for guest cart
     const sessionId = localStorage.getItem('sessionId');
-    if (sessionId) {
+    if (sessionId && !token) {
       config.headers['X-Session-ID'] = sessionId;
+      console.log('📤 Adding session ID to request:', sessionId);
     }
+    
+    console.log('📤 Request:', {
+      url: config.url,
+      method: config.method,
+      hasToken: !!token,
+      hasSessionId: !!sessionId,
+      withCredentials: config.withCredentials
+    });
     
     return config;
   },
@@ -33,21 +44,44 @@ api.interceptors.request.use(
 // Response interceptor to handle errors and capture session ID
 api.interceptors.response.use(
   (response) => {
-    // Capture session ID from cookie for guest users
+    console.log('📥 Response:', {
+      url: response.config.url,
+      status: response.status,
+      headers: response.headers
+    });
+    
+    // CAPTURE SESSION ID FROM COOKIE - THIS IS CRITICAL
     const setCookie = response.headers['set-cookie'];
     if (setCookie) {
-      const sessionCookie = setCookie.find(c => c.includes('CART_SESSION_ID'));
+      console.log('🍪 Set-Cookie header received:', setCookie);
+      
+      // Handle both string and array formats
+      const cookies = Array.isArray(setCookie) ? setCookie : [setCookie];
+      
+      const sessionCookie = cookies.find(c => c.includes('CART_SESSION_ID'));
       if (sessionCookie) {
-        const sessionId = sessionCookie.split('=')[1].split(';')[0];
-        localStorage.setItem('sessionId', sessionId);
-        console.log('Session ID saved:', sessionId);
+        // Parse the cookie value
+        const match = sessionCookie.match(/CART_SESSION_ID=([^;]+)/);
+        if (match) {
+          const sessionId = match[1];
+          localStorage.setItem('sessionId', sessionId);
+          console.log('✅✅✅ Session ID saved to localStorage:', sessionId);
+        }
       }
+    } else {
+      console.log('❌ No Set-Cookie header in response');
     }
+    
     return response;
   },
   (error) => {
+    console.error('❌ API Error:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      data: error.response?.data
+    });
+    
     if (error.response?.status === 401) {
-      // Only clear token for auth errors, keep session for guest cart
       if (error.config.url.includes('/auth/') === false) {
         localStorage.removeItem('token');
       }
@@ -58,7 +92,6 @@ api.interceptors.response.use(
 
 // Helper function to extract content from paginated responses
 export const extractContent = (response) => {
-  // If it's a paginated response (Spring Boot Page)
   if (response && response.content && Array.isArray(response.content)) {
     return {
       content: response.content,
@@ -71,7 +104,6 @@ export const extractContent = (response) => {
     };
   }
   
-  // If it's already an array
   if (Array.isArray(response)) {
     return {
       content: response,
@@ -84,7 +116,6 @@ export const extractContent = (response) => {
     };
   }
   
-  // If it's a single object
   if (response && typeof response === 'object') {
     return {
       content: [response],
@@ -97,7 +128,6 @@ export const extractContent = (response) => {
     };
   }
   
-  // Default: return empty
   console.warn('Unexpected response format:', response);
   return {
     content: [],

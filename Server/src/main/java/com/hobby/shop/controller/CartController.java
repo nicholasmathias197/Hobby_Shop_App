@@ -38,6 +38,8 @@ public class CartController {
      */
     @GetMapping
     public ResponseEntity<CartResponse> getUserCart() {
+        log.info("=== GET USER CART ===");
+
         if (securityUtils.isAuthenticated()) {
             String email = securityUtils.getCurrentUserEmail();
             log.info("Fetching cart for authenticated user: {}", email);
@@ -57,16 +59,24 @@ public class CartController {
      */
     @PostMapping("/items")
     public ResponseEntity<CartResponse> addItemToCart(@Valid @RequestBody CartItemRequest request) {
-        log.info("Adding item to cart. Request: {}", request);
+        log.info("=== ADD ITEM TO CART ===");
+        log.info("Request: productId={}, quantity={}", request.getProductId(), request.getQuantity());
 
         if (securityUtils.isAuthenticated()) {
             String email = securityUtils.getCurrentUserEmail();
             log.info("Authenticated user: {}", email);
-            return new ResponseEntity<>(cartService.addItemToUserCart(email, request), HttpStatus.CREATED);
+            CartResponse cartResponse = cartService.addItemToUserCart(email, request);
+            log.info("Item added successfully to user cart");
+            return new ResponseEntity<>(cartResponse, HttpStatus.CREATED);
         } else {
             String sessionId = getOrCreateSessionId();
             log.info("Guest user with session: {}", sessionId);
-            return new ResponseEntity<>(cartService.addItemToSessionCart(sessionId, request), HttpStatus.CREATED);
+
+            CartResponse cartResponse = cartService.addItemToSessionCart(sessionId, request);
+            log.info("Item added successfully to guest cart. New item count: {}",
+                    cartResponse.getItems().size());
+
+            return new ResponseEntity<>(cartResponse, HttpStatus.CREATED);
         }
     }
 
@@ -81,12 +91,22 @@ public class CartController {
     public ResponseEntity<CartResponse> updateCartItemQuantity(
             @PathVariable Long cartItemId,
             @RequestParam Integer quantity) {
+
+        log.info("=== UPDATE CART ITEM ===");
+        log.info("CartItemId: {}, Quantity: {}", cartItemId, quantity);
+
         if (securityUtils.isAuthenticated()) {
             String email = securityUtils.getCurrentUserEmail();
-            return ResponseEntity.ok(cartService.updateCartItemQuantity(email, cartItemId, quantity));
+            log.info("Authenticated user: {}", email);
+            CartResponse response = cartService.updateCartItemQuantity(email, cartItemId, quantity);
+            log.info("Cart item updated successfully");
+            return ResponseEntity.ok(response);
         } else {
             String sessionId = getOrCreateSessionId();
-            return ResponseEntity.ok(cartService.updateSessionCartItemQuantity(sessionId, cartItemId, quantity));
+            log.info("Guest user with session: {}", sessionId);
+            CartResponse response = cartService.updateSessionCartItemQuantity(sessionId, cartItemId, quantity);
+            log.info("Cart item updated successfully");
+            return ResponseEntity.ok(response);
         }
     }
 
@@ -98,12 +118,21 @@ public class CartController {
      */
     @DeleteMapping("/items/{cartItemId}")
     public ResponseEntity<CartResponse> removeItemFromCart(@PathVariable Long cartItemId) {
+        log.info("=== REMOVE ITEM FROM CART ===");
+        log.info("CartItemId: {}", cartItemId);
+
         if (securityUtils.isAuthenticated()) {
             String email = securityUtils.getCurrentUserEmail();
-            return ResponseEntity.ok(cartService.removeItemFromUserCart(email, cartItemId));
+            log.info("Authenticated user: {}", email);
+            CartResponse response = cartService.removeItemFromUserCart(email, cartItemId);
+            log.info("Item removed successfully from user cart");
+            return ResponseEntity.ok(response);
         } else {
             String sessionId = getOrCreateSessionId();
-            return ResponseEntity.ok(cartService.removeItemFromSessionCart(sessionId, cartItemId));
+            log.info("Guest user with session: {}", sessionId);
+            CartResponse response = cartService.removeItemFromSessionCart(sessionId, cartItemId);
+            log.info("Item removed successfully from guest cart");
+            return ResponseEntity.ok(response);
         }
     }
 
@@ -114,13 +143,19 @@ public class CartController {
      */
     @DeleteMapping
     public ResponseEntity<Void> clearCart() {
+        log.info("=== CLEAR CART ===");
+
         if (securityUtils.isAuthenticated()) {
             String email = securityUtils.getCurrentUserEmail();
+            log.info("Clearing cart for user: {}", email);
             cartService.clearUserCart(email);
         } else {
             String sessionId = getOrCreateSessionId();
+            log.info("Clearing cart for session: {}", sessionId);
             cartService.clearSessionCart(sessionId);
         }
+
+        log.info("Cart cleared successfully");
         return ResponseEntity.noContent().build();
     }
 
@@ -131,12 +166,18 @@ public class CartController {
      */
     @GetMapping("/count")
     public ResponseEntity<Integer> getCartItemCount() {
+        log.info("=== GET CART ITEM COUNT ===");
+
         if (securityUtils.isAuthenticated()) {
             String email = securityUtils.getCurrentUserEmail();
-            return ResponseEntity.ok(cartService.getCartItemCount(email, true));
+            int count = cartService.getCartItemCount(email, true);
+            log.info("Cart item count for user {}: {}", email, count);
+            return ResponseEntity.ok(count);
         } else {
             String sessionId = getOrCreateSessionId();
-            return ResponseEntity.ok(cartService.getCartItemCount(sessionId, false));
+            int count = cartService.getCartItemCount(sessionId, false);
+            log.info("Cart item count for session {}: {}", sessionId, count);
+            return ResponseEntity.ok(count);
         }
     }
 
@@ -150,9 +191,16 @@ public class CartController {
      */
     @PostMapping("/merge")
     public ResponseEntity<CartResponse> mergeCarts(@RequestParam String sessionId) {
+        log.info("=== MERGE CARTS ===");
+        log.info("Session ID to merge: {}", sessionId);
+
         String email = securityUtils.getCurrentUserEmail();
         log.info("Merging session cart {} with user cart for {}", sessionId, email);
-        return ResponseEntity.ok(cartService.mergeCarts(email, sessionId));
+
+        CartResponse mergedCart = cartService.mergeCarts(email, sessionId);
+        log.info("Cart merged successfully. New item count: {}", mergedCart.getItems().size());
+
+        return ResponseEntity.ok(mergedCart);
     }
 
     // ============= HELPER METHODS =============
@@ -164,35 +212,68 @@ public class CartController {
      * @return Session ID string
      */
     private String getOrCreateSessionId() {
-        // Try to get from cookie
+        log.info("=== getOrCreateSessionId called ===");
+
+        // Log all request cookies for debugging
         Cookie[] cookies = request.getCookies();
         if (cookies != null) {
+            log.info("Found {} cookies in request:", cookies.length);
             for (Cookie cookie : cookies) {
+                log.info("  Cookie: {} = {}", cookie.getName(), cookie.getValue());
                 if ("CART_SESSION_ID".equals(cookie.getName())) {
-                    log.debug("Found existing session cookie: {}", cookie.getValue());
-                    return cookie.getValue();
+                    String sessionId = cookie.getValue();
+                    log.info("✅ Found existing session cookie: {}", sessionId);
+
+                    // Refresh the cookie
+                    Cookie refreshedCookie = new Cookie("CART_SESSION_ID", sessionId);
+                    refreshedCookie.setPath("/");
+                    refreshedCookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
+                    refreshedCookie.setHttpOnly(true);
+                    refreshedCookie.setSecure(false);
+                    response.addCookie(refreshedCookie);
+                    log.info("✅ Refreshed session cookie: {}", sessionId);
+
+                    return sessionId;
                 }
             }
+        } else {
+            log.info("No cookies found in request");
         }
 
         // Try to get from header
         String headerSessionId = request.getHeader("X-Session-ID");
         if (headerSessionId != null && !headerSessionId.isEmpty()) {
-            log.debug("Using session from header: {}", headerSessionId);
+            log.info("📤 Found session in header: {}", headerSessionId);
+
+            // Set as cookie for future requests
+            Cookie sessionCookie = new Cookie("CART_SESSION_ID", headerSessionId);
+            sessionCookie.setPath("/");
+            sessionCookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
+            sessionCookie.setHttpOnly(true);
+            sessionCookie.setSecure(false);
+            response.addCookie(sessionCookie);
+            log.info("✅ Set cookie from header: {}", headerSessionId);
+
             return headerSessionId;
         }
 
         // Create new session ID
         String newSessionId = UUID.randomUUID().toString();
-        log.info("Creating new session ID: {}", newSessionId);
+        log.info("🆕 Creating new session ID: {}", newSessionId);
 
         // Set cookie in response
         Cookie sessionCookie = new Cookie("CART_SESSION_ID", newSessionId);
         sessionCookie.setPath("/");
         sessionCookie.setMaxAge(30 * 24 * 60 * 60); // 30 days
         sessionCookie.setHttpOnly(true);
-        sessionCookie.setSecure(false); // Set to true in production with HTTPS
+        sessionCookie.setSecure(false);
         response.addCookie(sessionCookie);
+
+        // Also set as header for debugging/fallback
+        response.setHeader("X-Session-ID", newSessionId);
+
+        log.info("✅ New session cookie set: {}", newSessionId);
+        log.info("=== getOrCreateSessionId completed ===");
 
         return newSessionId;
     }

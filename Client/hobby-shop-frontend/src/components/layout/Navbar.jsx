@@ -119,7 +119,7 @@ const Navbar = () => {
           >
             Gundam Models
           </Link>
-          <Link to="/category/2" style={{ 
+          <Link to="/category/3" style={{ 
             color: 'white', 
             textDecoration: 'none', 
             fontSize: '1.1rem',
@@ -133,7 +133,7 @@ const Navbar = () => {
           >
             Tools
           </Link>
-          <Link to="/category/3" style={{ 
+          <Link to="/category/2" style={{ 
             color: 'white', 
             textDecoration: 'none', 
             fontSize: '1.1rem',

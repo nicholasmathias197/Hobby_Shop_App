@@ -171,7 +171,8 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
 
         ProductResponse response = productMapper.toResponse(product);
-        Double avgRating = reviewRepository.getAverageRatingForProduct(id);
+        // FIXED: Use findAverageRatingByProductId instead of getAverageRatingForProduct
+        Double avgRating = reviewRepository.findAverageRatingByProductId(id).orElse(null);
         response.setAverageRating(avgRating != null ? avgRating : 0.0);
 
         return response;
@@ -191,7 +192,8 @@ public class ProductServiceImpl implements ProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found with SKU: " + sku));
 
         ProductResponse response = productMapper.toResponse(product);
-        Double avgRating = reviewRepository.getAverageRatingForProduct(product.getId());
+        // FIXED: Use findAverageRatingByProductId instead of getAverageRatingForProduct
+        Double avgRating = reviewRepository.findAverageRatingByProductId(product.getId()).orElse(null);
         response.setAverageRating(avgRating != null ? avgRating : 0.0);
 
         return response;
@@ -209,7 +211,8 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByIsActiveTrue(pageable)
                 .map(product -> {
                     ProductResponse response = productMapper.toResponse(product);
-                    Double avgRating = reviewRepository.getAverageRatingForProduct(product.getId());
+                    // FIXED: Use findAverageRatingByProductId instead of getAverageRatingForProduct
+                    Double avgRating = reviewRepository.findAverageRatingByProductId(product.getId()).orElse(null);
                     response.setAverageRating(avgRating != null ? avgRating : 0.0);
                     return response;
                 });
@@ -227,7 +230,8 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByCategoryIdAndIsActiveTrue(categoryId, pageable)
                 .map(product -> {
                     ProductResponse response = productMapper.toResponse(product);
-                    Double avgRating = reviewRepository.getAverageRatingForProduct(product.getId());
+                    // FIXED: Use findAverageRatingByProductId instead of getAverageRatingForProduct
+                    Double avgRating = reviewRepository.findAverageRatingByProductId(product.getId()).orElse(null);
                     response.setAverageRating(avgRating != null ? avgRating : 0.0);
                     return response;
                 });
@@ -245,7 +249,8 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByBrandIdAndIsActiveTrue(brandId, pageable)
                 .map(product -> {
                     ProductResponse response = productMapper.toResponse(product);
-                    Double avgRating = reviewRepository.getAverageRatingForProduct(product.getId());
+                    // FIXED: Use findAverageRatingByProductId instead of getAverageRatingForProduct
+                    Double avgRating = reviewRepository.findAverageRatingByProductId(product.getId()).orElse(null);
                     response.setAverageRating(avgRating != null ? avgRating : 0.0);
                     return response;
                 });
@@ -263,7 +268,8 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findByIsFeaturedTrueAndIsActiveTrue(pageable)
                 .map(product -> {
                     ProductResponse response = productMapper.toResponse(product);
-                    Double avgRating = reviewRepository.getAverageRatingForProduct(product.getId());
+                    // FIXED: Use findAverageRatingByProductId instead of getAverageRatingForProduct
+                    Double avgRating = reviewRepository.findAverageRatingByProductId(product.getId()).orElse(null);
                     response.setAverageRating(avgRating != null ? avgRating : 0.0);
                     return response;
                 });
@@ -281,7 +287,8 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findProductsByFilters(null, null, null, null, searchTerm, pageable)
                 .map(product -> {
                     ProductResponse response = productMapper.toResponse(product);
-                    Double avgRating = reviewRepository.getAverageRatingForProduct(product.getId());
+                    // FIXED: Use findAverageRatingByProductId instead of getAverageRatingForProduct
+                    Double avgRating = reviewRepository.findAverageRatingByProductId(product.getId()).orElse(null);
                     response.setAverageRating(avgRating != null ? avgRating : 0.0);
                     return response;
                 });
@@ -305,7 +312,8 @@ public class ProductServiceImpl implements ProductService {
         return productRepository.findProductsByFilters(categoryId, brandId, minPrice, maxPrice, searchTerm, pageable)
                 .map(product -> {
                     ProductResponse response = productMapper.toResponse(product);
-                    Double avgRating = reviewRepository.getAverageRatingForProduct(product.getId());
+                    // FIXED: Use findAverageRatingByProductId instead of getAverageRatingForProduct
+                    Double avgRating = reviewRepository.findAverageRatingByProductId(product.getId()).orElse(null);
                     response.setAverageRating(avgRating != null ? avgRating : 0.0);
                     return response;
                 });
