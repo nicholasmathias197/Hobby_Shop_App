@@ -1,0 +1,134 @@
+/* ===== LOGIN PAGE ===== */
+.login-page {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.login-container {
+    max-width: 450px;
+    width: 100%;
+    padding: 2.5rem;
+    box-shadow: 0 0 50px rgba(0, 217, 255, 0.2);
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.login-header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #00d9ff, #66ffff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+.login-subtitle {
+    color: #e0e1dd;
+    opacity: 0.8;
+    font-size: 0.95rem;
+}
+
+.login-redirect-message {
+    background: rgba(0, 217, 255, 0.1);
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #00d9ff;
+}
+
+.info-icon {
+    font-size: 1.2rem;
+}
+
+.login-form {
+    margin-bottom: 1.5rem;
+}
+
+.form-options {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.remember-me {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #e0e1dd;
+    cursor: pointer;
+}
+
+.remember-me input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+    accent-color: #00d9ff;
+}
+
+.forgot-password {
+    color: #00d9ff;
+    font-size: 0.9rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.forgot-password:hover {
+    color: #66ffff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
+}
+
+.login-button {
+    height: 48px;
+    font-size: 1.1rem;
+}
+
+.login-footer {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 217, 255, 0.2);
+}
+
+.login-footer p {
+    margin-bottom: 0.75rem;
+    color: #e0e1dd;
+}
+
+.register-link {
+    color: #00d9ff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.register-link:hover {
+    color: #66ffff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
+}
+
+.guest-note {
+    font-size: 0.85rem;
+    opacity: 0.7;
+    background: rgba(0, 0, 0, 0.3);
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-radius: 6px;
+}
+
+.guest-icon {
+    font-size: 1rem;
+}

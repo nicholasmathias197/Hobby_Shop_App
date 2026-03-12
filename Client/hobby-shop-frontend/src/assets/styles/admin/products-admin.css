@@ -1,0 +1,165 @@
+/* ===== PRODUCT TABLE SPECIFIC ===== */
+.product-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(0, 217, 255, 0.2);
+    border-radius: 12px;
+}
+
+.product-table {
+    min-width: 800px;
+    table-layout: auto;
+}
+
+.product-table .col-id { width: 60px; text-align: center; }
+.product-table .col-image { width: 70px; text-align: center; }
+.product-table .col-name { min-width: 150px; max-width: 200px; }
+.product-table .col-brand { width: 100px; }
+.product-table .col-category { width: 120px; }
+.product-table .col-price { width: 80px; text-align: right; }
+.product-table .col-stock { width: 70px; text-align: center; }
+.product-table .col-status { width: 120px; text-align: left; }
+.product-table .col-featured { width: 120px; text-align: left; }
+.product-table .col-actions { width: 180px; text-align: center; }
+
+.product-name-cell {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: help;
+}
+
+.product-thumbnail {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 2px solid rgba(0, 217, 255, 0.3);
+}
+
+.no-image {
+    width: 40px;
+    height: 40px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6rem;
+    color: #6c757d;
+    margin: 0 auto;
+}
+
+/* ===== CREATE/EDIT PRODUCT PAGE ===== */
+.create-product-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.new-product-badge {
+    background: linear-gradient(135deg, #00d9ff, #66ffff);
+    color: #05345f;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.edit-product-badge {
+    background: linear-gradient(135deg, #ffc107, #ffdb58);
+    color: #05345f;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.new-product-toggle {
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.new-product-toggle .toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    cursor: pointer;
+}
+
+.toggle-text {
+    color: #e0e1dd;
+    font-size: 1.1rem;
+    font-weight: 500;
+}
+
+.toggle-checkbox {
+    height: 0;
+    width: 0;
+    visibility: hidden;
+    position: absolute;
+}
+
+.toggle-switch-label {
+    cursor: pointer;
+    width: 60px;
+    height: 30px;
+    background: rgba(108, 117, 125, 0.3);
+    display: block;
+    border-radius: 30px;
+    position: relative;
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    transition: all 0.3s ease;
+}
+
+.toggle-switch-label:after {
+    content: '';
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 20px;
+    height: 20px;
+    background: white;
+    border-radius: 20px;
+    transition: 0.3s;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+}
+
+.toggle-checkbox:checked + .toggle-switch-label {
+    background: #00d9ff;
+    border-color: #00d9ff;
+    box-shadow: 0 0 15px rgba(0, 217, 255, 0.5);
+}
+
+.toggle-checkbox:checked + .toggle-switch-label:after {
+    left: calc(100% - 23px);
+    background: #05345f;
+}
+
+.toggle-help-text {
+    margin-top: 1rem;
+    color: #e0e1dd;
+    font-size: 0.85rem;
+    opacity: 0.7;
+    font-style: italic;
+    padding-left: 0.5rem;
+    border-left: 3px solid #00d9ff;
+}

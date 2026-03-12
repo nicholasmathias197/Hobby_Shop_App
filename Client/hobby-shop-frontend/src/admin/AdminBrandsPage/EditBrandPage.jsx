@@ -1,3 +1,4 @@
+// src/admin/AdminBrandsPage/EditBrandPage.jsx
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getBrandById, updateBrand } from '../../services/brandService';
@@ -8,6 +9,7 @@ const EditBrandPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
@@ -28,6 +30,7 @@ const EditBrandPage = () => {
         logoUrl: data.logoUrl || '',
         website: data.website || ''
       });
+      setIsActive(data.isActive !== false);
     } catch (error) {
       console.error('Error loading brand:', error);
       alert('Failed to load brand');
@@ -47,7 +50,11 @@ const EditBrandPage = () => {
     setSaving(true);
     
     try {
-      await updateBrand(id, formData);
+      const brandData = {
+        ...formData,
+        isActive
+      };
+      await updateBrand(id, brandData);
       navigate('/admin/brands');
     } catch (error) {
       console.error('Error updating brand:', error);
@@ -60,100 +67,82 @@ const EditBrandPage = () => {
   if (loading) return <div>Loading brand...</div>;
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '2rem' }}>Edit Brand</h1>
+    <div className="edit-brand-page">
+      <div className="page-header">
+        <h1>Edit Brand</h1>
+        <div className="edit-brand-badge">✏️ Editing Brand</div>
+      </div>
       
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-            Brand Name *
-          </label>
+      <form onSubmit={handleSubmit} className="brand-form">
+        <div className="form-group">
+          <label>Brand Name *</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: '1px solid #ddd'
-            }}
           />
         </div>
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-            Description
-          </label>
+        <div className="form-group">
+          <label>Description</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             rows="4"
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: '1px solid #ddd',
-              resize: 'vertical'
-            }}
           />
         </div>
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-            Logo URL
-          </label>
+        <div className="form-group">
+          <label>Logo URL</label>
           <input
             type="url"
             name="logoUrl"
             value={formData.logoUrl}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: '1px solid #ddd'
-            }}
           />
           {formData.logoUrl && (
-            <div style={{ marginTop: '0.5rem' }}>
+            <div className="logo-preview">
               <img 
                 src={formData.logoUrl} 
                 alt="Logo preview"
-                style={{ 
-                  maxWidth: '100px', 
-                  maxHeight: '100px',
-                  objectFit: 'contain',
-                  border: '1px solid #ddd',
-                  borderRadius: '4px'
-                }}
               />
             </div>
           )}
         </div>
 
-        <div style={{ marginBottom: '2rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-            Website
-          </label>
+        <div className="form-group">
+          <label>Website</label>
           <input
             type="url"
             name="website"
             value={formData.website}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: '1px solid #ddd'
-            }}
           />
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        {/* Active Status Toggle */}
+        <div className="form-toggle-group">
+          <label className="toggle-label">
+            <span className="toggle-text">Active Status:</span>
+            <div className="toggle-container">
+              <input
+                type="checkbox"
+                checked={isActive}
+                onChange={(e) => setIsActive(e.target.checked)}
+                className="toggle-checkbox"
+              />
+              <span className="toggle-switch-label">
+                <span className="toggle-button"></span>
+              </span>
+            </div>
+          </label>
+          <span className="toggle-status-text">{isActive ? 'Active' : 'Inactive'}</span>
+        </div>
+
+        <div className="form-actions">
           <Button type="submit" variant="primary" disabled={saving}>
             {saving ? 'Saving...' : 'Save Changes'}
           </Button>

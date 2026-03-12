@@ -1,0 +1,227 @@
+/* ===== PRODUCT CARD ===== */
+.product-card {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.product-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0066cc, #00d9ff, #0066cc);
+    z-index: 2;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    border-color: #00d9ff;
+    box-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
+}
+
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.product-image-container {
+    width: 100%;
+    height: 200px;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    border-bottom: 2px solid rgba(0, 217, 255, 0.3);
+}
+
+.product-image-wrapper {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+}
+
+.product-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+.product-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    color: #6c757d;
+    font-size: 1rem;
+    text-align: center;
+    padding: 1rem;
+}
+
+.product-info {
+    padding: 1.25rem;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: linear-gradient(to bottom, rgba(0,0,0,0.9), rgba(0,0,0,1));
+}
+
+.product-title-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.product-title {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #00d9ff;
+    line-height: 1.4;
+    transition: color 0.3s ease;
+    text-shadow: 0 0 5px rgba(0, 217, 255, 0.3);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-title-link:hover .product-title {
+    color: #66ffff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
+}
+
+.product-meta {
+    color: #e0e1dd;
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+    flex: 1;
+    opacity: 0.8;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.product-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+}
+
+.stars {
+    display: flex;
+    gap: 2px;
+}
+
+.star {
+    color: #e4e5e9;
+    font-size: 1.1rem;
+    transition: all 0.2s ease;
+}
+
+.star.filled {
+    color: #ffc107;
+    text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+}
+
+.star.half-filled {
+    position: relative;
+    color: #ffc107;
+    text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+}
+
+.star.half-filled::after {
+    content: '★';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 50%;
+    overflow: hidden;
+    color: #e4e5e9;
+}
+
+.rating-count {
+    color: #e0e1dd;
+    font-size: 0.8rem;
+    opacity: 0.7;
+}
+
+.product-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    border-top: 1px solid rgba(0, 217, 255, 0.2);
+    padding-top: 0.75rem;
+}
+
+.product-price {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #00d9ff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
+}
+
+.product-add-to-cart {
+    padding: 0.5rem 1rem !important;
+    font-size: 0.85rem !important;
+    white-space: nowrap;
+}
+
+.product-stock-warning {
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    color: #ff4d5e;
+    text-align: right;
+    text-shadow: 0 0 5px rgba(255, 77, 94, 0.5);
+    animation: pulse 2s infinite;
+}
+
+/* ===== PRODUCT REVIEWS ===== */
+.product-reviews {
+    border-top: 2px solid rgba(0, 217, 255, 0.3);
+    padding-top: 2rem;
+}
+
+.star-rating {
+    display: flex;
+    gap: 2px;
+}
+
+.star-rating span {
+    transition: transform 0.2s ease;
+}
+
+.star-rating span:hover {
+    transform: scale(1.2);
+}
+
+.rating-bar-row {
+    transition: all 0.3s ease;
+}
+
+.rating-bar-row:hover {
+    transform: translateX(5px);
+}

@@ -1,3 +1,4 @@
+// src/services/orderService.js
 import api, { extractContent } from './api';
 
 // ============= ORDER CREATION =============
@@ -126,6 +127,8 @@ export const lookupGuestOrder = async (email, orderNumber) => {
 
 /**
  * Get all orders (admin only)
+ * @param {number} page - Page number
+ * @param {number} size - Page size
  */
 export const getAllOrders = async (page = 0, size = 20) => {
   try {
@@ -142,6 +145,8 @@ export const getAllOrders = async (page = 0, size = 20) => {
 /**
  * Get orders by status (admin only)
  * @param {string} status - Order status (PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELLED)
+ * @param {number} page - Page number
+ * @param {number} size - Page size
  */
 export const getOrdersByStatus = async (status, page = 0, size = 20) => {
   try {
@@ -157,53 +162,114 @@ export const getOrdersByStatus = async (status, page = 0, size = 20) => {
 
 /**
  * Update order status (admin only)
+ * This function handles two calling conventions:
+ * 1. updateOrderStatus(orderId, status, comment)
+ * 2. updateOrderStatus(orderId, { status, comment })
+ * 
  * @param {number} orderId - Order ID
- * @param {string} status - New status
- * @param {string} comment - Optional comment
+ * @param {string|Object} statusOrData - New status string OR object with status and comment
+ * @param {string} comment - Optional comment (only used when second param is string)
  */
-export const updateOrderStatus = async (orderId, status, comment = '') => {
+export const updateOrderStatus = async (orderId, statusOrData, comment = '') => {
   try {
-    const response = await api.put(`/orders/${orderId}/status`, {
-      status,
-      comment
-    });
+    let payload;
+    
+    // Check if second parameter is an object (called with { status, comment })
+    if (typeof statusOrData === 'object' && statusOrData !== null) {
+      // Handle object format: updateOrderStatus(orderId, { status, comment })
+      payload = {
+        status: statusOrData.status,
+        comment: statusOrData.comment || ''
+      };
+      console.log('📤 Updating order status (object format):', { orderId, payload });
+    } else {
+      // Handle separate parameters format: updateOrderStatus(orderId, status, comment)
+      payload = {
+        status: statusOrData,
+        comment: comment
+      };
+      console.log('📤 Updating order status (param format):', { orderId, payload });
+    }
+    
+    const response = await api.put(`/orders/${orderId}/status`, payload);
+    console.log('📥 Update status response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Error updating order status:', error);
+    console.error('❌ Error updating order status:', error.response?.data || error.message);
     throw error;
   }
 };
 
 /**
  * Update payment status (admin only)
+ * This function handles two calling conventions:
+ * 1. updatePaymentStatus(orderId, paymentStatus)
+ * 2. updatePaymentStatus(orderId, { paymentStatus })
+ * 
  * @param {number} orderId - Order ID
- * @param {string} paymentStatus - Payment status (PAID, FAILED, REFUNDED, PENDING)
+ * @param {string|Object} statusOrData - Payment status string OR object with paymentStatus
  */
-export const updatePaymentStatus = async (orderId, paymentStatus) => {
+export const updatePaymentStatus = async (orderId, statusOrData) => {
   try {
-    const response = await api.put(`/orders/${orderId}/payment`, {
-      paymentStatus
-    });
+    let payload;
+    
+    // Check if second parameter is an object (called with { paymentStatus })
+    if (typeof statusOrData === 'object' && statusOrData !== null) {
+      // Handle object format: updatePaymentStatus(orderId, { paymentStatus })
+      payload = {
+        paymentStatus: statusOrData.paymentStatus
+      };
+      console.log('📤 Updating payment status (object format):', { orderId, payload });
+    } else {
+      // Handle string format: updatePaymentStatus(orderId, paymentStatus)
+      payload = {
+        paymentStatus: statusOrData
+      };
+      console.log('📤 Updating payment status (string format):', { orderId, payload });
+    }
+    
+    const response = await api.put(`/orders/${orderId}/payment`, payload);
+    console.log('📥 Update payment status response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Error updating payment status:', error);
+    console.error('❌ Error updating payment status:', error.response?.data || error.message);
     throw error;
   }
 };
 
 /**
  * Update tracking number (admin only)
+ * This function handles two calling conventions:
+ * 1. updateTrackingNumber(orderId, trackingNumber)
+ * 2. updateTrackingNumber(orderId, { trackingNumber })
+ * 
  * @param {number} orderId - Order ID
- * @param {string} trackingNumber - New tracking number
+ * @param {string|Object} trackingOrData - Tracking number string OR object with trackingNumber
  */
-export const updateTrackingNumber = async (orderId, trackingNumber) => {
+export const updateTrackingNumber = async (orderId, trackingOrData) => {
   try {
-    const response = await api.put(`/orders/${orderId}/tracking`, {
-      trackingNumber
-    });
+    let payload;
+    
+    // Check if second parameter is an object (called with { trackingNumber })
+    if (typeof trackingOrData === 'object' && trackingOrData !== null) {
+      // Handle object format: updateTrackingNumber(orderId, { trackingNumber })
+      payload = {
+        trackingNumber: trackingOrData.trackingNumber
+      };
+      console.log('📤 Updating tracking number (object format):', { orderId, payload });
+    } else {
+      // Handle string format: updateTrackingNumber(orderId, trackingNumber)
+      payload = {
+        trackingNumber: trackingOrData
+      };
+      console.log('📤 Updating tracking number (string format):', { orderId, payload });
+    }
+    
+    const response = await api.put(`/orders/${orderId}/tracking`, payload);
+    console.log('📥 Update tracking response:', response.data);
     return response.data;
   } catch (error) {
-    console.error('❌ Error updating tracking number:', error);
+    console.error('❌ Error updating tracking number:', error.response?.data || error.message);
     throw error;
   }
 };

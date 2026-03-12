@@ -1,0 +1,28 @@
+/* ===== ANIMATIONS ===== */
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@keyframes pulse {
+    0% { opacity: 0.7; }
+    50% { opacity: 1; }
+    100% { opacity: 0.7; }
+}
+
+@keyframes pulse-green {
+    0% { box-shadow: 0 0 5px #28a745; }
+    50% { box-shadow: 0 0 15px #28a745; }
+    100% { box-shadow: 0 0 5px #28a745; }
+}
+
+@keyframes pulse-star {
+    0% { text-shadow: 0 0 5px #ffc107; }
+    50% { text-shadow: 0 0 15px #ffc107; }
+    100% { text-shadow: 0 0 5px #ffc107; }
+}

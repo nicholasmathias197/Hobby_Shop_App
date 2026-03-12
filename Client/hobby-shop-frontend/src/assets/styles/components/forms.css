@@ -1,0 +1,52 @@
+/* ===== FORMS ===== */
+input, textarea, select,
+.filter-input, .filter-select {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 8px;
+    color: #e0e1dd;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+input:focus, textarea:focus, select:focus,
+.filter-input:focus, .filter-select:focus {
+    outline: none;
+    border-color: #00d9ff;
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+input::placeholder, .filter-input::placeholder {
+    color: rgba(224, 225, 221, 0.5);
+}
+
+select option, .filter-select option {
+    background: #0a1a2e;
+    color: #e0e1dd;
+}
+
+label, .filter-group label {
+    color: #00d9ff;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+/* ===== FILTER SIDEBAR ===== */
+.filter-group {
+    margin-bottom: 1.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.price-range {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.price-range .filter-input {
+    width: 50%;
+}

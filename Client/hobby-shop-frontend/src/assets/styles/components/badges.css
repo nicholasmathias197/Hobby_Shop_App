@@ -1,0 +1,66 @@
+/* ===== BADGE ===== */
+.badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    border: 2px solid;
+}
+
+.badge-primary {
+    background: rgba(0, 102, 204, 0.3);
+    border-color: #00d9ff;
+    color: #00d9ff;
+}
+
+.badge-success {
+    background: rgba(40, 167, 69, 0.3);
+    border-color: #28a745;
+    color: #98e0a5;
+}
+
+.badge-warning {
+    background: rgba(255, 193, 7, 0.3);
+    border-color: #ffc107;
+    color: #ffe484;
+}
+
+.badge-danger {
+    background: rgba(220, 53, 69, 0.3);
+    border-color: #dc3545;
+    color: #ff8b9a;
+}
+
+/* ===== STOCK BADGE ===== */
+.stock-badge {
+    display: inline-block;
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    min-width: 40px;
+    text-align: center;
+}
+
+.stock-badge.in-stock {
+    background: rgba(40, 167, 69, 0.2);
+    color: #28a745;
+    border: 1px solid #28a745;
+}
+
+.stock-badge.out-of-stock {
+    background: rgba(220, 53, 69, 0.2);
+    color: #dc3545;
+    border: 1px solid #dc3545;
+}
+
+/* ===== PRODUCT COUNT BADGE ===== */
+.product-count-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    background: rgba(0, 217, 255, 0.1);
+    border: 1px solid #00d9ff;
+    border-radius: 4px;
+    color: #00d9ff;
+    font-weight: bold;
+}

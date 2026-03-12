@@ -1,0 +1,80 @@
+/* ===== CARD STYLES ===== */
+.card,
+.dashboard-card,
+.stat-card,
+.product-card,
+.category-card,
+.filter-sidebar,
+.checkout-form,
+.payment-form,
+.review-section,
+.login-container,
+.register-container,
+.cart-totals,
+.empty-cart-content {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.card::before,
+.dashboard-card::before,
+.stat-card::before,
+.product-card::before,
+.category-card::before,
+.filter-sidebar::before,
+.login-container::before,
+.register-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, #0066cc, #00d9ff, #0066cc);
+    z-index: 2;
+}
+
+.card:hover,
+.dashboard-card:hover,
+.stat-card:hover,
+.product-card:hover,
+.category-card:hover,
+.filter-sidebar:hover,
+.login-container:hover,
+.register-container:hover {
+    transform: translateY(-5px);
+    border-color: #00d9ff;
+    box-shadow: 0 0 30px rgba(0, 217, 255, 0.4);
+}
+
+/* ===== STATS CARDS ===== */
+.stat-icon {
+    font-size: 2.5rem;
+    margin-bottom: 0.75rem;
+    transition: transform 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.stat-glow {
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.stat-card:hover .stat-glow {
+    opacity: 0.6;
+    animation: rotate 10s linear infinite;
+}

@@ -1,0 +1,239 @@
+/* ===== CHECKOUT PAGE ===== */
+.checkout-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.checkout-page h1 {
+    margin-bottom: 2rem;
+}
+
+.checkout-steps {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 3rem;
+    gap: 2rem;
+}
+
+.step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    flex: 1;
+    max-width: 200px;
+}
+
+.step::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    right: -50%;
+    width: 100%;
+    height: 2px;
+    background: rgba(0, 217, 255, 0.3);
+    z-index: 1;
+}
+
+.step:last-child::after {
+    display: none;
+}
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #e0e1dd;
+    margin-bottom: 0.5rem;
+    position: relative;
+    z-index: 2;
+}
+
+.step.active .step-number {
+    background: #00d9ff;
+    color: #05345f;
+    border-color: #00d9ff;
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+}
+
+.step.completed .step-number {
+    background: #28a745;
+    border-color: #28a745;
+}
+
+.step.completed .step-number::after {
+    content: '✓';
+}
+
+.step-label {
+    color: #e0e1dd;
+    font-size: 0.9rem;
+}
+
+.step.active .step-label {
+    color: #00d9ff;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 2rem;
+}
+
+.guest-notice {
+    background: rgba(0, 217, 255, 0.1);
+    border: 2px solid #00d9ff;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.notice-icon {
+    font-size: 1.5rem;
+}
+
+.notice-content {
+    flex: 1;
+}
+
+.notice-content strong {
+    color: #00d9ff;
+    display: block;
+    margin-bottom: 0.25rem;
+}
+
+.notice-content p {
+    color: #e0e1dd;
+    margin: 0;
+    font-size: 0.9rem;
+}
+
+.payment-select {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 8px;
+    color: #e0e1dd;
+    font-size: 1rem;
+}
+
+.card-preview {
+    background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    position: relative;
+    min-height: 160px;
+}
+
+.card-chip {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+}
+
+.card-number-display {
+    font-size: 1.2rem;
+    letter-spacing: 2px;
+    margin-bottom: 1rem;
+    color: #00d9ff;
+}
+
+.card-details {
+    display: flex;
+    justify-content: space-between;
+    color: #e0e1dd;
+    font-size: 0.9rem;
+}
+
+.credit-card-form {
+    margin-bottom: 2rem;
+}
+
+.billing-section {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid rgba(0, 217, 255, 0.3);
+}
+
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #e0e1dd;
+    margin-bottom: 1rem;
+    cursor: pointer;
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: auto;
+    margin: 0;
+}
+
+.billing-form {
+    margin-top: 1rem;
+}
+
+.paypal-info,
+.cod-info {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    color: #e0e1dd;
+}
+
+.review-block {
+    position: relative;
+    padding: 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+}
+
+.review-block h4 {
+    color: #00d9ff;
+    margin-bottom: 0.5rem;
+    font-size: 1rem;
+}
+
+.edit-btn {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    color: #00d9ff;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.edit-btn:hover {
+    background: rgba(0, 217, 255, 0.1);
+    border-color: #00d9ff;
+}
+
+.checkout-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+    gap: 1rem;
+}
+
+.checkout-actions button {
+    min-width: 150px;
+}

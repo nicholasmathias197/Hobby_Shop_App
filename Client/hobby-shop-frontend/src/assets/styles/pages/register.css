@@ -1,0 +1,107 @@
+/* ===== REGISTER PAGE ===== */
+.register-page {
+    min-height: calc(100vh - 200px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.register-container {
+    max-width: 600px;
+    width: 100%;
+    padding: 2.5rem;
+    box-shadow: 0 0 50px rgba(0, 217, 255, 0.2);
+}
+
+.register-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.register-header h1 {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(to right, #00d9ff, #66ffff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    display: inline-block;
+}
+
+.register-subtitle {
+    color: #e0e1dd;
+    opacity: 0.8;
+    font-size: 0.95rem;
+}
+
+.cart-merge-message {
+    background: rgba(0, 217, 255, 0.1);
+    border: 2px solid #00d9ff;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cart-icon {
+    font-size: 2rem;
+}
+
+.message-content {
+    flex: 1;
+}
+
+.message-content strong {
+    color: #00d9ff;
+    display: block;
+    margin-bottom: 0.25rem;
+    font-size: 1.1rem;
+}
+
+.message-content p {
+    color: #e0e1dd;
+    margin: 0;
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.register-form {
+    margin-bottom: 1.5rem;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.register-button {
+    height: 48px;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+.register-footer {
+    text-align: center;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(0, 217, 255, 0.2);
+}
+
+.register-footer p {
+    color: #e0e1dd;
+}
+
+.login-link {
+    color: #00d9ff;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.login-link:hover {
+    color: #66ffff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
+}

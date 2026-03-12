@@ -1,0 +1,183 @@
+/* ===== BRANDS PAGE STYLES ===== */
+.brand-table-wrapper {
+    overflow-x: auto;
+    margin-bottom: 2rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(0, 217, 255, 0.2);
+    border-radius: 12px;
+}
+
+.brand-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 1000px;
+}
+
+.brand-table th {
+    background: linear-gradient(135deg, #000000 0%, #001a33 50%, #003366 100%);
+    color: #00d9ff;
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+.brand-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+    color: #e0e1dd;
+    vertical-align: middle;
+}
+
+.brand-table tbody tr:hover {
+    background: rgba(0, 102, 204, 0.2);
+}
+
+/* Column widths */
+.brand-table .col-id { width: 60px; text-align: center; }
+.brand-table .col-logo { width: 80px; text-align: center; }
+.brand-table .col-name { min-width: 150px; }
+.brand-table .col-description { min-width: 200px; }
+.brand-table .col-website { width: 100px; }
+.brand-table .col-products { width: 80px; text-align: center; }
+.brand-table .col-status { width: 120px; text-align: center; }
+.brand-table .col-actions { width: 150px; text-align: center; }
+
+.brand-logo {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 4px;
+    border: 2px solid rgba(0, 217, 255, 0.3);
+}
+
+.no-logo {
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 0, 0, 0.3);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #00d9ff;
+    margin: 0 auto;
+}
+
+.brand-name-cell {
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: help;
+    font-weight: bold;
+    color: #00d9ff;
+}
+
+.brand-description-cell {
+    max-width: 250px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: help;
+    color: #e0e1dd;
+}
+
+.brand-website {
+    color: #00d9ff;
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+.brand-website:hover {
+    color: #66ffff;
+    text-shadow: 0 0 10px rgba(0, 217, 255, 0.8);
+}
+
+/* Create/Edit Brand Page */
+.create-brand-page,
+.edit-brand-page {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.new-brand-badge {
+    background: linear-gradient(135deg, #00d9ff, #66ffff);
+    color: #05345f;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.edit-brand-badge {
+    background: linear-gradient(135deg, #ffc107, #ffdb58);
+    color: #05345f;
+    padding: 0.5rem 1rem;
+    border-radius: 50px;
+    font-weight: bold;
+    font-size: 0.9rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+    animation: pulse 2s infinite;
+}
+
+.brand-form {
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 12px;
+    padding: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: #00d9ff;
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.6);
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 8px;
+    color: #e0e1dd;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: #00d9ff;
+    box-shadow: 0 0 20px rgba(0, 217, 255, 0.4);
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.logo-preview {
+    margin-top: 1rem;
+}
+
+.logo-preview img {
+    max-width: 100px;
+    max-height: 100px;
+    object-fit: contain;
+    border: 2px solid rgba(0, 217, 255, 0.3);
+    border-radius: 4px;
+    padding: 0.5rem;
+    background: rgba(0, 0, 0, 0.3);
+}

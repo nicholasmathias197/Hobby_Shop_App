@@ -1,0 +1,19 @@
+footer {
+    background: linear-gradient(135deg, #000000 0%, #001a33 100%);
+    border-top: 2px solid rgba(0, 217, 255, 0.4);
+    color: #00d9ff;
+    text-align: center;
+    padding: 1.5rem;
+    position: relative;
+    overflow: hidden;
+}
+
+footer::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #0066cc, #00d9ff, #0066cc);
+}

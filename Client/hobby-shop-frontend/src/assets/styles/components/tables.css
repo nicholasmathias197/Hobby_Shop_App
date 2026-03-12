@@ -1,0 +1,28 @@
+/* ===== TABLES ===== */
+table, .product-table, .cart-table, .order-items-table, .items-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: rgba(0, 0, 0, 0.6);
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid rgba(0, 217, 255, 0.2);
+}
+
+th, .product-table th, .cart-table th, .order-items-table th, .items-table th {
+    background: linear-gradient(135deg, #000000 0%, #001a33 50%, #003366 100%);
+    color: #00d9ff;
+    font-weight: 600;
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 2px solid rgba(0, 217, 255, 0.4);
+}
+
+td, .product-table td, .cart-table td, .order-items-table td, .items-table td {
+    padding: 1rem;
+    border-bottom: 1px solid rgba(0, 217, 255, 0.2);
+    color: #e0e1dd;
+}
+
+tr:hover, .product-table tbody tr:hover, .cart-table tbody tr:hover {
+    background: rgba(0, 102, 204, 0.2);
+}

@@ -9,11 +9,11 @@ const EditCategoryPage = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [isActive, setIsActive] = useState(true);
   const [formData, setFormData] = useState({
     name: '',
     description: '',
-    imageUrl: '',
-    active: true
+    imageUrl: ''
   });
 
   useEffect(() => {
@@ -23,12 +23,15 @@ const EditCategoryPage = () => {
   const loadCategory = async () => {
     try {
       const data = await getCategoryById(id);
+      console.log('Loaded category:', data); // Debug log
       setFormData({
         name: data.name || '',
         description: data.description || '',
-        imageUrl: data.imageUrl || '',
-        active: data.active !== undefined ? data.active : true
+        imageUrl: data.imageUrl || ''
       });
+      // Check which property name the backend uses
+      setIsActive(data.active !== undefined ? data.active : 
+                  data.isActive !== undefined ? data.isActive : true);
     } catch (error) {
       console.error('Error loading category:', error);
       alert('Failed to load category');
@@ -39,11 +42,8 @@ const EditCategoryPage = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData(prev => ({ 
-      ...prev, 
-      [name]: type === 'checkbox' ? checked : value 
-    }));
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -51,7 +51,14 @@ const EditCategoryPage = () => {
     setSaving(true);
     
     try {
-      await updateCategory(id, formData);
+      // Send both property names to be safe
+      const categoryData = {
+        ...formData,
+        active: isActive,
+        isActive: isActive
+      };
+      console.log('Updating category:', categoryData);
+      await updateCategory(id, categoryData);
       navigate('/admin/categories');
     } catch (error) {
       console.error('Error updating category:', error);
@@ -64,77 +71,47 @@ const EditCategoryPage = () => {
   if (loading) return <div>Loading category...</div>;
 
   return (
-    <div style={{ maxWidth: '600px', margin: '0 auto' }}>
-      <h1 style={{ marginBottom: '2rem' }}>Edit Category</h1>
+    <div className="edit-category-page">
+      <div className="page-header">
+        <h1>Edit Category</h1>
+        <div className="edit-category-badge">✏️ Editing Category</div>
+      </div>
       
-      <form onSubmit={handleSubmit}>
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-            Category Name *
-          </label>
+      <form onSubmit={handleSubmit} className="category-form">
+        <div className="form-group">
+          <label>Category Name *</label>
           <input
             type="text"
             name="name"
             value={formData.name}
             onChange={handleChange}
             required
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: '1px solid #ddd'
-            }}
           />
         </div>
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-            Description
-          </label>
+        <div className="form-group">
+          <label>Description</label>
           <textarea
             name="description"
             value={formData.description}
             onChange={handleChange}
             rows="4"
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: '1px solid #ddd',
-              resize: 'vertical'
-            }}
           />
         </div>
 
-        <div style={{ marginBottom: '1rem' }}>
-          <label style={{ display: 'block', marginBottom: '0.5rem', fontWeight: 'bold' }}>
-            Image URL
-          </label>
+        <div className="form-group">
+          <label>Image URL</label>
           <input
             type="url"
             name="imageUrl"
             value={formData.imageUrl}
             onChange={handleChange}
-            style={{
-              width: '100%',
-              padding: '0.75rem',
-              borderRadius: '4px',
-              border: '1px solid #ddd'
-            }}
           />
           {formData.imageUrl && (
-            <div style={{ marginTop: '0.5rem' }}>
-              <p>Preview:</p>
+            <div className="image-preview">
               <img 
                 src={formData.imageUrl} 
                 alt="Category preview"
-                style={{ 
-                  maxWidth: '200px', 
-                  maxHeight: '200px',
-                  objectFit: 'cover',
-                  borderRadius: '4px',
-                  border: '1px solid #ddd'
-                }}
                 onError={(e) => {
                   e.target.onerror = null;
                   e.target.src = 'https://via.placeholder.com/200?text=Invalid+Image';
@@ -144,19 +121,26 @@ const EditCategoryPage = () => {
           )}
         </div>
 
-        <div style={{ marginBottom: '2rem' }}>
-          <label style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <input
-              type="checkbox"
-              name="active"
-              checked={formData.active}
-              onChange={handleChange}
-            />
-            <span style={{ fontWeight: 'bold' }}>Active (visible to customers)</span>
+        {/* Active Status Toggle */}
+        <div className="form-toggle-group">
+          <label className="toggle-label">
+            <span className="toggle-text">Active Status:</span>
+            <div className="toggle-container">
+              <input
+                type="checkbox"
+                checked={isActive}
+                onChange={(e) => setIsActive(e.target.checked)}
+                className="toggle-checkbox"
+              />
+              <span className="toggle-switch-label">
+                <span className="toggle-button"></span>
+              </span>
+            </div>
           </label>
+          <span className="toggle-status-text">{isActive ? 'Active' : 'Inactive'}</span>
         </div>
 
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div className="form-actions">
           <Button type="submit" variant="primary" disabled={saving}>
             {saving ? 'Saving...' : 'Save Changes'}
           </Button>

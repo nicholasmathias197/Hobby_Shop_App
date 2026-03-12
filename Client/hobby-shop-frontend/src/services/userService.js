@@ -1,6 +1,8 @@
+// src/services/userService.js
 import api from './api';
 
-// User profile
+// ============= USER PROFILE =============
+
 export const getProfile = async () => {
   const response = await api.get('/customers/profile');
   return response.data;
@@ -19,12 +21,24 @@ export const changePassword = async (oldPassword, newPassword) => {
   return response.data;
 };
 
-// Admin customer management
-export const getAllCustomers = async () => {
-  const response = await api.get('/customers');
+// ============= ADMIN CUSTOMER MANAGEMENT =============
+
+/**
+ * Get all customers (admin only)
+ * @param {number} page - Page number
+ * @param {number} size - Page size
+ */
+export const getAllCustomers = async (page = 0, size = 20) => {
+  const response = await api.get('/customers', {
+    params: { page, size }
+  });
   return response.data;
 };
 
+/**
+ * Get customer by ID (admin only)
+ * @param {number} id - Customer ID
+ */
 export const getCustomerById = async (id) => {
   const response = await api.get(`/customers/${id}`);
   return response.data;
@@ -40,8 +54,13 @@ export const updateCustomer = async (id, customerData) => {
   return response.data;
 };
 
-export const toggleCustomerStatus = async (id) => {
-  const response = await api.put(`/customers/${id}/toggle-status`);
+/**
+ * Toggle customer status (enable/disable)
+ * @param {number} id - Customer ID
+ * @param {boolean} enabled - Desired status
+ */
+export const toggleCustomerStatus = async (id, enabled) => {
+  const response = await api.put(`/customers/${id}/toggle-status`, { enabled });
   return response.data;
 };
 
@@ -62,7 +81,8 @@ export const deleteCustomer = async (id) => {
   return response.data;
 };
 
-// Statistics
+// ============= STATISTICS =============
+
 export const getCustomerStats = async () => {
   const response = await api.get('/customers/statistics');
   return response.data;
