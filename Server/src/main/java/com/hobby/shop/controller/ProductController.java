@@ -177,4 +177,53 @@ public class ProductController {
         productService.deleteProduct(id);
         return ResponseEntity.noContent().build();
     }
+    /**
+     * Get all products including inactive (soft-deleted) (admin only)
+            * GET /api/products/admin/all
+ */
+    @GetMapping("/admin/all")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<ProductResponse>> getAllProductsIncludingInactive(
+            @PageableDefault(size = 20, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
+        return ResponseEntity.ok(productService.getAllProductsIncludingInactive(pageable));
+    }
+
+    /**
+     * Restore a soft-deleted product (admin only)
+     * PUT /api/products/{id}/restore
+     */
+    @PutMapping("/{id}/restore")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ProductResponse> restoreProduct(@PathVariable Long id) {
+        return ResponseEntity.ok(productService.restoreProduct(id));
+    }
+    /**
+     * Get count of active products (admin only)
+     * GET /api/products/count/active
+     */
+    @GetMapping("/count/active")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Long> getActiveProductsCount() {
+        return ResponseEntity.ok(productService.getActiveProductsCount());
+    }
+
+    /**
+     * Get count of inactive products (admin only)
+     * GET /api/products/count/inactive
+     */
+    @GetMapping("/count/inactive")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Long> getInactiveProductsCount() {
+        return ResponseEntity.ok(productService.getInactiveProductsCount());
+    }
+
+    /**
+     * Get count of featured products (admin only)
+     * GET /api/products/count/featured
+     */
+    @GetMapping("/count/featured")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Long> getFeaturedProductsCount() {
+        return ResponseEntity.ok(productService.getFeaturedProductsCount());
+    }
 }

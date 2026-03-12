@@ -357,4 +357,41 @@ public class ProductServiceImpl implements ProductService {
         product.setStockQuantity(product.getStockQuantity() - quantity);
         productRepository.save(product);
     }
+    @Override
+    public Page<ProductResponse> getAllProductsIncludingInactive(Pageable pageable) {
+        return productRepository.findAll(pageable) // This will include inactive products
+                .map(product -> {
+                    ProductResponse response = productMapper.toResponse(product);
+                    Double avgRating = reviewRepository.findAverageRatingByProductId(product.getId()).orElse(null);
+                    response.setAverageRating(avgRating != null ? avgRating : 0.0);
+                    return response;
+                });
+    }
+
+    @Override
+    public ProductResponse restoreProduct(Long id) {
+        Product product = productRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Product not found with id: " + id));
+
+        product.setIsActive(true);
+        Product restoredProduct = productRepository.save(product);
+        log.info("Product restored successfully with ID: {}", id);
+
+        return productMapper.toResponse(restoredProduct);
+    }
+    // In ProductServiceImpl.java
+    @Override
+    public long getActiveProductsCount() {
+        return productRepository.countByIsActiveTrue();
+    }
+
+    @Override
+    public long getInactiveProductsCount() {
+        return productRepository.countByIsActiveFalse();
+    }
+
+    @Override
+    public long getFeaturedProductsCount() {
+        return productRepository.countByIsFeaturedTrueAndIsActiveTrue();
+    }
 }

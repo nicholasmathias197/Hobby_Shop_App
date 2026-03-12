@@ -23,4 +23,9 @@ public interface ProductService {
                                          String searchTerm, Pageable pageable);
     boolean checkStock(Long productId, Integer quantity);
     void updateStock(Long productId, Integer quantity);
+    Page<ProductResponse> getAllProductsIncludingInactive(Pageable pageable);
+    ProductResponse restoreProduct(Long id);
+    long getActiveProductsCount();
+    long getInactiveProductsCount();
+    long getFeaturedProductsCount();
 }

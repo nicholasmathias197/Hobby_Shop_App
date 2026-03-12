@@ -45,15 +45,17 @@ const ProductCard = ({ product }) => {
       <Link to={`/product/${product.id}`} className="product-card-link">
         <div className="product-image-container">
           {product.imageUrl ? (
-            <img 
-              src={product.imageUrl} 
-              alt={product.name}
-              className="product-image"
-              onError={(e) => {
-                e.target.onerror = null;
-                e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
-              }}
-            />
+            <div className="product-image-wrapper">
+              <img 
+                src={product.imageUrl} 
+                alt={product.name}
+                className="product-image"
+                onError={(e) => {
+                  e.target.onerror = null;
+                  e.target.src = 'https://via.placeholder.com/300x200?text=No+Image';
+                }}
+              />
+            </div>
           ) : (
             <div className="product-image-placeholder">
               No Image Available

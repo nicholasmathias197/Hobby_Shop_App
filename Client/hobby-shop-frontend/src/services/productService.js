@@ -172,3 +172,46 @@ export const deleteProduct = async (id) => {
   const response = await api.delete(`/products/${id}`);
   return response.data;
 };
+/**
+ * Get all products including inactive (soft-deleted) - Admin only
+ */
+export const getAllProductsIncludingInactive = async (page = 0, size = 20) => {
+  const response = await api.get('/products/admin/all', {
+    params: { page, size }
+  });
+  return extractContent(response.data);
+};
+
+/**
+ * Restore a soft-deleted product - Admin only
+ * @param {number} id - Product ID
+ */
+export const restoreProduct = async (id) => {
+  const response = await api.put(`/products/${id}/restore`);
+  return response.data;
+};
+// src/services/productService.js - add these functions
+
+/**
+ * Get count of active products (admin only)
+ */
+export const getActiveProductsCount = async () => {
+  const response = await api.get('/products/count/active');
+  return response.data;
+};
+
+/**
+ * Get count of inactive products (admin only)
+ */
+export const getInactiveProductsCount = async () => {
+  const response = await api.get('/products/count/inactive');
+  return response.data;
+};
+
+/**
+ * Get count of featured products (admin only)
+ */
+export const getFeaturedProductsCount = async () => {
+  const response = await api.get('/products/count/featured');
+  return response.data;
+};

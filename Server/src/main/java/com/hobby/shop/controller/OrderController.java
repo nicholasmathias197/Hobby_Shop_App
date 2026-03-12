@@ -29,6 +29,18 @@ public class OrderController {
     // ============= AUTHENTICATED USER ENDPOINTS =============
 
     /**
+     * Create order for authenticated user
+     * POST /api/orders
+     */
+    @PostMapping
+    public ResponseEntity<OrderResponse> createOrder(@Valid @RequestBody OrderRequest request) {
+        String email = securityUtils.getCurrentUserEmail();
+        log.info("Creating order for authenticated user: {}", email);
+        OrderResponse response = orderService.createOrder(email, request);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    /**
      * Create order for guest user
      * POST /api/orders/guest
      */

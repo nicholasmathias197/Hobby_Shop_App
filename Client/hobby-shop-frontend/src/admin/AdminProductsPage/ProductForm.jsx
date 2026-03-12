@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Input, Button } from '../../components/ui';
-import { getCategoriesArray } from '../../services/categoryService';  // Changed from productService
-import { getBrandsArray } from '../../services/brandService';        // Changed from productService
+import { getCategoriesArray } from '../../services/categoryService';
+import { getBrandsArray } from '../../services/brandService';
 
 const ProductForm = ({ product, onSubmit, onCancel }) => {
   const [formData, setFormData] = useState({
@@ -43,8 +43,8 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
   const loadFormData = async () => {
     try {
       const [categoriesData, brandsData] = await Promise.all([
-        getCategoriesArray(),  // Now using correct service
-        getBrandsArray()       // Now using correct service
+        getCategoriesArray(),
+        getBrandsArray()
       ]);
       setCategories(categoriesData);
       setBrands(brandsData);
@@ -72,7 +72,7 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} style={{ padding: '1rem' }}>
+    <form onSubmit={handleSubmit} className="product-form">
       <h3>{product ? 'Edit Product' : 'Create New Product'}</h3>
       
       <Input
@@ -83,19 +83,13 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
         required
       />
       
-      <div style={{ marginBottom: '1rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Description</label>
+      <div className="form-group">
+        <label>Description</label>
         <textarea
           name="description"
           value={formData.description}
           onChange={handleChange}
           rows="4"
-          style={{
-            width: '100%',
-            padding: '0.5rem',
-            border: '1px solid #ddd',
-            borderRadius: '4px'
-          }}
           required
         />
       </div>
@@ -127,18 +121,12 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
         required
       />
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Brand</label>
+      <div className="form-group">
+        <label>Brand</label>
         <select
           name="brandId"
           value={formData.brandId}
           onChange={handleChange}
-          style={{
-            width: '100%',
-            padding: '0.5rem',
-            border: '1px solid #ddd',
-            borderRadius: '4px'
-          }}
           required
         >
           <option value="">Select Brand</option>
@@ -148,18 +136,12 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
         </select>
       </div>
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label style={{ display: 'block', marginBottom: '0.5rem' }}>Category</label>
+      <div className="form-group">
+        <label>Category</label>
         <select
           name="categoryId"
           value={formData.categoryId}
           onChange={handleChange}
-          style={{
-            width: '100%',
-            padding: '0.5rem',
-            border: '1px solid #ddd',
-            borderRadius: '4px'
-          }}
           required
         >
           <option value="">Select Category</option>
@@ -183,28 +165,47 @@ const ProductForm = ({ product, onSubmit, onCancel }) => {
         onChange={handleChange}
       />
 
-      <div style={{ marginBottom: '1rem' }}>
-        <label style={{ marginRight: '1rem' }}>
-          <input
-            type="checkbox"
-            name="isActive"
-            checked={formData.isActive}
-            onChange={handleChange}
-          />
-          {' '}Active
+      {/* Active Status Toggle */}
+      <div className="form-toggle-group">
+        <label className="toggle-label">
+          <span className="toggle-text">Active Status:</span>
+          <div className="toggle-container">
+            <input
+              type="checkbox"
+              name="isActive"
+              checked={formData.isActive}
+              onChange={handleChange}
+              className="toggle-checkbox"
+            />
+            <span className="toggle-switch-label">
+              <span className="toggle-button"></span>
+            </span>
+          </div>
         </label>
-        <label>
-          <input
-            type="checkbox"
-            name="isFeatured"
-            checked={formData.isFeatured}
-            onChange={handleChange}
-          />
-          {' '}Featured
-        </label>
+        <span className="toggle-status-text">{formData.isActive ? 'Active' : 'Inactive'}</span>
       </div>
 
-      <div style={{ display: 'flex', gap: '1rem' }}>
+      {/* Featured Toggle */}
+      <div className="form-toggle-group featured-group">
+        <label className="toggle-label">
+          <span className="toggle-text">Featured:</span>
+          <div className="toggle-container">
+            <input
+              type="checkbox"
+              name="isFeatured"
+              checked={formData.isFeatured}
+              onChange={handleChange}
+              className="toggle-checkbox"
+            />
+            <span className="toggle-switch-label">
+              <span className="toggle-button"></span>
+            </span>
+          </div>
+        </label>
+        <span className="toggle-status-text">{formData.isFeatured ? 'Featured' : 'Regular'}</span>
+      </div>
+
+      <div className="form-actions">
         <Button type="submit" variant="primary" disabled={loading}>
           {loading ? 'Saving...' : (product ? 'Update' : 'Create')}
         </Button>

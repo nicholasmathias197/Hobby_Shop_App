@@ -3,7 +3,6 @@ package com.hobby.shop.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -11,23 +10,6 @@ import java.util.List;
 
 @Data
 public class OrderRequest {
-
-    // Payment Information
-    @NotBlank(message = "Payment method is required")
-    private String paymentMethod; // "credit_card", "paypal", etc.
-
-    private String cardNumber;
-    private String cardHolderName;
-    private String cardExpiryMonth;
-    private String cardExpiryYear;
-    private String cardCvv;
-
-    // Billing Address (can be same as shipping)
-    private boolean sameAsShipping = true;
-    private String billingAddress;
-    private String billingCity;
-    private String billingPostalCode;
-    private String billingCountry;
 
     // Shipping Information
     @NotBlank(message = "Shipping address is required")
@@ -42,11 +24,30 @@ public class OrderRequest {
     @NotBlank(message = "Country is required")
     private String shippingCountry;
 
+    // Payment Information
+    private String paymentMethod;
+
+    // For credit card payments (store only last 4 digits in production)
+    private String cardLastFour; // You can derive this from cardNumber on backend
+
+    // Billing Information
+    private String billingAddress;
+    private String billingCity;
+    private String billingPostalCode;
+    private String billingCountry;
+
+    // Customer Information
+    private String customerEmail;
+    private String customerPhone;
+    private String customerName;
+
     private String notes;
 
+    // Guest Email (for guest checkout)
     @Email(message = "Valid email is required for guest checkout")
     private String guestEmail;
 
+    // Order Items
     @NotNull(message = "Order items are required")
     @Size(min = 1, message = "At least one item is required")
     private List<OrderItemRequest> items;
