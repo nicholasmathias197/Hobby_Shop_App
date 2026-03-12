@@ -18,6 +18,7 @@ import CheckoutPage from '../pages/CheckoutPage/CheckoutPage';
 import OrdersPage from '../pages/OrdersPage';
 import OrderDetailPage from '../pages/OrderDetailPage';
 import ProfilePage from '../pages/ProfilePage/ProfilePage';
+import OrderSuccessPage from '../pages/OrderSuccessPage'
 
 // ============= ADMIN PAGE IMPORTS =============
 import AdminDashboard from '../admin/AdminDashboard/AdminDashboard';
@@ -148,6 +149,13 @@ const AppRoutes = () => {
           </MainLayout>
         </ProtectedRoute>
       } />
+      <Route path="/order/:orderNumber" element={
+  <ProtectedRoute>
+    <MainLayout>
+      <OrderSuccessPage />
+    </MainLayout>
+  </ProtectedRoute>
+} />
       
       {/* Order Details */}
       <Route path="/order/:orderNumber" element={

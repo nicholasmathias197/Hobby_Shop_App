@@ -1,17 +1,18 @@
-import React, { useState, useEffect } from 'react';
+// src/pages/OrderDetailPage.jsx
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { getOrderByNumber } from '../services/orderService';
+import { getOrderByNumber, cancelOrder } from '../services/orderService';
+import { useAuth } from '../hooks/useAuth';
+import { Button } from '../components/ui';
 
 const OrderDetailPage = () => {
   const { orderNumber } = useParams();
+  const { isAuthenticated } = useAuth();
   const [order, setOrder] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [cancelling, setCancelling] = useState(false);
 
-  useEffect(() => {
-    loadOrder();
-  }, [orderNumber]);
-
-  const loadOrder = async () => {
+  const loadOrder = useCallback(async () => {
     try {
       const data = await getOrderByNumber(orderNumber);
       setOrder(data);
@@ -20,94 +21,171 @@ const OrderDetailPage = () => {
     } finally {
       setLoading(false);
     }
+  }, [orderNumber]);
+
+  useEffect(() => {
+    loadOrder();
+  }, [loadOrder]);
+
+  const handleCancelOrder = async () => {
+    if (!window.confirm('Are you sure you want to cancel this order?')) {
+      return;
+    }
+
+    setCancelling(true);
+    try {
+      await cancelOrder(order.id, 'Cancelled by customer');
+      await loadOrder();
+    } catch (error) {
+      console.error('Error cancelling order:', error);
+      alert('Failed to cancel order');
+    } finally {
+      setCancelling(false);
+    }
   };
 
-  if (loading) return <div>Loading order details...</div>;
-  if (!order) return <div>Order not found</div>;
+  const getStatusColor = (status) => {
+    const colors = {
+      'PENDING': '#ffc107',
+      'PROCESSING': '#17a2b8',
+      'SHIPPED': '#007bff',
+      'DELIVERED': '#28a745',
+      'CANCELLED': '#dc3545'
+    };
+    return colors[status] || '#6c757d';
+  };
+
+  const getPaymentMethodDisplay = (method) => {
+    const methods = {
+      'credit_card': 'Credit Card',
+      'paypal': 'PayPal',
+      'cash_on_delivery': 'Cash on Delivery'
+    };
+    return methods[method] || method;
+  };
+
+  if (loading) return <div className="loading">Loading order details...</div>;
+  if (!order) return <div className="error">Order not found</div>;
 
   return (
-    <div>
-      <h1 style={{ marginBottom: '2rem' }}>Order #{order.orderNumber}</h1>
-      
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(2, 1fr)',
-        gap: '2rem',
-        marginBottom: '2rem'
-      }}>
-        <div style={{
-          padding: '1rem',
-          backgroundColor: '#000408',
-          borderRadius: '4px'
-        }}>
-          <h3>Order Information</h3>
-          <p><strong>Date:</strong> {new Date(order.orderDate).toLocaleString()}</p>
-          <p><strong>Status:</strong> {order.status}</p>
-          <p><strong>Payment Status:</strong> {order.paymentStatus}</p>
-          {order.trackingNumber && (
-            <p><strong>Tracking Number:</strong> {order.trackingNumber}</p>
-          )}
+    <div className="order-detail-page">
+      <div className="order-header">
+        <h1>Order #{order.orderNumber}</h1>
+        <span 
+          className="status-badge" 
+          style={{ backgroundColor: getStatusColor(order.status) }}
+        >
+          {order.status}
+        </span>
+      </div>
+
+      <div className="order-grid">
+        <div className="order-section">
+          <h3>Shipping Address</h3>
+          <p>
+            {order.shippingAddress?.firstName} {order.shippingAddress?.lastName}<br />
+            {order.shippingAddress?.address}<br />
+            {order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.postalCode}<br />
+            {order.shippingAddress?.country}<br />
+            {order.shippingAddress?.email}<br />
+            {order.shippingAddress?.phone}
+          </p>
         </div>
 
-        <div style={{
-          padding: '1rem',
-          backgroundColor: '#010408',
-          borderRadius: '4px'
-        }}>
-          <h3>Shipping Address</h3>
-          <p>{order.shippingAddress?.firstName} {order.shippingAddress?.lastName}</p>
-          <p>{order.shippingAddress?.address}</p>
-          <p>{order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.postalCode}</p>
-          <p>{order.shippingAddress?.country}</p>
-          <p>{order.shippingAddress?.email}</p>
-          <p>{order.shippingAddress?.phone}</p>
+        <div className="order-section">
+          <h3>Payment Information</h3>
+          <p>
+            <strong>Method:</strong> {getPaymentMethodDisplay(order.paymentMethod)}<br />
+            {order.paymentMethod === 'credit_card' && order.cardLastFour && (
+              <>Card ending in {order.cardLastFour}</>
+            )}
+          </p>
+          
+          <h3 style={{ marginTop: '1rem' }}>Billing Address</h3>
+          {order.billingAddress ? (
+            <p>
+              {order.billingAddress}<br />
+              {order.billingCity}, {order.billingPostalCode}<br />
+              {order.billingCountry}
+            </p>
+          ) : (
+            <p>Same as shipping address</p>
+          )}
+
+          <p style={{ marginTop: '1rem' }}>
+            <strong>Payment Status:</strong>{' '}
+            <span className={`payment-status ${order.paymentStatus?.toLowerCase()}`}>
+              {order.paymentStatus}
+            </span>
+          </p>
         </div>
       </div>
 
-      <h3>Order Items</h3>
-      <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-        <thead>
-          <tr style={{ backgroundColor: '#f8f9fa' }}>
-            <th style={{ padding: '1rem', textAlign: 'left' }}>Product</th>
-            <th style={{ padding: '1rem', textAlign: 'left' }}>Price</th>
-            <th style={{ padding: '1rem', textAlign: 'left' }}>Quantity</th>
-            <th style={{ padding: '1rem', textAlign: 'left' }}>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          {order.items?.map(item => (
-            <tr key={item.id} style={{ borderBottom: '1px solid #ddd' }}>
-              <td style={{ padding: '1rem' }}>{item.productName}</td>
-              <td style={{ padding: '1rem' }}>${item.price}</td>
-              <td style={{ padding: '1rem' }}>{item.quantity}</td>
-              <td style={{ padding: '1rem' }}>${(item.price * item.quantity).toFixed(2)}</td>
+      <div className="order-items-section">
+        <h3>Order Items</h3>
+        <table className="order-items-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Price</th>
+              <th>Quantity</th>
+              <th>Total</th>
             </tr>
-          ))}
-        </tbody>
-        <tfoot>
-          <tr>
-            <td colSpan="3" style={{ padding: '1rem', textAlign: 'right', fontWeight: 'bold' }}>
-              Total:
-            </td>
-            <td style={{ padding: '1rem', fontWeight: 'bold' }}>
-              ${order.totalAmount}
-            </td>
-          </tr>
-        </tfoot>
-      </table>
+          </thead>
+          <tbody>
+            {order.items?.map(item => (
+              <tr key={item.id}>
+                <td>
+                  <Link to={`/product/${item.productId}`}>
+                    {item.productName}
+                  </Link>
+                </td>
+                <td>${item.pricePerUnit?.toFixed(2)}</td>
+                <td>{item.quantity}</td>
+                <td>${item.subtotal?.toFixed(2)}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr>
+              <td colSpan="3" className="total-label">Subtotal:</td>
+              <td className="total-value">${order.subtotal?.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td colSpan="3" className="total-label">Shipping:</td>
+              <td className="total-value">${order.shippingCost?.toFixed(2)}</td>
+            </tr>
+            <tr>
+              <td colSpan="3" className="total-label">Tax:</td>
+              <td className="total-value">${order.tax?.toFixed(2)}</td>
+            </tr>
+            <tr className="grand-total">
+              <td colSpan="3" className="total-label">Total:</td>
+              <td className="total-value">${order.totalAmount?.toFixed(2)}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
-      <div style={{ marginTop: '2rem' }}>
+      {order.trackingNumber && (
+        <div className="tracking-section">
+          <h3>Tracking Information</h3>
+          <p>Tracking Number: {order.trackingNumber}</p>
+        </div>
+      )}
+
+      <div className="order-actions">
+        {order.status === 'PENDING' && isAuthenticated() && (
+          <Button 
+            variant="danger" 
+            onClick={handleCancelOrder}
+            disabled={cancelling}
+          >
+            {cancelling ? 'Cancelling...' : 'Cancel Order'}
+          </Button>
+        )}
         <Link to="/orders">
-          <button style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: '#6c757d',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}>
-            Back to Orders
-          </button>
+          <Button variant="secondary">Back to Orders</Button>
         </Link>
       </div>
     </div>

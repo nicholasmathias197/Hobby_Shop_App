@@ -3,6 +3,7 @@ package com.hobby.shop.dto.request;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
@@ -11,11 +12,24 @@ import java.util.List;
 @Data
 public class OrderRequest {
 
-    private String paymentMethod;
+    // Payment Information
+    @NotBlank(message = "Payment method is required")
+    private String paymentMethod; // "credit_card", "paypal", etc.
 
-    @Email(message = "Valid email is required for guest checkout")
-    private String guestEmail;  // Add this field for guest orders
+    private String cardNumber;
+    private String cardHolderName;
+    private String cardExpiryMonth;
+    private String cardExpiryYear;
+    private String cardCvv;
 
+    // Billing Address (can be same as shipping)
+    private boolean sameAsShipping = true;
+    private String billingAddress;
+    private String billingCity;
+    private String billingPostalCode;
+    private String billingCountry;
+
+    // Shipping Information
     @NotBlank(message = "Shipping address is required")
     private String shippingAddress;
 
@@ -29,6 +43,9 @@ public class OrderRequest {
     private String shippingCountry;
 
     private String notes;
+
+    @Email(message = "Valid email is required for guest checkout")
+    private String guestEmail;
 
     @NotNull(message = "Order items are required")
     @Size(min = 1, message = "At least one item is required")
