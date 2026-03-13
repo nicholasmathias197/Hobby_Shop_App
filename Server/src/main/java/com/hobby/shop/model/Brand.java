@@ -47,4 +47,7 @@ public class Brand {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
     }
+
+    public void setUpdatedAt(LocalDateTime now) {
+    }
 }

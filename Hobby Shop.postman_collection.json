@@ -193,6 +193,49 @@
             }
           },
           "response": []
+        },
+        {
+          "name": "Get All Reviews For Product",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/products/{productId}/reviews",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products",
+                "{productId}",
+                "reviews"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Get Average Rating and Total Count",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/products/{productId}rating",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products",
+                "{productId}rating"
+              ]
+            }
+          },
+          "response": []
         }
       ]
     },
@@ -1057,7 +1100,7 @@
               "bearer": [
                 {
                   "key": "token",
-                  "value": "{{token}}",
+                  "value": "{{jwtToken}}",
                   "type": "string"
                 }
               ]
@@ -1107,6 +1150,100 @@
                 "orders",
                 "4",
                 "cancel"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Product Reviews",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/products/{productId}/reviews",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "products",
+                "{productId}",
+                "reviews"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Update a Review",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/{reviewId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "{reviewId}"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete A Review",
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{jwtToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:8080/api/reviews/{reviewId}",
+              "protocol": "http",
+              "host": [
+                "localhost"
+              ],
+              "port": "8080",
+              "path": [
+                "api",
+                "reviews",
+                "{reviewId}"
               ]
             }
           },
@@ -1708,7 +1845,7 @@
           "response": []
         },
         {
-          "name": "New Request(Soft Delete)",
+          "name": "Delete Customer(Soft Delete)",
           "request": {
             "auth": {
               "type": "bearer",
@@ -1763,7 +1900,7 @@
               }
             },
             "url": {
-              "raw": "http://localhost:8080/api/customers/4/toggle-status",
+              "raw": "http://localhost:8080/api/customers/3/toggle-status",
               "protocol": "http",
               "host": [
                 "localhost"
@@ -1772,7 +1909,7 @@
               "path": [
                 "api",
                 "customers",
-                "4",
+                "3",
                 "toggle-status"
               ]
             }
@@ -1858,6 +1995,14 @@
                 "roles"
               ]
             }
+          },
+          "response": []
+        },
+        {
+          "name": "Delete Customer Review",
+          "request": {
+            "method": "GET",
+            "header": []
           },
           "response": []
         }

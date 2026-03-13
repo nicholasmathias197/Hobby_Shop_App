@@ -25,7 +25,7 @@ public class UserDetailsImpl implements UserDetails {
     private String lastName;
     private Collection<? extends GrantedAuthority> authorities;
 
-    public static UserDetailsImpl build(Customer customer) {
+    public static UserDetailsImpl builder(Customer customer) {
         List<GrantedAuthority> authorities = customer.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getName()))
                 .collect(Collectors.toList());
