@@ -44,7 +44,7 @@ public class Brand {
     private List<Product> products = new ArrayList<>();
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         createdAt = LocalDateTime.now();
     }
 

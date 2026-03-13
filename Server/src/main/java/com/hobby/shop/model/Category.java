@@ -41,7 +41,7 @@ public class Category {
     private List<Product> products = new ArrayList<>();
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         createdAt = LocalDateTime.now();
     }
 

@@ -39,7 +39,7 @@ public class Cart {
     private Set<CartItem> items = new HashSet<>();
 
     @PrePersist
-    protected void onCreate() {
+    public void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
     }
