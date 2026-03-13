@@ -13,8 +13,11 @@ import java.util.Optional;
 @Repository
 public interface OrderRepository extends JpaRepository<Order, Long> {
     Optional<Order> findByOrderNumber(String orderNumber);
+
     Page<Order> findByCustomerId(Long customerId, Pageable pageable);
+
     boolean existsByOrderNumber(String orderNumber);
+
     Page<Order> findByStatus(String status, Pageable pageable);
 
     @Query("SELECT CASE WHEN COUNT(o) > 0 THEN true ELSE false END FROM Order o " +

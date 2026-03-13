@@ -13,16 +13,10 @@ import java.util.Optional;
 
 @Repository
 public interface ProductReviewRepository extends JpaRepository<ProductReview, Long> {
-
     Page<ProductReview> findByProductId(Long productId, Pageable pageable);
-
-    List<ProductReview> findByProductId(Long productId);
-
-    Optional<ProductReview> findByProductIdAndCustomerId(Long productId, Long customerId);
 
     boolean existsByProductIdAndCustomerId(Long productId, Long customerId);
 
-    void deleteByProductId(Long productId);
 
     @Query("SELECT AVG(pr.rating) FROM ProductReview pr WHERE pr.product.id = :productId")
     Optional<Double> findAverageRatingByProductId(@Param("productId") Long productId);

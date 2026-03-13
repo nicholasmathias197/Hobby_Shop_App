@@ -18,6 +18,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Optional<Product> findBySku(String sku);
 
     boolean existsBySku(String sku);
+
     boolean existsById(Long id);
 
     Page<Product> findByIsActiveTrue(Pageable pageable);
@@ -44,9 +45,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             @Param("searchTerm") String searchTerm,
             Pageable pageable);
 
-    List<Product> findByStockQuantityLessThan(Integer threshold);
-
     long countByIsActiveTrue();
+
     long countByIsActiveFalse();
+
     long countByIsFeaturedTrueAndIsActiveTrue();
 }
