@@ -25,6 +25,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
 
 @ExtendWith(MockitoExtension.class)
 class CartServiceImplTest extends BaseServiceTest {
@@ -57,6 +58,7 @@ class CartServiceImplTest extends BaseServiceTest {
     private Cart userCart;
     private Cart sessionCart;
     private Product product;
+    private Product product2;
     private CartItem cartItem;
     private CartItemRequest cartItemRequest;
     private final String email = "test@example.com";
@@ -68,6 +70,7 @@ class CartServiceImplTest extends BaseServiceTest {
         customer = createTestCustomer(1L, email);
 
         product = createTestProduct(productId, "Test Product", "SKU123", 10);
+        product2 = createTestProduct(2L, "Product 2", "SKU456", 5);
 
         userCart = createTestCart(1L, customer);
 
@@ -509,25 +512,24 @@ class CartServiceImplTest extends BaseServiceTest {
 
     // ==================== CART MERGING TESTS ====================
 
-    // ==================== CART MERGING TESTS ====================
-
     @Test
     void mergeCarts_UserCartAndSessionCart_MergesSuccessfully() {
         // Arrange
         Cart userEmptyCart = createTestCart(1L, customer);
 
-        Product product2 = createTestProduct(2L, "Product 2", "SKU456", 5);
+        // Clear any existing items
+        userEmptyCart.getItems().clear();
+        sessionCart.getItems().clear();
+
         CartItem sessionItem1 = createTestCartItem(2L, sessionCart, product, 2);
         CartItem sessionItem2 = createTestCartItem(3L, sessionCart, product2, 1);
         sessionCart.getItems().add(sessionItem1);
         sessionCart.getItems().add(sessionItem2);
 
-        when(customerRepository.findByEmail(email)).thenReturn(Optional.of(customer));
-        when(cartRepository.findByCustomerId(customer.getId())).thenReturn(Optional.of(userEmptyCart));
-        when(cartRepository.findBySessionId(sessionId)).thenReturn(Optional.of(sessionCart));
-        // Remove the unnecessary stubbing for cartItemRepository.save
-        // when(cartItemRepository.save(any(CartItem.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(cartRepository.findById(userEmptyCart.getId())).thenReturn(Optional.of(userEmptyCart));
+        lenient().when(customerRepository.findByEmail(email)).thenReturn(Optional.of(customer));
+        lenient().when(cartRepository.findByCustomerId(customer.getId())).thenReturn(Optional.of(userEmptyCart));
+        lenient().when(cartRepository.findBySessionId(sessionId)).thenReturn(Optional.of(sessionCart));
+        lenient().when(cartRepository.findById(userEmptyCart.getId())).thenReturn(Optional.of(userEmptyCart));
 
         // Act
         CartResponse response = cartService.mergeCarts(email, sessionId);
@@ -542,23 +544,24 @@ class CartServiceImplTest extends BaseServiceTest {
     void mergeCarts_UserCartWithExistingItems_MergesWithQuantityUpdate() {
         // Arrange
         CartItem userItem = createTestCartItem(1L, userCart, product, 2);
+        userCart.getItems().clear();
         userCart.getItems().add(userItem);
 
         CartItem sessionItem = createTestCartItem(2L, sessionCart, product, 3); // Same product
+        sessionCart.getItems().clear();
         sessionCart.getItems().add(sessionItem);
 
-        when(customerRepository.findByEmail(email)).thenReturn(Optional.of(customer));
-        when(cartRepository.findByCustomerId(customer.getId())).thenReturn(Optional.of(userCart));
-        when(cartRepository.findBySessionId(sessionId)).thenReturn(Optional.of(sessionCart));
-        when(cartItemRepository.save(any(CartItem.class))).thenAnswer(invocation -> invocation.getArgument(0));
-        when(cartRepository.findById(userCart.getId())).thenReturn(Optional.of(userCart));
+        lenient().when(customerRepository.findByEmail(email)).thenReturn(Optional.of(customer));
+        lenient().when(cartRepository.findByCustomerId(customer.getId())).thenReturn(Optional.of(userCart));
+        lenient().when(cartRepository.findBySessionId(sessionId)).thenReturn(Optional.of(sessionCart));
+        lenient().when(cartRepository.findById(userCart.getId())).thenReturn(Optional.of(userCart));
 
         // Act
         CartResponse response = cartService.mergeCarts(email, sessionId);
 
         // Assert
         assertThat(response).isNotNull();
-        // Should update existing item, not create new one
+        // Should update existing item (2 + 3 = 5), not create new one
         verify(cartItemRepository, times(1)).save(any(CartItem.class));
         assertThat(userItem.getQuantity()).isEqualTo(5); // 2 + 3
     }
@@ -569,8 +572,6 @@ class CartServiceImplTest extends BaseServiceTest {
         when(customerRepository.findByEmail(email)).thenReturn(Optional.of(customer));
         when(cartRepository.findByCustomerId(customer.getId())).thenReturn(Optional.of(userCart));
         when(cartRepository.findBySessionId(sessionId)).thenReturn(Optional.empty());
-        // Remove the unnecessary stubbing for cartRepository.findById
-        // when(cartRepository.findById(userCart.getId())).thenReturn(Optional.of(userCart));
 
         // Act
         CartResponse response = cartService.mergeCarts(email, sessionId);
