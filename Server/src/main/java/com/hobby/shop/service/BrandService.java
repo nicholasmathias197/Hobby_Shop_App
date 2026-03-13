@@ -9,11 +9,18 @@ import java.util.List;
 
 public interface BrandService {
     BrandResponse createBrand(BrandRequest request);
+
     BrandResponse updateBrand(Long id, BrandRequest request);
+
     void deleteBrand(Long id);
+
     BrandResponse getBrandById(Long id);
+
     BrandResponse getBrandByName(String name);
+
     Page<BrandResponse> getAllBrands(Pageable pageable);
+
     List<BrandResponse> getAllActiveBrands();
+
     Page<BrandResponse> getActiveBrands(Pageable pageable);
 }

@@ -9,11 +9,18 @@ import java.util.List;
 
 public interface CategoryService {
     CategoryResponse createCategory(CategoryRequest request);
+
     CategoryResponse updateCategory(Long id, CategoryRequest request);
+
     void deleteCategory(Long id);
+
     CategoryResponse getCategoryById(Long id);
+
     CategoryResponse getCategoryByName(String name);
+
     Page<CategoryResponse> getAllCategories(Pageable pageable);
+
     List<CategoryResponse> getAllActiveCategories();
+
     Page<CategoryResponse> getActiveCategories(Pageable pageable);
 }
