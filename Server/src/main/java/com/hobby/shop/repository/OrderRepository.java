@@ -17,7 +17,6 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     boolean existsByOrderNumber(String orderNumber);
     Page<Order> findByStatus(String status, Pageable pageable);
 
-    Page<Order> findByGuestEmail(String guestEmail, Pageable pageable);
     @Query("SELECT CASE WHEN COUNT(o) > 0 THEN true ELSE false END FROM Order o " +
             "JOIN o.items i WHERE o.customer.id = :customerId AND i.product.id = :productId")
     boolean existsByCustomerIdAndOrderItemsProductId(@Param("customerId") Long customerId,
