@@ -28,3 +28,7 @@ phases:
   post_build:
     commands:
       - echo "========== BUILD COMPLETE =========="
+
+artifacts:
+  files:
+    - '**/*'
