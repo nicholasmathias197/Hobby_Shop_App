@@ -30,7 +30,7 @@ const AdminBrandsPage = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this brand?')) {
+    if (globalThis.confirm('Are you sure you want to delete this brand?')) {
       try {
         await deleteBrand(id);
         loadBrands();
@@ -84,7 +84,7 @@ const AdminBrandsPage = () => {
           }}
         >
           Active Brands 
-          <span className="tab-count">{activeCount}</span>
+        <span className="tab-count">{activeCount}</span>
         </button>
         <button 
           className={`tab ${activeTab === 'inactive' ? 'active' : ''}`}
@@ -94,7 +94,7 @@ const AdminBrandsPage = () => {
           }}
         >
           Inactive Brands 
-          <span className="tab-count">{inactiveCount}</span>
+        <span className="tab-count">{inactiveCount}</span>
         </button>
       </div>
 

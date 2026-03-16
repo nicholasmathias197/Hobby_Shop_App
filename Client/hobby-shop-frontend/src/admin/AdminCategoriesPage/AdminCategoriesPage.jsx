@@ -29,7 +29,7 @@ const AdminCategoriesPage = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to delete this category?')) {
+    if (globalThis.confirm('Are you sure you want to delete this category?')) {
       try {
         await deleteCategory(id);
         loadCategories();
@@ -97,7 +97,7 @@ const AdminCategoriesPage = () => {
           }}
         >
           Active Categories 
-          <span className="tab-count">{activeCount}</span>
+        <span className="tab-count">{activeCount}</span>
         </button>
         <button 
           className={`tab ${activeTab === 'inactive' ? 'active' : ''}`}
@@ -107,7 +107,7 @@ const AdminCategoriesPage = () => {
           }}
         >
           Inactive Categories 
-          <span className="tab-count">{inactiveCount}</span>
+        <span className="tab-count">{inactiveCount}</span>
         </button>
       </div>
 

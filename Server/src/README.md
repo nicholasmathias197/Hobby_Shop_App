@@ -14,63 +14,44 @@ Spring Boot REST API for an online hobby shop specializing in Gundam models and 
 - MapStruct
 
 ## Features
+# Gundam Hobby Shop API - Backend
 
-- User authentication and authorization (JWT-based)
-- Product catalog management
-- Shopping cart functionality (supports both authenticated and guest users)
-- Order processing
-- Product search and filtering
-- Category and brand management
-- Product reviews and ratings
+A Spring Boot REST API for a specialty Gundam hobby shop e-commerce platform. Built with Spring Boot 4.0.0-RC2 and Java 21, deployed on AWS.
 
-## API Endpoints
+## 📋 Table of Contents
+- [Tech Stack](#tech-stack)
+- [Quick Start](#quick-start)
+- [API Documentation](#api-documentation)
+- [Database Schema](#database-schema)
+- [Authentication](#authentication)
+- [AWS Deployment Guide](#aws-deployment-guide)
+- [Architecture Decisions](#architecture-decisions)
+- [Monitoring](#monitoring)
 
-### Authentication
-- `POST /api/auth/register` - Register new user
-- `POST /api/auth/login` - Login user
+## 🛠 Tech Stack
 
-### Products
-- `GET /api/products` - Get all products (paginated)
-- `GET /api/products/{id}` - Get product by ID
-- `GET /api/products/sku/{sku}` - Get product by SKU
-- `GET /api/products/search?query=` - Search products
-- `GET /api/products/filter` - Filter products
-- `POST /api/products` - Create product (Admin)
-- `PUT /api/products/{id}` - Update product (Admin)
-- `DELETE /api/products/{id}` - Deactivate product (Admin)
+| Component | Technology | Version |
+|-----------|------------|---------|
+| Java | OpenJDK | 21 LTS |
+| Framework | Spring Boot | 4.0.0-RC2 |
+| Security | Spring Security + JWT | 0.12.6 |
+| Database | MySQL | 8.x |
+| ORM | Hibernate + JPA | - |
+| Mapping | MapStruct | 1.6.3 |
+| Build | Maven | 3.9.x |
+| Cloud | AWS | EC2, RDS, S3 |
 
-### Cart
-- `GET /api/cart` - Get current cart
-- `POST /api/cart/items` - Add item to cart
-- `PUT /api/cart/items/{itemId}?quantity=` - Update cart item
-- `DELETE /api/cart/items/{itemId}` - Remove item from cart
-- `DELETE /api/cart/clear` - Clear cart
+## 🚀 Quick Start
 
-### Categories
-- `GET /api/categories` - Get all categories
-- `GET /api/categories/{id}` - Get category by ID
-- `GET /api/categories/{id}/products` - Get products by category
-- `POST /api/categories` - Create category (Admin)
-- `PUT /api/categories/{id}` - Update category (Admin)
-- `DELETE /api/categories/{id}` - Delete category (Admin)
+### Prerequisites
+- Java 21
+- MySQL 8.0+
+- Maven
+- AWS CLI (for deployment)
 
-### Brands
-- `GET /api/brands` - Get all brands
-- `GET /api/brands/{id}` - Get brand by ID
-- `GET /api/brands/{id}/products` - Get products by brand
-- `POST /api/brands` - Create brand (Admin)
-- `PUT /api/brands/{id}` - Update brand (Admin)
-- `DELETE /api/brands/{id}` - Delete brand (Admin)
+### Local Setup Steps
 
-### Orders
-- `GET /api/orders` - Get user orders
-- `GET /api/orders/{orderNumber}` - Get order by number
-- `POST /api/orders` - Create order
-- `PUT /api/orders/{id}/status` - Update order status (Admin)
-
-## Setup Instructions
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/hobby-shop-backend.git
-   cd hobby-shop-backend
+1. **Clone & Enter**
+```bash
+git clone <repository-url>
+cd hobby-shop-backend
