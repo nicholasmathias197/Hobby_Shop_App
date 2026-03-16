@@ -1,0 +1,26 @@
+version: 0.2
+
+phases:
+  install:
+    commands:
+      - echo '========== INSTALLING TERRAFORM =========='
+      - dnf install -y dnf-plugins-core
+      - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+      - dnf install -y terraform
+
+  pre_build:
+    commands:
+      - echo '========== PRE-DEPLOY =========='
+      - ls -la
+      - find . -name '*.tf' -type f
+
+  build:
+    commands:
+      - echo '========== TERRAFORM APPLY =========='
+      - terraform --version
+      - terraform init
+      - terraform apply -auto-approve -input=false
+
+  post_build:
+    commands:
+      - echo '========== DEPLOY COMPLETE =========='
