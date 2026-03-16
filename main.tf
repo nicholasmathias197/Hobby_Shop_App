@@ -53,11 +53,36 @@ resource "aws_security_group" "spring_boot_sg" {
   }
 }
 
+# IAM role for EC2 to access S3
+resource "aws_iam_role" "ec2_role" {
+  name = "gundam-hobby-shop-ec2-role"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Action    = "sts:AssumeRole"
+      Effect    = "Allow"
+      Principal = { Service = "ec2.amazonaws.com" }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "ec2_s3" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
+}
+
+resource "aws_iam_instance_profile" "ec2_profile" {
+  name = "gundam-hobby-shop-ec2-profile"
+  role = aws_iam_role.ec2_role.name
+}
+
 # EC2 Instance for Spring Boot
 resource "aws_instance" "spring_boot_app" {
   ami                    = "ami-0c55b159cbfafe1f0"
   instance_type          = "t3.micro"
-  vpc_security_group_ids = [aws_security_group.spring_boot_sg.id]
+  vpc_security_group_ids      = [aws_security_group.spring_boot_sg.id]
+  iam_instance_profile        = aws_iam_instance_profile.ec2_profile.name
 
   user_data = <<-EOF
     #!/bin/bash
