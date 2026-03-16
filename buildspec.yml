@@ -1,12 +1,14 @@
 version: 0.2
 
 phases:
-  install:
+  pre_build:
     commands:
-      - echo "========== INSTALLING TERRAFORM =========="
+      - echo "========== DEPLOYMENT PHASE STARTING =========="
+      - echo "Installing Terraform..."
       - dnf install -y dnf-plugins-core
       - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - dnf install -y terraform
+<<<<<<< HEAD
 
   pre_build:
     commands:
@@ -17,14 +19,24 @@ phases:
       - echo "Looking for Terraform files:"
       - find . -name "*.tf" -type f
 
+=======
+      - terraform --version
+>>>>>>> c53806d36882a3f12d5f75a5958daff85ace9402
   build:
     commands:
-      - echo "========== TERRAFORM COMMANDS =========="
-      - terraform --version
+      - echo "========== CURRENT DIRECTORY =========="
+      - pwd
+      - ls -la
+      - echo "========== APPLYING TERRAFORM =========="
       - terraform init
+<<<<<<< HEAD
       - terraform fmt -check
       - terraform plan -input=false
 
+=======
+      - terraform apply -auto-approve -input=false
+>>>>>>> c53806d36882a3f12d5f75a5958daff85ace9402
   post_build:
     commands:
-      - echo "========== BUILD COMPLETE =========="
+      - echo "========== DEPLOYMENT COMPLETE =========="
+      - echo "Infrastructure successfully deployed!"
