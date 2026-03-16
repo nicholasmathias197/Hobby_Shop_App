@@ -8,13 +8,23 @@ phases:
       - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - dnf install -y terraform
   
+  pre_build:
+    commands:
+      - echo "Current directory: $(pwd)"
+      - echo "Listing files:"
+      - ls -la
+      - echo "Checking for Terraform files:"
+      - find . -name "*.tf"
+  
   build:
     commands:
-      - echo "Changing to Terraform directory..."
-      - cd terraform/environments/prod  # <-- CHANGE THIS to your actual path!
       - echo "Initializing Terraform..."
       - terraform init
       - echo "Formatting check..."
       - terraform fmt -check
       - echo "Planning Terraform..."
       - terraform plan -input=false
+
+  post_build:
+    commands:
+      - echo "Terraform plan completed"
