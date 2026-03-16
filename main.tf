@@ -6,6 +6,11 @@ terraform {
       version = "~> 5.0"
     }
   }
+  backend "s3" {
+    bucket = "gundam-hobby-shop-frontend-911784620581"
+    key    = "terraform/state"
+    region = "us-east-2"
+  }
 }
 
 provider "aws" {
@@ -15,7 +20,7 @@ provider "aws" {
 # EC2 Instance for Spring Boot
 resource "aws_instance" "spring_boot_app" {
   ami           = "ami-0c55b159cbfafe1f0"
-  instance_type = "t2.micro"
+  instance_type = "t3.micro"
 
   tags = {
     Name        = "gundam-hobby-shop-backend"
