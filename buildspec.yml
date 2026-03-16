@@ -9,7 +9,6 @@ phases:
       - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - dnf install -y terraform
       - terraform --version
-  
   build:
     commands:
       - echo "========== CURRENT DIRECTORY =========="
@@ -18,7 +17,6 @@ phases:
       - echo "========== APPLYING TERRAFORM =========="
       - terraform init
       - terraform apply -auto-approve -input=false
-  
   post_build:
     commands:
       - echo "========== DEPLOYMENT COMPLETE =========="
