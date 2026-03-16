@@ -2,19 +2,17 @@ version: 0.2
 
 phases:
   install:
+    runtime-versions:
+      java: corretto21
     commands:
       - echo '========== INSTALLING DEPENDENCIES =========='
-      - dnf install -y dnf-plugins-core maven
-      - export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
-      - java -version
+      - dnf install -y maven
       - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - dnf install -y terraform
 
   pre_build:
     commands:
       - echo '========== BUILDING SPRING BOOT JAR =========='
-      - export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
-      - export PATH=$JAVA_HOME/bin:$PATH
       - java -version
       - cd Server
       - mvn clean package -DskipTests
