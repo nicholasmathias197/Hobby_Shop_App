@@ -3,28 +3,28 @@ version: 0.2
 phases:
   install:
     commands:
-      - echo "Installing Terraform..."
+      - echo "========== INSTALLING TERRAFORM =========="
       - dnf install -y dnf-plugins-core
       - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - dnf install -y terraform
   
   pre_build:
     commands:
+      - echo "========== DEBUGGING =========="
       - echo "Current directory: $(pwd)"
-      - echo "Listing files:"
+      - echo "Listing all files:"
       - ls -la
-      - echo "Checking for Terraform files:"
-      - find . -name "*.tf"
+      - echo "Looking for Terraform files:"
+      - find . -name "*.tf" -type f
   
   build:
     commands:
-      - echo "Initializing Terraform..."
+      - echo "========== TERRAFORM COMMANDS =========="
+      - terraform --version
       - terraform init
-      - echo "Formatting check..."
       - terraform fmt -check
-      - echo "Planning Terraform..."
       - terraform plan -input=false
-
+  
   post_build:
     commands:
-      - echo "Terraform plan completed"
+      - echo "========== BUILD COMPLETE =========="
