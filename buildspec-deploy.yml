@@ -4,13 +4,18 @@ phases:
   install:
     commands:
       - echo '========== INSTALLING DEPENDENCIES =========='
-      - dnf install -y dnf-plugins-core java-21-amazon-corretto-devel
+      - dnf install -y dnf-plugins-core java-21-amazon-corretto-devel maven
+      - export JAVA_HOME=/usr/lib/jvm/java-21-amazon-corretto
+      - export PATH=$JAVA_HOME/bin:$PATH
+      - java -version
       - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
       - dnf install -y terraform
 
   pre_build:
     commands:
       - echo '========== BUILDING SPRING BOOT JAR =========='
+      - export JAVA_HOME=/usr/lib/jvm/java-21-amazon-corretto
+      - export PATH=$JAVA_HOME/bin:$PATH
       - cd Server
       - mvn clean package -DskipTests
       - cd ..
