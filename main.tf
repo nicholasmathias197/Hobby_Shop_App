@@ -54,3 +54,18 @@ resource "aws_s3_bucket_website_configuration" "frontend" {
 
 # Get current account ID
 data "aws_caller_identity" "current" {}
+
+import {
+  to = aws_s3_bucket.react_frontend
+  id = "gundam-hobby-shop-frontend-911784620581"
+}
+
+import {
+  to = aws_s3_bucket_website_configuration.frontend
+  id = "gundam-hobby-shop-frontend-911784620581"
+}
+
+import {
+  to = aws_instance.spring_boot_app
+  id = "i-074fdb10b4edde12a"
+}
