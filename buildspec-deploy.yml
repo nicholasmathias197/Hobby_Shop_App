@@ -36,12 +36,17 @@ phases:
       - terraform import -input=false aws_iam_role.ec2_role gundam-hobby-shop-ec2-role || true
       - terraform import -input=false aws_iam_instance_profile.ec2_profile gundam-hobby-shop-ec2-profile || true
       - terraform import -input=false aws_iam_role_policy_attachment.ec2_s3 gundam-hobby-shop-ec2-role/arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess || true
+      - terraform import -input=false aws_iam_role_policy_attachment.ec2_ssm gundam-hobby-shop-ec2-role/arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore || true
       - terraform import -input=false aws_s3_bucket.react_frontend gundam-hobby-shop-frontend-911784620581 || true
       - terraform import -input=false aws_s3_bucket_website_configuration.frontend gundam-hobby-shop-frontend-911784620581 || true
       - terraform import -input=false aws_s3_bucket_public_access_block.frontend gundam-hobby-shop-frontend-911784620581 || true
       - terraform import -input=false aws_s3_bucket_policy.frontend gundam-hobby-shop-frontend-911784620581 || true
       - terraform import -input=false aws_instance.spring_boot_app i-0b52ed3a337196e25 || true
       - terraform apply -auto-approve -input=false
+      - echo '========== RESTARTING SPRING BOOT ON EC2 =========='
+      - INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=gundam-hobby-shop-backend" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].InstanceId" --output text --region us-east-2)
+      - COMMAND_ID=$(aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters 'commands=["aws s3 cp s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar /opt/hobby-shop/hobby-shop-backend.jar","systemctl restart hobby-shop"]' --region us-east-2 --query "Command.CommandId" --output text)
+      - aws ssm wait command-executed --command-id $COMMAND_ID --instance-id $INSTANCE_ID --region us-east-2
 
   post_build:
     commands:

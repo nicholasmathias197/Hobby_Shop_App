@@ -72,6 +72,11 @@ resource "aws_iam_role_policy_attachment" "ec2_s3" {
   policy_arn = "arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess"
 }
 
+resource "aws_iam_role_policy_attachment" "ec2_ssm" {
+  role       = aws_iam_role.ec2_role.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+}
+
 resource "aws_iam_instance_profile" "ec2_profile" {
   name = "gundam-hobby-shop-ec2-profile"
   role = aws_iam_role.ec2_role.name
@@ -101,7 +106,8 @@ mysql -e "CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'Postgres1'
 mysql -e "GRANT ALL PRIVILEGES ON hobby_shop_db.* TO 'root'@'localhost';"
 mysql -e "FLUSH PRIVILEGES;"
 
-aws s3 cp s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar /opt/hobby-shop-backend.jar
+mkdir -p /opt/hobby-shop
+aws s3 cp s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar /opt/hobby-shop/hobby-shop-backend.jar
 
 cat > /etc/systemd/system/hobby-shop.service <<SERVICE
 [Unit]
@@ -109,7 +115,7 @@ Description=Hobby Shop Spring Boot App
 After=network.target mariadb.service
 
 [Service]
-ExecStart=/usr/bin/java -jar /opt/hobby-shop-backend.jar
+ExecStart=/usr/bin/java -jar /opt/hobby-shop/hobby-shop-backend.jar
 Restart=always
 StandardOutput=journal
 StandardError=journal
