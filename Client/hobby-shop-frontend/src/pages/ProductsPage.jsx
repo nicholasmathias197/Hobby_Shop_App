@@ -113,7 +113,7 @@ const ProductsPage = () => {
   return (
     <div style={{ 
       display: 'grid', 
-      gridTemplateColumns: '280px 1fr', 
+      gridTemplateColumns: '320px 1fr', 
       gap: '2rem',
       padding: '2rem 0'
     }}>

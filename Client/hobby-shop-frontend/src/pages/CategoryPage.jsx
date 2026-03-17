@@ -76,7 +76,7 @@ const CategoryPage = () => {
     <div>
       {/* Category Header */}
       <div style={{
-        backgroundColor: '#f8f9fa',
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
         padding: '2rem',
         borderRadius: '4px',
         marginBottom: '2rem',
@@ -107,7 +107,7 @@ const CategoryPage = () => {
       </div>
 
       {/* Products Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: '250px 1fr', gap: '2rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '2rem' }}>
         <FilterSidebar onFilterChange={handleFilterChange} />
         
         <div>

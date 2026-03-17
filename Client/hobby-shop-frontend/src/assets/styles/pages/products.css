@@ -1,3 +1,55 @@
+/* ===== FILTER SIDEBAR ===== */
+.filter-sidebar {
+    background: rgba(0, 0, 0, 0.8);
+    border: 2px solid rgba(0, 217, 255, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-width: 0;
+}
+
+.filter-sidebar h3 {
+    color: #00d9ff;
+    margin-bottom: 1.25rem;
+}
+
+.filter-group {
+    margin-bottom: 1.25rem;
+}
+
+.filter-group label {
+    display: block;
+    color: #e0e1dd;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.filter-input,
+.filter-select {
+    width: 100%;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(0, 217, 255, 0.3);
+    border-radius: 6px;
+    color: #e0e1dd;
+    font-size: 0.95rem;
+    box-sizing: border-box;
+}
+
+.filter-select option {
+    background: #001a33;
+    color: #e0e1dd;
+}
+
+.price-range {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.clear-filters-btn {
+    width: 100%;
+    margin-top: 0.5rem;
+}
+
 /* ===== PRODUCT CARD ===== */
 .product-card {
     background: rgba(0, 0, 0, 0.8);
