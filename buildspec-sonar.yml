@@ -15,13 +15,12 @@ phases:
   pre_build:
     commands:
       - echo "Compiling and testing before SonarCloud analysis..."
-      - cd Server
-      - mvn clean test
+      - cd Server && mvn clean test
 
   build:
     commands:
       - echo "Running SonarCloud analysis..."
-      - mvn sonar:sonar -Dsonar.projectKey=nicholasmathias197_Hobby_Shop_App -Dsonar.organization=nicholasmathias197 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN || true
+      - cd Server && mvn sonar:sonar -Dsonar.projectKey=nicholasmathias197_Hobby_Shop_App -Dsonar.organization=nicholasmathias197 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN || true
 
   post_build:
     commands:
