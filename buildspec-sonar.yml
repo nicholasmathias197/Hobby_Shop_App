@@ -16,12 +16,12 @@ phases:
   pre_build:
     commands:
       - echo "Compiling for SonarCloud analysis..."
-      - cd Server && mvn clean package -DskipTests
+      - cd Server && mvn clean package jacoco:report -DskipTests=false
 
   build:
     commands:
       - echo "Running SonarCloud analysis..."
-      - cd Server && mvn sonar:sonar -Dsonar.projectKey=nicholasmathias197_Hobby_Shop_App -Dsonar.organization=nicholasmathias197 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN || true
+      - cd Server && mvn sonar:sonar -Dsonar.projectKey=nicholasmathias197_Hobby_Shop_App -Dsonar.organization=nicholasmathias197 -Dsonar.host.url=https://sonarcloud.io -Dsonar.token=$SONAR_TOKEN -Dsonar.coverage.jacoco.xmlReportPaths=target/site/jacoco/jacoco.xml || true
 
   post_build:
     commands:
