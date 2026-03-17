@@ -8,7 +8,7 @@ terraform {
   }
   backend "s3" {
     bucket = "gundam-hobby-shop-frontend-911784620581"
-    key    = "terraform/state"
+    key    = "tfstate"
     region = "us-east-2"
   }
 }
