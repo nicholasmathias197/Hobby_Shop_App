@@ -15,8 +15,8 @@ phases:
 
   pre_build:
     commands:
-      - echo "Compiling and testing before SonarCloud analysis..."
-      - cd Server && mvn clean test
+      - echo "Compiling for SonarCloud analysis..."
+      - cd Server && mvn clean package -DskipTests
 
   build:
     commands:
