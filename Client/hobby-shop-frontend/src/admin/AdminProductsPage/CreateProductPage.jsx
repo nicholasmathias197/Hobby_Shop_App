@@ -9,16 +9,19 @@ const CreateProductPage = () => {
 
   const handleSubmit = async (formData) => {
     try {
-      // Add the isNew flag to the form data
       const productData = {
         ...formData,
-        isNew: isNewProduct // This will set the "NEW" tag on the product
+        price: parseFloat(formData.price),
+        stockQuantity: parseInt(formData.stockQuantity),
+        brandId: formData.brandId ? parseInt(formData.brandId) : null,
+        categoryId: formData.categoryId ? parseInt(formData.categoryId) : null,
+        isNew: isNewProduct
       };
-      
       await createProduct(productData);
       navigate('/admin/products');
     } catch (error) {
       console.error('Error creating product:', error);
+      alert(`Failed to create product: ${error.response?.data?.message || error.message}`);
     }
   };
 

@@ -30,15 +30,19 @@ const EditProductPage = () => {
 
   const handleSubmit = async (formData) => {
     try {
-      // Add the isNew flag to the form data
       const productData = {
         ...formData,
+        price: parseFloat(formData.price),
+        stockQuantity: parseInt(formData.stockQuantity),
+        brandId: formData.brandId ? parseInt(formData.brandId) : null,
+        categoryId: formData.categoryId ? parseInt(formData.categoryId) : null,
         isNew: isNewProduct
       };
       await updateProduct(id, productData);
       navigate('/admin/products');
     } catch (error) {
       console.error('Error updating product:', error);
+      alert(`Failed to update product: ${error.response?.data?.message || error.message}`);
     }
   };
 
