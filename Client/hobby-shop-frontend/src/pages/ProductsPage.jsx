@@ -49,10 +49,6 @@ const ProductsPage = () => {
     }
   }, [location]);
 
-  useEffect(() => {
-    loadProducts();
-  }, [currentPage, filters]);
-
   const loadProducts = useCallback(async () => {
     dispatch({ type: 'FETCH_START' });
     try {
@@ -74,6 +70,10 @@ const ProductsPage = () => {
       dispatch({ type: 'FETCH_ERROR', payload: err.message || 'Failed to load products' });
     }
   }, [currentPage, filters]);
+
+  useEffect(() => {
+    loadProducts();
+  }, [loadProducts]);
 
   const handleFilterChange = useCallback((newFilters) => {
     dispatch({ type: 'SET_FILTERS', payload: newFilters });
