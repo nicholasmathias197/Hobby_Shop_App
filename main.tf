@@ -20,6 +20,31 @@ provider "aws" {
 # Get current account ID
 data "aws_caller_identity" "current" {}
 
+import {
+  to = aws_security_group.spring_boot_sg
+  id = "sg-090cf228c30fca1dc"
+}
+
+import {
+  to = aws_iam_role.ec2_role
+  id = "gundam-hobby-shop-ec2-role"
+}
+
+import {
+  to = aws_iam_instance_profile.ec2_profile
+  id = "gundam-hobby-shop-ec2-profile"
+}
+
+import {
+  to = aws_s3_bucket.react_frontend
+  id = "gundam-hobby-shop-frontend-911784620581"
+}
+
+import {
+  to = aws_s3_bucket_website_configuration.frontend
+  id = "gundam-hobby-shop-frontend-911784620581"
+}
+
 # Security Group
 resource "aws_security_group" "spring_boot_sg" {
   name        = "gundam-hobby-shop-sg"
