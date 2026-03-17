@@ -11,7 +11,7 @@ import { Button } from '../../components/ui';
 
 const CheckoutPage = () => {
   const navigate = useNavigate();
-  const { cart, clearCart } = useCart();
+  const { cart, clearCart, cartTotal } = useCart();
   const { user, isAuthenticated } = useAuth();
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState(1); // 1: Shipping, 2: Payment, 3: Review
@@ -309,7 +309,7 @@ const CheckoutPage = () => {
           </div>
 
           <div className="checkout-sidebar">
-            <OrderSummary />
+            <OrderSummary cartItems={cart.items || []} cartTotal={cartTotal} />
           </div>
         </div>
 
