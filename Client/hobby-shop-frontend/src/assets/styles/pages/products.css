@@ -277,3 +277,35 @@
 .rating-bar-row:hover {
     transform: translateX(5px);
 }
+
+/* ===== PRODUCTS MEDIA QUERIES ===== */
+@media (max-width: 900px) {
+    .products-layout {
+        grid-template-columns: 1fr !important;
+    }
+    .filter-sidebar {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-card:hover {
+        transform: none;
+    }
+    .product-image-container {
+        height: 160px;
+    }
+}
+
+@media (max-width: 480px) {
+    .product-title {
+        font-size: 1rem;
+    }
+    .product-price {
+        font-size: 1.1rem;
+    }
+    .product-add-to-cart {
+        padding: 0.4rem 0.6rem !important;
+        font-size: 0.8rem !important;
+    }
+}

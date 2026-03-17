@@ -107,7 +107,7 @@ const CategoryPage = () => {
       </div>
 
       {/* Products Section */}
-      <div style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '2rem' }}>
+      <div className="products-layout" style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '2rem' }}>
         <FilterSidebar onFilterChange={handleFilterChange} />
         
         <div>

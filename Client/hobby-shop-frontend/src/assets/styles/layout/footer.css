@@ -17,3 +17,10 @@ footer::before {
     height: 2px;
     background: linear-gradient(90deg, #0066cc, #00d9ff, #0066cc);
 }
+
+@media (max-width: 480px) {
+    footer {
+        padding: 1rem;
+        font-size: 0.85rem;
+    }
+}

@@ -111,7 +111,7 @@ const ProductsPage = () => {
   }
 
   return (
-    <div style={{ 
+    <div className="products-layout" style={{ 
       display: 'grid', 
       gridTemplateColumns: '320px 1fr', 
       gap: '2rem',

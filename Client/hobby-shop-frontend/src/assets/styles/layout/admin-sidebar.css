@@ -14,3 +14,9 @@
     background: rgba(0, 102, 204, 0.5);
     padding-left: 1.5rem;
 }
+
+@media (max-width: 768px) {
+    .admin-sidebar {
+        display: none;
+    }
+}

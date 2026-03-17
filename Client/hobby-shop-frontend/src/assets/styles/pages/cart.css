@@ -207,3 +207,34 @@
     margin: 0;
     opacity: 0.8;
 }
+
+/* ===== CART MEDIA QUERIES ===== */
+@media (max-width: 768px) {
+    .cart-page {
+        padding: 1rem;
+    }
+    .cart-summary {
+        justify-content: stretch;
+    }
+    .cart-totals {
+        min-width: unset;
+        width: 100%;
+    }
+    .cart-actions {
+        flex-direction: column;
+    }
+    .cart-guarantees {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-page h1 {
+        font-size: 1.6rem;
+    }
+    .checkout-btn,
+    .continue-shopping-btn {
+        width: 100%;
+    }
+}

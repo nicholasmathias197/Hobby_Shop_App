@@ -237,3 +237,41 @@
 .checkout-actions button {
     min-width: 150px;
 }
+
+/* ===== CHECKOUT MEDIA QUERIES ===== */
+@media (max-width: 900px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 768px) {
+    .checkout-page {
+        padding: 1rem;
+    }
+    .checkout-steps {
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .step-label {
+        font-size: 0.75rem;
+    }
+    .checkout-actions {
+        flex-direction: column;
+    }
+    .checkout-actions button {
+        min-width: unset;
+        width: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .checkout-steps {
+        gap: 0.25rem;
+    }
+    .step-number {
+        width: 30px;
+        height: 30px;
+        font-size: 0.85rem;
+    }
+}
