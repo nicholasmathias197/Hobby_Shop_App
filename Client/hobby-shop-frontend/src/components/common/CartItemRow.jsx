@@ -13,9 +13,9 @@ const CartItemRow = ({ item, onUpdateQuantity, onRemove }) => {
     <tr style={{ borderBottom: '1px solid #ddd' }}>
       <td style={{ padding: '1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-          {item.imageUrl ? (
+          {item.productImage ? (
             <img 
-              src={item.imageUrl} 
+              src={item.productImage} 
               alt={item.productName}
               style={{ width: '50px', height: '50px', objectFit: 'cover', borderRadius: '4px' }}
             />
