@@ -1,5 +1,5 @@
 // src/contexts/CartProvider.jsx
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { CartContext } from './CartContext';
 import { 
   getCart, 
@@ -28,53 +28,47 @@ export const CartProvider = ({ children }) => {
     }
   }, []);
 
-  // Load cart on mount
   useEffect(() => {
     loadCart();
   }, [loadCart]);
 
-  // Reload cart when user changes (login/logout)
   useEffect(() => {
     console.log('👤 User changed, reloading cart...');
     loadCart();
   }, [user, loadCart]);
 
-  const addToCart = async (product, quantity = 1) => {
+  const addToCart = useCallback(async (product, quantity = 1) => {
     try {
-      console.log('➕ Adding to cart:', { product, quantity });
       await addItemToCart(product.id, quantity);
       await loadCart();
     } catch (error) {
       console.error('❌ Error adding to cart:', error);
       throw error;
     }
-  };
+  }, [loadCart]);
 
-  const updateQuantity = async (itemId, quantity) => {
+  const updateQuantity = useCallback(async (itemId, quantity) => {
     try {
-      console.log('🔄 Updating cart item:', { itemId, quantity });
       await updateCartItem(itemId, quantity);
       await loadCart();
     } catch (error) {
       console.error('❌ Error updating cart:', error);
       throw error;
     }
-  };
+  }, [loadCart]);
 
-  const removeFromCart = async (itemId) => {
+  const removeFromCart = useCallback(async (itemId) => {
     try {
-      console.log('❌ Removing from cart:', itemId);
       await removeCartItem(itemId);
       await loadCart();
     } catch (error) {
       console.error('❌ Error removing from cart:', error);
       throw error;
     }
-  };
+  }, [loadCart]);
 
-  const clearCart = async () => {
+  const clearCart = useCallback(async () => {
     try {
-      console.log('🧹 Clearing cart');
       await apiClearCart();
       setCart(null);
       await loadCart();
@@ -82,13 +76,13 @@ export const CartProvider = ({ children }) => {
       console.error('❌ Error clearing cart:', error);
       throw error;
     }
-  };
+  }, [loadCart]);
 
-  const cartTotal = cart?.items?.reduce((total, item) => 
-    total + (item.price * item.quantity), 0
-  ) || 0;
+  const cartTotal = useMemo(() =>
+    cart?.items?.reduce((total, item) => total + (item.price * item.quantity), 0) || 0
+  , [cart]);
 
-  const cartItemsCount = cart?.items?.length || 0;
+  const cartItemsCount = useMemo(() => cart?.items?.length || 0, [cart]);
 
   return (
     <CartContext.Provider value={{

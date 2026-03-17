@@ -1,5 +1,5 @@
 // src/pages/ProductsPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useReducer, useEffect, useCallback } from 'react';
 import { useLocation } from 'react-router-dom';
 import { getAllProducts, filterProducts } from '../services/productService';
 import ProductGrid from '../components/common/ProductGrid';
@@ -7,22 +7,45 @@ import FilterSidebar from '../components/common/FilterSidebar';
 import { useCart } from '../hooks/useCart';
 import { Button } from '../components/ui';
 
+const initialState = {
+  products: [],
+  loading: true,
+  error: null,
+  currentPage: 0,
+  totalPages: 0,
+  totalProducts: 0,
+  filters: {}
+};
+
+function productsReducer(state, action) {
+  switch (action.type) {
+    case 'FETCH_START':
+      return { ...state, loading: true, error: null };
+    case 'FETCH_SUCCESS':
+      return { ...state, loading: false, products: action.payload.products,
+        totalPages: action.payload.totalPages, totalProducts: action.payload.totalProducts };
+    case 'FETCH_ERROR':
+      return { ...state, loading: false, error: action.payload, products: [] };
+    case 'SET_FILTERS':
+      return { ...state, filters: action.payload, currentPage: 0 };
+    case 'SET_PAGE':
+      return { ...state, currentPage: action.payload };
+    default:
+      return state;
+  }
+}
+
 const ProductsPage = () => {
   const location = useLocation();
-  const [products, setProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [currentPage, setCurrentPage] = useState(0);
-  const [totalPages, setTotalPages] = useState(0);
-  const [totalProducts, setTotalProducts] = useState(0);
-  const [filters, setFilters] = useState({});
+  const [state, dispatch] = useReducer(productsReducer, initialState);
+  const { products, loading, error, currentPage, totalPages, totalProducts, filters } = state;
   const { addToCart } = useCart();
 
   // Parse URL params for featured filter
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     if (params.get('featured') === 'true') {
-      setFilters({ ...filters, featured: true });
+      dispatch({ type: 'SET_FILTERS', payload: { ...filters, featured: true } });
     }
   }, [location]);
 
@@ -30,50 +53,36 @@ const ProductsPage = () => {
     loadProducts();
   }, [currentPage, filters]);
 
-  const loadProducts = async () => {
-    setLoading(true);
+  const loadProducts = useCallback(async () => {
+    dispatch({ type: 'FETCH_START' });
     try {
       let response;
-      
-      // Check if we have any active filters
-      const hasFilters = Object.keys(filters).some(key => 
+      const hasFilters = Object.keys(filters).some(key =>
         filters[key] !== '' && filters[key] !== null && filters[key] !== undefined
       );
-      
       if (hasFilters) {
         response = await filterProducts(filters, currentPage, 12);
       } else {
         response = await getAllProducts(currentPage, 12);
       }
-      
-      console.log('Products page response:', response);
-      
-      // Extract the content array safely
-      const productsArray = response?.content || [];
-      console.log('Products array:', productsArray);
-      
-      setProducts(productsArray);
-      setTotalPages(response?.totalPages || 0);
-      setTotalProducts(response?.totalElements || 0);
-      setError(null);
+      dispatch({ type: 'FETCH_SUCCESS', payload: {
+        products: response?.content || [],
+        totalPages: response?.totalPages || 0,
+        totalProducts: response?.totalElements || 0
+      }});
     } catch (err) {
-      console.error('Error loading products:', err);
-      setError(err.message || 'Failed to load products');
-      setProducts([]); // Set empty array on error
-    } finally {
-      setLoading(false);
+      dispatch({ type: 'FETCH_ERROR', payload: err.message || 'Failed to load products' });
     }
-  };
+  }, [currentPage, filters]);
 
-  const handleFilterChange = (newFilters) => {
-    setFilters(newFilters);
-    setCurrentPage(0); // Reset to first page when filters change
-  };
+  const handleFilterChange = useCallback((newFilters) => {
+    dispatch({ type: 'SET_FILTERS', payload: newFilters });
+  }, []);
 
-  const handlePageChange = (newPage) => {
-    setCurrentPage(newPage);
+  const handlePageChange = useCallback((newPage) => {
+    dispatch({ type: 'SET_PAGE', payload: newPage });
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  }, []);
 
   if (loading && products.length === 0) {
     return (
@@ -151,8 +160,7 @@ const ProductsPage = () => {
               Try adjusting your filters or check back later.
             </p>
             <Button variant="primary" onClick={() => {
-              setFilters({});
-              setCurrentPage(0);
+              dispatch({ type: 'SET_FILTERS', payload: {} });
             }}>
               Clear Filters
             </Button>
