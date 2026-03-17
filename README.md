@@ -151,6 +151,13 @@ All endpoints are prefixed with `/api`. A full Postman collection is included at
 
 Pass the token in subsequent requests as: `Authorization: Bearer <jwt_token>`
 
+**Test accounts:**
+
+| Role | Email | Password |
+|------|-------|----------|
+| User | user@example.com | password123 |
+| Admin | admin@hobbyshop.com | password123 |
+
 Cart merging: include `X-Session-ID` header on login/register to merge a guest cart into the authenticated user's cart.
 
 ---
