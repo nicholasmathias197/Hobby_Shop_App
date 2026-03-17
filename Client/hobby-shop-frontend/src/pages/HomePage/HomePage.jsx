@@ -74,9 +74,6 @@ const HomePage = () => {
             marginBottom: '1.5rem'
           }}>
             <h2>Shop by Category</h2>
-            <Link to="/categories" style={{ color: '#007bff', textDecoration: 'none' }}>
-              View All Categories →
-            </Link>
           </div>
           <CategoryShowcase categories={categories} />
         </section>
