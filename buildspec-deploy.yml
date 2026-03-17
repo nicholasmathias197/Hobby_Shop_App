@@ -46,17 +46,9 @@ phases:
       - terraform import -input=false aws_instance.spring_boot_app $CURRENT_INSTANCE_ID || true
       - terraform apply -auto-approve -input=false
       - echo '========== WAITING FOR SSM AND RESTARTING SPRING BOOT =========='
-      - |
-        INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=gundam-hobby-shop-backend" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].InstanceId" --output text --region us-east-2)
-        echo "Target instance: $INSTANCE_ID"
-        for i in $(seq 1 20); do
-          STATUS=$(aws ssm describe-instance-information --filters "Key=InstanceIds,Values=$INSTANCE_ID" --query "InstanceInformationList[0].PingStatus" --output text --region us-east-2 2>/dev/null)
-          echo "SSM status $i/20: $STATUS"
-          [ "$STATUS" = "Online" ] && break
-          sleep 15
-        done
-        COMMAND_ID=$(aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters 'commands=["aws s3 cp s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar /opt/hobby-shop/hobby-shop-backend.jar","systemctl restart hobby-shop"]' --region us-east-2 --query "Command.CommandId" --output text)
-        aws ssm wait command-executed --command-id $COMMAND_ID --instance-id $INSTANCE_ID --region us-east-2
+      - printf '#!/bin/bash\nINSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=gundam-hobby-shop-backend" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].InstanceId" --output text --region us-east-2)\necho "Target instance: $INSTANCE_ID"\nfor i in $(seq 1 20); do\n  STATUS=$(aws ssm describe-instance-information --filters "Key=InstanceIds,Values=$INSTANCE_ID" --query "InstanceInformationList[0].PingStatus" --output text --region us-east-2 2>/dev/null)\n  echo "SSM status $i/20: $STATUS"\n  [ "$STATUS" = "Online" ] && break\n  sleep 15\ndone\nCOMMAND_ID=$(aws ssm send-command --instance-ids $INSTANCE_ID --document-name "AWS-RunShellScript" --parameters '"'"'commands=["aws s3 cp s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar /opt/hobby-shop/hobby-shop-backend.jar","systemctl restart hobby-shop"]'"'"' --region us-east-2 --query "Command.CommandId" --output text)\naws ssm wait command-executed --command-id $COMMAND_ID --instance-id $INSTANCE_ID --region us-east-2\n' > /tmp/ssm-restart.sh
+      - chmod +x /tmp/ssm-restart.sh
+      - bash /tmp/ssm-restart.sh
 
   post_build:
     commands:
