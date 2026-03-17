@@ -1,4 +1,4 @@
-# Gundam Hobby Shop — Full Stack E-Commerce Application
+# U197 Hobbies — Full Stack E-Commerce Application
 
 A full-stack e-commerce platform for Gundam models and modeling supplies. Built with Spring Boot 4 and React 18, deployed on AWS using Terraform and CodePipeline.
 
