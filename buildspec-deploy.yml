@@ -40,7 +40,7 @@ phases:
       - terraform import -input=false aws_s3_bucket_website_configuration.frontend gundam-hobby-shop-frontend-911784620581 || true
       - terraform import -input=false aws_s3_bucket_public_access_block.frontend gundam-hobby-shop-frontend-911784620581 || true
       - terraform import -input=false aws_s3_bucket_policy.frontend gundam-hobby-shop-frontend-911784620581 || true
-      - terraform import -input=false aws_instance.spring_boot_app i-065ea380c428fd415 || true
+      - terraform import -input=false aws_instance.spring_boot_app i-0e969c4a4ea98b7ab || true
       - terraform apply -auto-approve -input=false
 
   post_build:

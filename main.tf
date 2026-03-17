@@ -81,6 +81,7 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 resource "aws_instance" "spring_boot_app" {
   ami                    = "ami-0b0b78dcacbab728f"
   instance_type          = "t3.micro"
+  key_name               = "hobby-shop-key"
   vpc_security_group_ids = [aws_security_group.spring_boot_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
