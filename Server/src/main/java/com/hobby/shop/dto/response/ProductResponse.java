@@ -17,6 +17,7 @@ public class ProductResponse {
     private String categoryName;
     private Long brandId;
     private String brandName;
+    private String brandLogoUrl;
     private String scale;
     private String colorCode;
     private String paintType;

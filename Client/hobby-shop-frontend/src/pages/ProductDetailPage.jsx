@@ -69,6 +69,32 @@ const ProductDetailPage = () => {
         
         {/* Product Details */}
         <div>
+          {/* Brand Logo */}
+          {product.brandLogoUrl && (
+            <div style={{
+              width: '160px',
+              height: '60px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '1rem',
+              background: 'rgba(255,255,255,0.08)',
+              border: '1px solid rgba(0,217,255,0.2)',
+              borderRadius: '8px',
+              padding: '0.5rem'
+            }}>
+              <img
+                src={product.brandLogoUrl}
+                alt={product.brandName}
+                style={{
+                  maxWidth: '100%',
+                  maxHeight: '100%',
+                  objectFit: 'contain'
+                }}
+              />
+            </div>
+          )}
+
           <h1>{product.name}</h1>
           
           {/* Rating Summary */}
