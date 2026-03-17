@@ -7,3 +7,8 @@ output "s3_bucket_url" {
   description = "S3 website URL"
   value       = aws_s3_bucket_website_configuration.frontend.website_endpoint
 }
+
+output "sns_topic_arn" {
+  description = "SNS topic ARN for CloudWatch alerts"
+  value       = aws_sns_topic.alerts.arn
+}

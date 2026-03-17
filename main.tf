@@ -146,6 +146,92 @@ systemctl start hobby-shop
   }
 }
 
+# SNS Topic for CloudWatch Alarms
+resource "aws_sns_topic" "alerts" {
+  name = "gundam-hobby-shop-alerts"
+}
+
+resource "aws_sns_topic_subscription" "email" {
+  topic_arn = aws_sns_topic.alerts.arn
+  protocol  = "email"
+  endpoint  = "nicholas.mathias@peopleshores.com"
+}
+
+# CloudWatch Alarm — EC2 High CPU
+resource "aws_cloudwatch_metric_alarm" "ec2_cpu_high" {
+  alarm_name          = "gundam-hobby-shop-cpu-high"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "CPUUtilization"
+  namespace           = "AWS/EC2"
+  period              = 300
+  statistic           = "Average"
+  threshold           = 80
+  alarm_description   = "EC2 CPU utilization exceeded 80% for 10 minutes"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+  ok_actions          = [aws_sns_topic.alerts.arn]
+
+  dimensions = {
+    InstanceId = aws_instance.spring_boot_app.id
+  }
+
+  tags = {
+    Name        = "gundam-hobby-shop-cpu-alarm"
+    Environment = "production"
+    Project     = "capstone"
+  }
+}
+
+# CloudWatch Alarm — EC2 Status Check Failed
+resource "aws_cloudwatch_metric_alarm" "ec2_status_check" {
+  alarm_name          = "gundam-hobby-shop-status-check"
+  comparison_operator = "GreaterThanThreshold"
+  evaluation_periods  = 2
+  metric_name         = "StatusCheckFailed"
+  namespace           = "AWS/EC2"
+  period              = 60
+  statistic           = "Maximum"
+  threshold           = 0
+  alarm_description   = "EC2 instance failed status check"
+  alarm_actions       = [aws_sns_topic.alerts.arn]
+  ok_actions          = [aws_sns_topic.alerts.arn]
+
+  dimensions = {
+    InstanceId = aws_instance.spring_boot_app.id
+  }
+
+  tags = {
+    Name        = "gundam-hobby-shop-status-alarm"
+    Environment = "production"
+    Project     = "capstone"
+  }
+}
+
+# AWS Budget — $20/month with alerts
+resource "aws_budgets_budget" "monthly" {
+  name         = "gundam-hobby-shop-monthly-budget"
+  budget_type  = "COST"
+  limit_amount = "20"
+  limit_unit   = "USD"
+  time_unit    = "MONTHLY"
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 80
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "ACTUAL"
+    subscriber_email_addresses = ["nicholas.mathias@peopleshores.com"]
+  }
+
+  notification {
+    comparison_operator        = "GREATER_THAN"
+    threshold                  = 100
+    threshold_type             = "PERCENTAGE"
+    notification_type          = "FORECASTED"
+    subscriber_email_addresses = ["nicholas.mathias@peopleshores.com"]
+  }
+}
+
 # S3 Bucket for React Frontend
 resource "aws_s3_bucket" "react_frontend" {
   bucket = "gundam-hobby-shop-frontend-${data.aws_caller_identity.current.account_id}"
