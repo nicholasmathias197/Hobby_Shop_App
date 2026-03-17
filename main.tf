@@ -88,7 +88,7 @@ resource "aws_instance" "spring_boot_app" {
 
   user_data = <<-EOF
     #!/bin/bash
-    set -e
+    exec > /var/log/user-data.log 2>&1
 
     # Install Java 21
     dnf install -y java-21-amazon-corretto-headless
