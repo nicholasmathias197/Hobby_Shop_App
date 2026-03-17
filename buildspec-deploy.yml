@@ -21,7 +21,7 @@ phases:
       - echo '========== BUILDING REACT FRONTEND =========='
       - cd Client/hobby-shop-frontend
       - npm install
-      - npm run build
+      - VITE_API_BASE_URL=http://$(aws ec2 describe-instances --instance-ids $(aws ec2 describe-instances --filters "Name=tag:Name,Values=gundam-hobby-shop-backend" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].InstanceId" --output text --region us-east-2) --query "Reservations[0].Instances[0].PublicIpAddress" --output text --region us-east-2):8080/api npm run build
       - cd ../..
 
   build:
@@ -40,7 +40,7 @@ phases:
       - terraform import -input=false aws_s3_bucket_website_configuration.frontend gundam-hobby-shop-frontend-911784620581 || true
       - terraform import -input=false aws_s3_bucket_public_access_block.frontend gundam-hobby-shop-frontend-911784620581 || true
       - terraform import -input=false aws_s3_bucket_policy.frontend gundam-hobby-shop-frontend-911784620581 || true
-      - terraform import -input=false aws_instance.spring_boot_app i-0e969c4a4ea98b7ab || true
+      - terraform import -input=false aws_instance.spring_boot_app i-0b52ed3a337196e25 || true
       - terraform apply -auto-approve -input=false
 
   post_build:

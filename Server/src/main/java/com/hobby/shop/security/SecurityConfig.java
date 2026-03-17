@@ -55,7 +55,8 @@ public class SecurityConfig {
                 "http://localhost:5173",
                 "http://localhost:5174",
                 "http://localhost:3000",
-                "http://localhost:4200"
+                "http://localhost:4200",
+                "http://gundam-hobby-shop-frontend-911784620581.s3-website.us-east-2.amazonaws.com"
         ));
         configuration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH", "HEAD"

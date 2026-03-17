@@ -1,8 +1,6 @@
 -- Create database
-CREATE
-DATABASE IF NOT EXISTS hobby_shop_db;
-USE
-hobby_shop_db;
+CREATE DATABASE IF NOT EXISTS hobby_shop_db;
+USE hobby_shop_db;
 
 -- =============================================
 -- USERS AND AUTHENTICATION TABLES
