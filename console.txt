@@ -1,0 +1,1100 @@
+﻿i-065ea380c428fd415	[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[2J[01;01H[=3h[2J[01;01H[0m[35m[40m[2J[01;01H[=3h[2J[01;01H[0m[37m[40m  Booting `Amazon Linux (6.1.163-186.299.amzn2023.x86_64) 2023'
+
+
+
+[    0.035079] RETBleed: WARNING: Spectre v2 mitigation leaves CPU vulnerable to RETBleed attacks, data leaks possible!
+
+[    2.999281] loop: module loaded
+
+[    3.033424] systemd[1]: Finished modprobe@dm_mod.service - Load Kernel Module dm_mod.
+
+[    3.035006] systemd[1]: Started systemd-journald.service - Journal Service.
+
+[    3.613284] systemd-journald[829]: Received client request to flush runtime journal.
+
+[    4.001548] RPC: Registered named UNIX socket transport module.
+
+[    4.002322] RPC: Registered udp transport module.
+
+[    4.002905] RPC: Registered tcp transport module.
+
+[    4.003558] RPC: Registered tcp NFSv4.1 backchannel transport module.
+
+[    4.100112] input: Power Button as /devices/LNXSYSTM:00/LNXPWRBN:00/input/input0
+
+[    4.143209] ACPI: button: Power Button [PWRF]
+
+[    4.143856] input: Sleep Button as /devices/LNXSYSTM:00/LNXSLPBN:00/input/input1
+
+[    4.145355] ACPI: button: Sleep Button [SLPF]
+
+[    4.147664] i8042: PNP: PS/2 Controller [PNP0303:KBD,PNP0f13:MOU] at 0x60,0x64 irq 1,12
+
+[    4.148890] i8042: Warning: Keylock active
+
+[    4.150556] ena 0000:00:05.0: Elastic Network Adapter (ENA) v2.16.1g
+
+[    4.152759] serio: i8042 KBD port at 0x60,0x64 irq 1
+
+[    4.153340] serio: i8042 AUX port at 0x60,0x64 irq 12
+
+[    4.163179] ena 0000:00:05.0: ENA device version: 0.10
+
+[    4.163822] ena 0000:00:05.0: ENA controller version: 0.0.1 implementation version 1
+
+[    4.243051] ena 0000:00:05.0: LLQ is not supported Fallback to host mode policy.
+
+[    4.255922] ena 0000:00:05.0: Elastic Network Adapter (ENA) found at mem 80400000, mac addr 0a:a7:db:02:9f:97
+
+[    4.313561] ena 0000:00:05.0 ens5: renamed from eth0
+
+[    4.541678] zram_generator::config[1380]: zram0: system has too much memory (916MB), limit is 800MB, ignoring.
+
+[    5.295652] ena 0000:00:05.0 ens5: Local page cache is disabled for less than 16 channels
+
+[    6.629381] cloud-init[1520]: Cloud-init v. 22.2.2 running 'init' at Tue, 17 Mar 2026 01:41:19 +0000. Up 6.59 seconds.
+
+[    6.705345] cloud-init[1520]: ci-info: ++++++++++++++++++++++++++++++++++++++Net device info+++++++++++++++++++++++++++++++++++++++
+
+[    6.707553] cloud-init[1520]: ci-info: +--------+------+-----------------------------+---------------+--------+-------------------+
+
+[    6.709751] cloud-init[1520]: ci-info: | Device |  Up  |           Address           |      Mask     | Scope  |     Hw-Address    |
+
+[    6.711825] cloud-init[1520]: ci-info: +--------+------+-----------------------------+---------------+--------+-------------------+
+
+[    6.713916] cloud-init[1520]: ci-info: |  ens5  | True |         172.31.41.71        | 255.255.240.0 | global | 0a:a7:db:02:9f:97 |
+
+[    6.715969] cloud-init[1520]: ci-info: |  ens5  | True | fe80::8a7:dbff:fe02:9f97/64 |       .       |  link  | 0a:a7:db:02:9f:97 |
+
+[    6.718077] cloud-init[1520]: ci-info: |   lo   | True |          127.0.0.1          |   255.0.0.0   |  host  |         .         |
+
+[    6.720147] cloud-init[1520]: ci-info: |   lo   | True |           ::1/128           |       .       |  host  |         .         |
+
+[    6.722201] cloud-init[1520]: ci-info: +--------+------+-----------------------------+---------------+--------+-------------------+
+
+[    6.724252] cloud-init[1520]: ci-info: ++++++++++++++++++++++++++++++Route IPv4 info++++++++++++++++++++++++++++++
+
+[    6.726185] cloud-init[1520]: ci-info: +-------+-------------+-------------+-----------------+-----------+-------+
+
+[    6.728102] cloud-init[1520]: ci-info: | Route | Destination |   Gateway   |     Genmask     | Interface | Flags |
+
+[    6.729943] cloud-init[1520]: ci-info: +-------+-------------+-------------+-----------------+-----------+-------+
+
+[    6.731782] cloud-init[1520]: ci-info: |   0   |   0.0.0.0   | 172.31.32.1 |     0.0.0.0     |    ens5   |   UG  |
+
+[    6.733605] cloud-init[1520]: ci-info: |   1   |  172.31.0.2 | 172.31.32.1 | 255.255.255.255 |    ens5   |  UGH  |
+
+[    6.735437] cloud-init[1520]: ci-info: |   2   | 172.31.32.0 |   0.0.0.0   |  255.255.240.0  |    ens5   |   U   |
+
+[    6.737245] cloud-init[1520]: ci-info: |   3   | 172.31.32.1 |   0.0.0.0   | 255.255.255.255 |    ens5   |   UH  |
+
+[    6.739020] cloud-init[1520]: ci-info: +-------+-------------+-------------+-----------------+-----------+-------+
+
+[    6.740813] cloud-init[1520]: ci-info: +++++++++++++++++++Route IPv6 info+++++++++++++++++++
+
+[    6.742313] cloud-init[1520]: ci-info: +-------+-------------+---------+-----------+-------+
+
+[    6.743809] cloud-init[1520]: ci-info: | Route | Destination | Gateway | Interface | Flags |
+
+[    6.745303] cloud-init[1520]: ci-info: +-------+-------------+---------+-----------+-------+
+
+[    6.746768] cloud-init[1520]: ci-info: |   0   |  fe80::/64  |    ::   |    ens5   |   U   |
+
+[    6.748267] cloud-init[1520]: ci-info: |   2   |    local    |    ::   |    ens5   |   U   |
+
+[    6.749725] cloud-init[1520]: ci-info: |   3   |  multicast  |    ::   |    ens5   |   U   |
+
+[    6.751202] cloud-init[1520]: ci-info: +-------+-------------+---------+-----------+-------+
+
+[    7.562613] cloud-init[1520]: Generating public/private ed25519 key pair.
+
+[    7.564168] cloud-init[1520]: Your identification has been saved in /etc/ssh/ssh_host_ed25519_key
+
+[    7.565826] cloud-init[1520]: Your public key has been saved in /etc/ssh/ssh_host_ed25519_key.pub
+
+[    7.567451] cloud-init[1520]: The key fingerprint is:
+
+[    7.568456] cloud-init[1520]: SHA256:Sh6BfjMr6zmojBuglvDX+S/GPJtzW0fZB6SsPNmcKck root@ip-172-31-41-71.us-east-2.compute.internal
+
+[    7.570493] cloud-init[1520]: The key's randomart image is:
+
+[    7.571526] cloud-init[1520]: +--[ED25519 256]--+
+
+[    7.572425] cloud-init[1520]: |              .  |
+
+[    7.573349] cloud-init[1520]: |     .     . o   |
+
+[    7.574245] cloud-init[1520]: |    . .     o .  |
+
+[    7.575135] cloud-init[1520]: |   .   . o * o + |
+
+[    7.576103] cloud-init[1520]: |o   . * S E = o o|
+
+[    7.577007] cloud-init[1520]: |+..  = B   o .  .|
+
+[    7.577930] cloud-init[1520]: |oo..o *o    . .  |
+
+[    7.578840] cloud-init[1520]: |+....+ .B... .   |
+
+[    7.579754] cloud-init[1520]: |++ .+. .+Bo.     |
+
+[    7.580798] cloud-init[1520]: +----[SHA256]-----+
+
+[    7.581720] cloud-init[1520]: Generating public/private ecdsa key pair.
+
+[    7.582937] cloud-init[1520]: Your identification has been saved in /etc/ssh/ssh_host_ecdsa_key
+
+[    7.584499] cloud-init[1520]: Your public key has been saved in /etc/ssh/ssh_host_ecdsa_key.pub
+
+[    7.586048] cloud-init[1520]: The key fingerprint is:
+
+[    7.587010] cloud-init[1520]: SHA256:n4u6+cQAsyO2gzUq+dd8GwMmPeEeqOjloBYwXEsCW58 root@ip-172-31-41-71.us-east-2.compute.internal
+
+[    7.589022] cloud-init[1520]: The key's randomart image is:
+
+[    7.590087] cloud-init[1520]: +---[ECDSA 256]---+
+
+[    7.591005] cloud-init[1520]: |o .              |
+
+[    7.591909] cloud-init[1520]: | + + .           |
+
+[    7.592818] cloud-init[1520]: |o + E .          |
+
+[    7.593737] cloud-init[1520]: |o. . B .         |
+
+[    7.594674] cloud-init[1520]: |..= = O S        |
+
+[    7.595589] cloud-init[1520]: | O = = * . .     |
+
+[    7.596499] cloud-init[1520]: |*.=. o. = o      |
+
+[    7.597413] cloud-init[1520]: |+o+.. oo.+ .     |
+
+[    7.598300] cloud-init[1520]: |o..o  +=+..      |
+
+[    7.599216] cloud-init[1520]: +----[SHA256]-----+
+
+[    8.202689] cloud-init[1608]: Cloud-init v. 22.2.2 running 'modules:config' at Tue, 17 Mar 2026 01:41:21 +0000. Up 8.12 seconds.
+
+[    8.942140] cloud-init[1618]: Cloud-init v. 22.2.2 running 'modules:final' at Tue, 17 Mar 2026 01:41:22 +0000. Up 8.87 seconds.
+
+2026/03/17 01:41:22Z: SSM Agent unable to acquire credentials: <error>no valid credentials could be retrieved for ec2 identity. Default Host Management Err: error calling RequestManagedInstanceRoleToken: AccessDeniedException: Systems Manager's instance management role is not configured for account: 911784620581
+	status code: 400, request id: 9e9ade3b-78ea-4632-b756-3add2b129326</error>
+[   10.515586] cloud-init[1618]: Amazon Linux 2023 repository                     70 MB/s |  56 MB     00:00
+
+
+
+Amazon Linux 2023.10.20260302
+
+Kernel 6.1.163-186.299.amzn2023.x86_64 on an x86_64 (-)
+
+
+
+ip-172-31-41-71 login: [   23.567731] cloud-init[1618]: Amazon Linux 2023 Kernel Livepatch repository   266 kB/s |  30 kB     00:00
+
+[   23.679852] cloud-init[1618]: Last metadata expiration check: 0:00:01 ago on Tue Mar 17 01:41:36 2026.
+
+[   24.774815] cloud-init[1618]: Dependencies resolved.
+
+[   24.816069] cloud-init[1618]: ========================================================================================
+
+[   24.818039] cloud-init[1618]:  Package                            Arch    Version                   Repository    Size
+
+[   24.819949] cloud-init[1618]: ========================================================================================
+
+[   24.821915] cloud-init[1618]: Installing:
+
+[   24.822667] cloud-init[1618]:  java-21-amazon-corretto-headless   x86_64  1:21.0.10+7-1.amzn2023.1  amazonlinux   96 M
+
+[   24.824500] cloud-init[1618]: Installing dependencies:
+
+[   24.825473] cloud-init[1618]:  alsa-lib                           x86_64  1.2.7.2-1.amzn2023.0.3    amazonlinux  503 k
+
+[   24.827498] cloud-init[1618]:  cairo                              x86_64  1.18.0-4.amzn2023.0.3     amazonlinux  717 k
+
+[   24.829327] cloud-init[1618]:  dejavu-sans-fonts                  noarch  2.37-16.amzn2023.0.2      amazonlinux  1.3 M
+
+[   24.831190] cloud-init[1618]:  dejavu-sans-mono-fonts             noarch  2.37-16.amzn2023.0.2      amazonlinux  467 k
+
+[   24.833020] cloud-init[1618]:  dejavu-serif-fonts                 noarch  2.37-16.amzn2023.0.2      amazonlinux  1.0 M
+
+[   24.834836] cloud-init[1618]:  fontconfig                         x86_64  2.13.94-2.amzn2023.0.2    amazonlinux  273 k
+
+[   24.836670] cloud-init[1618]:  fonts-filesystem                   noarch  1:2.0.5-12.amzn2023.0.2   amazonlinux  9.5 k
+
+[   24.838498] cloud-init[1618]:  freetype                           x86_64  2.13.2-5.amzn2023.0.1     amazonlinux  423 k
+
+[   24.840319] cloud-init[1618]:  google-noto-fonts-common           noarch  20240401-1.amzn2023.0.2   amazonlinux   17 k
+
+[   24.842076] cloud-init[1618]:  google-noto-sans-vf-fonts          noarch  20240401-1.amzn2023.0.2   amazonlinux  593 k
+
+[   24.843811] cloud-init[1618]:  graphite2                          x86_64  1.3.14-7.amzn2023.0.2     amazonlinux   97 k
+
+[   24.845560] cloud-init[1618]:  harfbuzz                           x86_64  7.0.0-2.amzn2023.0.2      amazonlinux  873 k
+
+[   24.847316] cloud-init[1618]:  javapackages-filesystem            noarch  6.0.0-7.amzn2023.0.6      amazonlinux   12 k
+
+[   24.849049] cloud-init[1618]:  langpacks-core-font-en             noarch  3.0-21.amzn2023.0.4       amazonlinux   10 k
+
+[   24.850801] cloud-init[1618]:  libX11                             x86_64  1.8.10-2.amzn2023.0.1     amazonlinux  659 k
+
+[   24.852539] cloud-init[1618]:  libX11-common                      noarch  1.8.10-2.amzn2023.0.1     amazonlinux  147 k
+
+[   24.854274] cloud-init[1618]:  libXau                             x86_64  1.0.11-6.amzn2023.0.1     amazonlinux   33 k
+
+[   24.856021] cloud-init[1618]:  libXext                            x86_64  1.3.6-1.amzn2023.0.1      amazonlinux   42 k
+
+[   24.857770] cloud-init[1618]:  libXrender                         x86_64  0.9.11-6.amzn2023.0.1     amazonlinux   29 k
+
+[   24.859503] cloud-init[1618]:  libbrotli                          x86_64  1.0.9-4.amzn2023.0.2      amazonlinux  315 k
+
+[   24.861244] cloud-init[1618]:  libjpeg-turbo                      x86_64  2.1.4-2.amzn2023.0.5      amazonlinux  190 k
+
+[   24.863007] cloud-init[1618]:  libpng                             x86_64  2:1.6.37-10.amzn2023.0.11 amazonlinux  128 k
+
+[   24.864907] cloud-init[1618]:  libxcb                             x86_64  1.17.0-1.amzn2023.0.1     amazonlinux  235 k
+
+[   24.866779] cloud-init[1618]:  pixman                             x86_64  0.43.4-1.amzn2023.0.4     amazonlinux  296 k
+
+[   24.868632] cloud-init[1618]:  xml-common                         noarch  0.6.3-56.amzn2023.0.2     amazonlinux   32 k
+
+[   24.870784] cloud-init[1618]: Transaction Summary
+
+[   24.871741] cloud-init[1618]: ========================================================================================
+
+[   24.871821] cloud-init[1618]: Install  26 Packages
+
+[   24.871859] cloud-init[1618]: Total download size: 105 M
+
+[   24.875339] cloud-init[1618]: Installed size: 281 M
+
+[   24.876284] cloud-init[1618]: Downloading Packages:
+
+[   24.909308] cloud-init[1618]: (1/26): alsa-lib-1.2.7.2-1.amzn2023.0.3.x86_64.  11 MB/s | 503 kB     00:00
+
+[   24.920753] cloud-init[1618]: (2/26): cairo-1.18.0-4.amzn2023.0.3.x86_64.rpm   13 MB/s | 717 kB     00:00
+
+[   24.932513] cloud-init[1618]: (3/26): dejavu-sans-fonts-2.37-16.amzn2023.0.2.  20 MB/s | 1.3 MB     00:00
+
+[   24.942256] cloud-init[1618]: (4/26): dejavu-sans-mono-fonts-2.37-16.amzn2023  14 MB/s | 467 kB     00:00
+
+[   24.963542] cloud-init[1618]: (5/26): dejavu-serif-fonts-2.37-16.amzn2023.0.2  24 MB/s | 1.0 MB     00:00
+
+[   24.970334] cloud-init[1618]: (6/26): fontconfig-2.13.94-2.amzn2023.0.2.x86_6 7.2 MB/s | 273 kB     00:00
+
+[   24.973853] cloud-init[1618]: (7/26): fonts-filesystem-2.0.5-12.amzn2023.0.2. 307 kB/s | 9.5 kB     00:00
+
+[   25.000837] cloud-init[1618]: (8/26): freetype-2.13.2-5.amzn2023.0.1.x86_64.r  11 MB/s | 423 kB     00:00
+
+[   25.004734] cloud-init[1618]: (9/26): google-noto-fonts-common-20240401-1.amz 493 kB/s |  17 kB     00:00
+
+[   25.014817] cloud-init[1618]: (10/26): google-noto-sans-vf-fonts-20240401-1.a  14 MB/s | 593 kB     00:00
+
+[   25.034961] cloud-init[1618]: (11/26): harfbuzz-7.0.0-2.amzn2023.0.2.x86_64.r  30 MB/s | 873 kB     00:00
+
+[   25.040902] cloud-init[1618]: (12/26): graphite2-1.3.14-7.amzn2023.0.2.x86_64 2.4 MB/s |  97 kB     00:00
+
+[   25.067533] cloud-init[1618]: (13/26): javapackages-filesystem-6.0.0-7.amzn20 387 kB/s |  12 kB     00:00
+
+[   25.073276] cloud-init[1618]: (14/26): langpacks-core-font-en-3.0-21.amzn2023 354 kB/s |  10 kB     00:00
+
+[   25.107338] cloud-init[1618]: (15/26): libX11-1.8.10-2.amzn2023.0.1.x86_64.rp  17 MB/s | 659 kB     00:00
+
+[   25.114802] cloud-init[1618]: (16/26): libX11-common-1.8.10-2.amzn2023.0.1.no 3.7 MB/s | 147 kB     00:00
+
+[   25.141055] cloud-init[1618]: (17/26): libXau-1.0.11-6.amzn2023.0.1.x86_64.rp 1.1 MB/s |  33 kB     00:00
+
+[   25.145306] cloud-init[1618]: (18/26): libXext-1.3.6-1.amzn2023.0.1.x86_64.rp 1.4 MB/s |  42 kB     00:00
+
+[   25.168977] cloud-init[1618]: (19/26): libXrender-0.9.11-6.amzn2023.0.1.x86_6 1.1 MB/s |  29 kB     00:00
+
+[   25.177671] cloud-init[1618]: (20/26): libbrotli-1.0.9-4.amzn2023.0.2.x86_64. 9.7 MB/s | 315 kB     00:00
+
+[   25.202198] cloud-init[1618]: (21/26): libjpeg-turbo-2.1.4-2.amzn2023.0.5.x86 5.8 MB/s | 190 kB     00:00
+
+[   25.213323] cloud-init[1618]: (22/26): libpng-1.6.37-10.amzn2023.0.11.x86_64. 3.6 MB/s | 128 kB     00:00
+
+[   25.230857] cloud-init[1618]: (23/26): libxcb-1.17.0-1.amzn2023.0.1.x86_64.rp 8.2 MB/s | 235 kB     00:00
+
+[   25.250985] cloud-init[1618]: (24/26): pixman-0.43.4-1.amzn2023.0.4.x86_64.rp 7.8 MB/s | 296 kB     00:00
+
+[   25.259245] cloud-init[1618]: (25/26): xml-common-0.6.3-56.amzn2023.0.2.noarc 1.1 MB/s |  32 kB     00:00
+
+[   26.369608] cloud-init[1618]: (26/26): java-21-amazon-corretto-headless-21.0.  71 MB/s |  96 MB     00:01
+
+[   26.371511] cloud-init[1618]: --------------------------------------------------------------------------------
+
+[   26.373418] cloud-init[1618]: Total                                            67 MB/s | 105 MB     00:01
+
+[   27.644379] cloud-init[1618]: Running transaction check
+
+[   27.677710] cloud-init[1618]: Transaction check succeeded.
+
+[   27.678929] cloud-init[1618]: Running transaction test
+
+[   28.805174] cloud-init[1618]: Transaction test succeeded.
+
+[   28.806421] cloud-init[1618]: Running transaction
+
+[   29.989146] cloud-init[1618]:   Preparing        :                                                        1/1
+
+[   30.018537] cloud-init[1618]:   Installing       : fonts-filesystem-1:2.0.5-12.amzn2023.0.2.noarch       1/26
+
+[   30.067320] cloud-init[1618]:   Installing       : dejavu-sans-mono-fonts-2.37-16.amzn2023.0.2.noarch    2/26
+
+[   30.081947] cloud-init[1618]:   Installing       : dejavu-sans-fonts-2.37-16.amzn2023.0.2.noarch         3/26
+
+[   30.119383] cloud-init[1618]:   Installing       : libpng-2:1.6.37-10.amzn2023.0.11.x86_64               4/26
+
+[   30.125163] cloud-init[1618]:   Installing       : dejavu-serif-fonts-2.37-16.amzn2023.0.2.noarch        5/26
+
+[   30.143880] cloud-init[1618]:   Running scriptlet: xml-common-0.6.3-56.amzn2023.0.2.noarch               6/26
+
+[   30.158432] cloud-init[1618]:   Installing       : xml-common-0.6.3-56.amzn2023.0.2.noarch               6/26
+
+[   30.173844] cloud-init[1618]:   Installing       : pixman-0.43.4-1.amzn2023.0.4.x86_64                   7/26
+
+[   30.191898] cloud-init[1618]:   Installing       : libjpeg-turbo-2.1.4-2.amzn2023.0.5.x86_64             8/26
+
+[   30.204088] cloud-init[1618]:   Installing       : libbrotli-1.0.9-4.amzn2023.0.2.x86_64                 9/26
+
+[   30.247143] cloud-init[1618]:   Installing       : libXau-1.0.11-6.amzn2023.0.1.x86_64                  10/26
+
+[   30.351992] cloud-init[1618]:   Installing       : libxcb-1.17.0-1.amzn2023.0.1.x86_64                  11/26
+
+[   30.377310] cloud-init[1618]:   Installing       : libX11-common-1.8.10-2.amzn2023.0.1.noarch           12/26
+
+[   30.385965] cloud-init[1618]:   Installing       : libX11-1.8.10-2.amzn2023.0.1.x86_64                  13/26
+
+[   30.394415] cloud-init[1618]:   Installing       : libXext-1.3.6-1.amzn2023.0.1.x86_64                  14/26
+
+[   30.403168] cloud-init[1618]:   Installing       : libXrender-0.9.11-6.amzn2023.0.1.x86_64              15/26
+
+[   30.415598] cloud-init[1618]:   Installing       : javapackages-filesystem-6.0.0-7.amzn2023.0.6.noarc   16/26
+
+[   30.425148] cloud-init[1618]:   Installing       : graphite2-1.3.14-7.amzn2023.0.2.x86_64               17/26
+
+[   30.440386] cloud-init[1618]:   Installing       : google-noto-fonts-common-20240401-1.amzn2023.0.2.n   18/26
+
+[   30.447855] cloud-init[1618]:   Installing       : google-noto-sans-vf-fonts-20240401-1.amzn2023.0.2.   19/26
+
+[   30.470858] cloud-init[1618]:   Installing       : langpacks-core-font-en-3.0-21.amzn2023.0.4.noarch    20/26
+
+[   30.501458] cloud-init[1618]:   Installing       : cairo-1.18.0-4.amzn2023.0.3.x86_64                   21/26
+
+[   30.520417] cloud-init[1618]:   Installing       : harfbuzz-7.0.0-2.amzn2023.0.2.x86_64                 22/26
+
+[   30.577391] cloud-init[1618]:   Installing       : freetype-2.13.2-5.amzn2023.0.1.x86_64                23/26
+
+[   30.585777] cloud-init[1618]:   Installing       : fontconfig-2.13.94-2.amzn2023.0.2.x86_64             24/26
+
+[   31.678473] cloud-init[1618]:   Running scriptlet: fontconfig-2.13.94-2.amzn2023.0.2.x86_64             24/26
+
+[   33.207934] cloud-init[1618]:   Installing       : alsa-lib-1.2.7.2-1.amzn2023.0.3.x86_64               25/26
+
+[   33.228706] cloud-init[1618]:   Installing       : java-21-amazon-corretto-headless-1:21.0.10+7-1.amz   26/26
+
+[   33.242651] cloud-init[1618]:   Running scriptlet: java-21-amazon-corretto-headless-1:21.0.10+7-1.amz   26/26
+
+[   33.312725] cloud-init[1618]:   Running scriptlet: fontconfig-2.13.94-2.amzn2023.0.2.x86_64             26/26
+
+[   33.955431] cloud-init[1618]:   Running scriptlet: java-21-amazon-corretto-headless-1:21.0.10+7-1.amz   26/26
+
+[   33.957418] cloud-init[1618]:   Verifying        : alsa-lib-1.2.7.2-1.amzn2023.0.3.x86_64                1/26
+
+[   33.959327] cloud-init[1618]:   Verifying        : cairo-1.18.0-4.amzn2023.0.3.x86_64                    2/26
+
+[   33.961381] cloud-init[1618]:   Verifying        : dejavu-sans-fonts-2.37-16.amzn2023.0.2.noarch         3/26
+
+[   33.963346] cloud-init[1618]:   Verifying        : dejavu-sans-mono-fonts-2.37-16.amzn2023.0.2.noarch    4/26
+
+[   33.965272] cloud-init[1618]:   Verifying        : dejavu-serif-fonts-2.37-16.amzn2023.0.2.noarch        5/26
+
+[   33.967128] cloud-init[1618]:   Verifying        : fontconfig-2.13.94-2.amzn2023.0.2.x86_64              6/26
+
+[   33.968994] cloud-init[1618]:   Verifying        : fonts-filesystem-1:2.0.5-12.amzn2023.0.2.noarch       7/26
+
+[   33.970887] cloud-init[1618]:   Verifying        : freetype-2.13.2-5.amzn2023.0.1.x86_64                 8/26
+
+[   33.972800] cloud-init[1618]:   Verifying        : google-noto-fonts-common-20240401-1.amzn2023.0.2.n    9/26
+
+[   33.974669] cloud-init[1618]:   Verifying        : google-noto-sans-vf-fonts-20240401-1.amzn2023.0.2.   10/26
+
+[   33.976544] cloud-init[1618]:   Verifying        : graphite2-1.3.14-7.amzn2023.0.2.x86_64               11/26
+
+[   33.978393] cloud-init[1618]:   Verifying        : harfbuzz-7.0.0-2.amzn2023.0.2.x86_64                 12/26
+
+[   33.980261] cloud-init[1618]:   Verifying        : java-21-amazon-corretto-headless-1:21.0.10+7-1.amz   13/26
+
+[   33.982142] cloud-init[1618]:   Verifying        : javapackages-filesystem-6.0.0-7.amzn2023.0.6.noarc   14/26
+
+[   33.984017] cloud-init[1618]:   Verifying        : langpacks-core-font-en-3.0-21.amzn2023.0.4.noarch    15/26
+
+[   33.985857] cloud-init[1618]:   Verifying        : libX11-1.8.10-2.amzn2023.0.1.x86_64                  16/26
+
+[   33.987721] cloud-init[1618]:   Verifying        : libX11-common-1.8.10-2.amzn2023.0.1.noarch           17/26
+
+[   33.989549] cloud-init[1618]:   Verifying        : libXau-1.0.11-6.amzn2023.0.1.x86_64                  18/26
+
+[   33.991399] cloud-init[1618]:   Verifying        : libXext-1.3.6-1.amzn2023.0.1.x86_64                  19/26
+
+[   33.993200] cloud-init[1618]:   Verifying        : libXrender-0.9.11-6.amzn2023.0.1.x86_64              20/26
+
+[   33.995338] cloud-init[1618]:   Verifying        : libbrotli-1.0.9-4.amzn2023.0.2.x86_64                21/26
+
+[   33.995430] cloud-init[1618]:   Verifying        : libjpeg-turbo-2.1.4-2.amzn2023.0.5.x86_64            22/26
+
+[   33.995664] cloud-init[1618]:   Verifying        : libpng-2:1.6.37-10.amzn2023.0.11.x86_64              23/26
+
+[   33.995896] cloud-init[1618]:   Verifying        : libxcb-1.17.0-1.amzn2023.0.1.x86_64                  24/26
+
+[   33.996130] cloud-init[1618]:   Verifying        : pixman-0.43.4-1.amzn2023.0.4.x86_64                  25/26
+
+[   34.375455] cloud-init[1618]:   Verifying        : xml-common-0.6.3-56.amzn2023.0.2.noarch              26/26
+
+[   34.375628] cloud-init[1618]: Installed:
+
+[   34.375830] cloud-init[1618]:   alsa-lib-1.2.7.2-1.amzn2023.0.3.x86_64
+
+[   34.376045] cloud-init[1618]:   cairo-1.18.0-4.amzn2023.0.3.x86_64
+
+[   34.376259] cloud-init[1618]:   dejavu-sans-fonts-2.37-16.amzn2023.0.2.noarch
+
+[   34.376486] cloud-init[1618]:   dejavu-sans-mono-fonts-2.37-16.amzn2023.0.2.noarch
+
+[   34.376699] cloud-init[1618]:   dejavu-serif-fonts-2.37-16.amzn2023.0.2.noarch
+
+[   34.376924] cloud-init[1618]:   fontconfig-2.13.94-2.amzn2023.0.2.x86_64
+
+[   34.377144] cloud-init[1618]:   fonts-filesystem-1:2.0.5-12.amzn2023.0.2.noarch
+
+[   34.377366] cloud-init[1618]:   freetype-2.13.2-5.amzn2023.0.1.x86_64
+
+[   34.377589] cloud-init[1618]:   google-noto-fonts-common-20240401-1.amzn2023.0.2.noarch
+
+[   34.377808] cloud-init[1618]:   google-noto-sans-vf-fonts-20240401-1.amzn2023.0.2.noarch
+
+[   34.378032] cloud-init[1618]:   graphite2-1.3.14-7.amzn2023.0.2.x86_64
+
+[   34.378254] cloud-init[1618]:   harfbuzz-7.0.0-2.amzn2023.0.2.x86_64
+
+[   34.378484] cloud-init[1618]:   java-21-amazon-corretto-headless-1:21.0.10+7-1.amzn2023.1.x86_64
+
+[   34.378703] cloud-init[1618]:   javapackages-filesystem-6.0.0-7.amzn2023.0.6.noarch
+
+[   34.378928] cloud-init[1618]:   langpacks-core-font-en-3.0-21.amzn2023.0.4.noarch
+
+[   34.379150] cloud-init[1618]:   libX11-1.8.10-2.amzn2023.0.1.x86_64
+
+[   34.379369] cloud-init[1618]:   libX11-common-1.8.10-2.amzn2023.0.1.noarch
+
+[   34.379594] cloud-init[1618]:   libXau-1.0.11-6.amzn2023.0.1.x86_64
+
+[   34.379815] cloud-init[1618]:   libXext-1.3.6-1.amzn2023.0.1.x86_64
+
+[   34.380252] cloud-init[1618]:   libXrender-0.9.11-6.amzn2023.0.1.x86_64
+
+[   34.380472] cloud-init[1618]:   libbrotli-1.0.9-4.amzn2023.0.2.x86_64
+
+[   34.380697] cloud-init[1618]:   libjpeg-turbo-2.1.4-2.amzn2023.0.5.x86_64
+
+[   34.380920] cloud-init[1618]:   libpng-2:1.6.37-10.amzn2023.0.11.x86_64
+
+[   34.381142] cloud-init[1618]:   libxcb-1.17.0-1.amzn2023.0.1.x86_64
+
+[   34.381394] cloud-init[1618]:   pixman-0.43.4-1.amzn2023.0.4.x86_64
+
+[   34.381587] cloud-init[1618]:   xml-common-0.6.3-56.amzn2023.0.2.noarch
+
+[   34.383762] cloud-init[1618]: Complete!
+
+[   35.386983] cloud-init[1618]: Last metadata expiration check: 0:00:12 ago on Tue Mar 17 01:41:36 2026.
+
+[   35.563933] cloud-init[1618]: Dependencies resolved.
+
+[   35.629399] cloud-init[1618]: ===========================================================================================
+
+[   35.631546] cloud-init[1618]:  Package                              Arch    Version                    Repository    Size
+
+[   35.633595] cloud-init[1618]: ===========================================================================================
+
+[   35.635601] cloud-init[1618]: Installing:
+
+[   35.636755] cloud-init[1618]:  mariadb105-server                    x86_64  3:10.5.29-1.amzn2023.0.1   amazonlinux   10 M
+
+[   35.638781] cloud-init[1618]: Installing dependencies:
+
+[   35.639933] cloud-init[1618]:  mariadb-connector-c                  x86_64  3.3.10-1.amzn2023.0.1      amazonlinux  211 k
+
+[   35.640028] cloud-init[1618]:  mariadb-connector-c-config           noarch  3.3.10-1.amzn2023.0.1      amazonlinux  9.9 k
+
+[   35.640270] cloud-init[1618]:  mariadb105                           x86_64  3:10.5.29-1.amzn2023.0.1   amazonlinux  1.5 M
+
+[   35.640741] cloud-init[1618]:  mariadb105-common                    x86_64  3:10.5.29-1.amzn2023.0.1   amazonlinux   28 k
+
+[   35.640971] cloud-init[1618]:  mariadb105-errmsg                    x86_64  3:10.5.29-1.amzn2023.0.1   amazonlinux  212 k
+
+[   35.641211] cloud-init[1618]:  mysql-selinux                        noarch  1.0.4-2.amzn2023.0.3       amazonlinux   36 k
+
+[   35.641457] cloud-init[1618]:  perl-B                               x86_64  1.80-477.amzn2023.0.7      amazonlinux  177 k
+
+[   35.641714] cloud-init[1618]:  perl-DBD-MariaDB                     x86_64  1.22-1.amzn2023.0.4        amazonlinux  153 k
+
+[   35.641921] cloud-init[1618]:  perl-DBI                             x86_64  1.643-7.amzn2023.0.3       amazonlinux  700 k
+
+[   35.642161] cloud-init[1618]:  perl-Data-Dumper                     x86_64  2.174-460.amzn2023.0.2     amazonlinux   55 k
+
+[   35.642413] cloud-init[1618]:  perl-File-Copy                       noarch  2.34-477.amzn2023.0.7      amazonlinux   20 k
+
+[   35.642664] cloud-init[1618]:  perl-FileHandle                      noarch  2.03-477.amzn2023.0.7      amazonlinux   15 k
+
+[   35.642894] cloud-init[1618]:  perl-Math-BigInt                     noarch  1:1.9998.39-2.amzn2023.0.2 amazonlinux  202 k
+
+[   35.643125] cloud-init[1618]:  perl-Math-BigRat                     noarch  0.2624-500.amzn2023.0.2    amazonlinux   42 k
+
+[   35.643358] cloud-init[1618]:  perl-Math-Complex                    noarch  1.59-477.amzn2023.0.7      amazonlinux   46 k
+
+[   35.643599] cloud-init[1618]:  perl-Sys-Hostname                    x86_64  1.23-477.amzn2023.0.7      amazonlinux   16 k
+
+[   35.643831] cloud-init[1618]:  perl-base                            noarch  2.27-477.amzn2023.0.7      amazonlinux   16 k
+
+[   35.644057] cloud-init[1618]: Installing weak dependencies:
+
+[   35.644357] cloud-init[1618]:  mariadb105-backup                    x86_64  3:10.5.29-1.amzn2023.0.1   amazonlinux  6.0 M
+
+[   35.644527] cloud-init[1618]:  mariadb105-cracklib-password-check   x86_64  3:10.5.29-1.amzn2023.0.1   amazonlinux   13 k
+
+[   35.644764] cloud-init[1618]:  mariadb105-gssapi-server             x86_64  3:10.5.29-1.amzn2023.0.1   amazonlinux   15 k
+
+[   35.645000] cloud-init[1618]:  mariadb105-server-utils              x86_64  3:10.5.29-1.amzn2023.0.1   amazonlinux  207 k
+
+[   35.645240] cloud-init[1618]: Transaction Summary
+
+[   35.645523] cloud-init[1618]: ===========================================================================================
+
+[   35.645783] cloud-init[1618]: Install  22 Packages
+
+[   35.646040] cloud-init[1618]: Total download size: 20 M
+
+[   35.646274] cloud-init[1618]: Installed size: 117 M
+
+[   35.646505] cloud-init[1618]: Downloading Packages:
+
+[   35.784775] cloud-init[1618]: (1/22): mariadb105-10.5.29-1.amzn2023.0.1.x86_6  27 MB/s | 1.5 MB     00:00
+
+[   35.792301] cloud-init[1618]: (2/22): mariadb-connector-c-3.3.10-1.amzn2023.0 3.3 MB/s | 211 kB     00:00
+
+[   35.796528] cloud-init[1618]: (3/22): mariadb-connector-c-config-3.3.10-1.amz 150 kB/s | 9.9 kB     00:00
+
+[   35.820247] cloud-init[1618]: (4/22): mariadb105-common-10.5.29-1.amzn2023.0. 1.2 MB/s |  28 kB     00:00
+
+[   35.826564] cloud-init[1618]: (5/22): mariadb105-cracklib-password-check-10.5 460 kB/s |  13 kB     00:00
+
+[   35.851299] cloud-init[1618]: (6/22): mariadb105-gssapi-server-10.5.29-1.amzn 578 kB/s |  15 kB     00:00
+
+[   35.858660] cloud-init[1618]: (7/22): mariadb105-errmsg-10.5.29-1.amzn2023.0. 5.7 MB/s | 212 kB     00:00
+
+[   35.894255] cloud-init[1618]: (8/22): mariadb105-backup-10.5.29-1.amzn2023.0.  56 MB/s | 6.0 MB     00:00
+
+[   35.903824] cloud-init[1618]: (9/22): mariadb105-server-utils-10.5.29-1.amzn2 5.1 MB/s | 207 kB     00:00
+
+[   35.920371] cloud-init[1618]: (10/22): mysql-selinux-1.0.4-2.amzn2023.0.3.noa 1.4 MB/s |  36 kB     00:00
+
+[   35.935345] cloud-init[1618]: (11/22): perl-B-1.80-477.amzn2023.0.7.x86_64.rp 5.5 MB/s | 177 kB     00:00
+
+[   35.950128] cloud-init[1618]: (12/22): perl-DBD-MariaDB-1.22-1.amzn2023.0.4.x 5.7 MB/s | 153 kB     00:00
+
+[   35.961938] cloud-init[1618]: (13/22): perl-DBI-1.643-7.amzn2023.0.3.x86_64.r  25 MB/s | 700 kB     00:00
+
+[   36.025196] cloud-init[1618]: (14/22): mariadb105-server-10.5.29-1.amzn2023.0  59 MB/s |  10 MB     00:00
+
+[   36.027910] cloud-init[1618]: (15/22): perl-Data-Dumper-2.174-460.amzn2023.0. 704 kB/s |  55 kB     00:00
+
+[   36.031404] cloud-init[1618]: (16/22): perl-File-Copy-2.34-477.amzn2023.0.7.n 289 kB/s |  20 kB     00:00
+
+[   36.050491] cloud-init[1618]: (17/22): perl-FileHandle-2.03-477.amzn2023.0.7. 597 kB/s |  15 kB     00:00
+
+[   36.062511] cloud-init[1618]: (18/22): perl-Math-BigRat-0.2624-500.amzn2023.0 1.6 MB/s |  42 kB     00:00
+
+[   36.065770] cloud-init[1618]: (19/22): perl-Math-BigInt-1.9998.39-2.amzn2023. 6.1 MB/s | 202 kB     00:00
+
+[   36.075073] cloud-init[1618]: (20/22): perl-Math-Complex-1.59-477.amzn2023.0. 1.9 MB/s |  46 kB     00:00
+
+[   36.086224] cloud-init[1618]: (21/22): perl-Sys-Hostname-1.23-477.amzn2023.0. 638 kB/s |  16 kB     00:00
+
+[   36.092366] cloud-init[1618]: (22/22): perl-base-2.27-477.amzn2023.0.7.noarch 662 kB/s |  16 kB     00:00
+
+[   36.095162] cloud-init[1618]: --------------------------------------------------------------------------------
+
+[   36.097231] cloud-init[1618]: Total                                            43 MB/s |  20 MB     00:00
+
+[   36.743720] cloud-init[1618]: Running transaction check
+
+[   36.795290] cloud-init[1618]: Transaction check succeeded.
+
+[   36.796428] cloud-init[1618]: Running transaction test
+
+[   37.135830] cloud-init[1618]: Transaction test succeeded.
+
+[   37.136676] cloud-init[1618]: Running transaction
+
+[   37.647388] cloud-init[1618]:   Preparing        :                                                        1/1
+
+[   37.682553] cloud-init[1618]:   Installing       : mariadb-connector-c-config-3.3.10-1.amzn2023.0.1.n    1/22
+
+[   37.709011] cloud-init[1618]:   Installing       : mariadb105-common-3:10.5.29-1.amzn2023.0.1.x86_64     2/22
+
+[   37.722219] cloud-init[1618]:   Installing       : mariadb-connector-c-3.3.10-1.amzn2023.0.1.x86_64      3/22
+
+[   37.734823] cloud-init[1618]:   Installing       : perl-Sys-Hostname-1.23-477.amzn2023.0.7.x86_64        4/22
+
+[   37.749356] cloud-init[1618]:   Installing       : perl-Math-Complex-1.59-477.amzn2023.0.7.noarch        5/22
+
+[   37.777281] cloud-init[1618]:   Installing       : perl-Math-BigRat-0.2624-500.amzn2023.0.2.noarch       6/22
+
+[   37.831043] cloud-init[1618]:   Installing       : perl-Math-BigInt-1:1.9998.39-2.amzn2023.0.2.noarch    7/22
+
+[   37.846776] cloud-init[1618]:   Installing       : mariadb105-errmsg-3:10.5.29-1.amzn2023.0.1.x86_64     8/22
+
+[   37.873532] cloud-init[1618]:   Installing       : perl-Data-Dumper-2.174-460.amzn2023.0.2.x86_64        9/22
+
+[   37.882033] cloud-init[1618]:   Installing       : perl-B-1.80-477.amzn2023.0.7.x86_64                  10/22
+
+[   37.888459] cloud-init[1618]:   Installing       : perl-base-2.27-477.amzn2023.0.7.noarch               11/22
+
+[   37.995853] cloud-init[1618]:   Installing       : perl-FileHandle-2.03-477.amzn2023.0.7.noarch         12/22
+
+[   38.019562] cloud-init[1618]:   Installing       : perl-DBI-1.643-7.amzn2023.0.3.x86_64                 13/22
+
+[   38.029989] cloud-init[1618]:   Installing       : perl-DBD-MariaDB-1.22-1.amzn2023.0.4.x86_64          14/22
+
+[   38.035708] cloud-init[1618]:   Installing       : perl-File-Copy-2.34-477.amzn2023.0.7.noarch          15/22
+
+[   38.052660] cloud-init[1618]:   Running scriptlet: mysql-selinux-1.0.4-2.amzn2023.0.3.noarch            16/22
+
+[   38.058786] cloud-init[1618]:   Installing       : mysql-selinux-1.0.4-2.amzn2023.0.3.noarch            16/22
+
+[   51.120223] SELinux:  Class user_namespace not defined in policy.
+
+[   51.120963] SELinux: the above unknown classes and permissions will be allowed
+
+[   51.122092] SELinux:  Converting 329 SID table entries...
+
+[   51.130076] SELinux:  policy capability network_peer_controls=1
+
+[   51.130782] SELinux:  policy capability open_perms=1
+
+[   51.131456] SELinux:  policy capability extended_socket_class=1
+
+[   51.132260] SELinux:  policy capability always_check_network=0
+
+[   51.133059] SELinux:  policy capability cgroup_seclabel=1
+
+[   51.133787] SELinux:  policy capability nnp_nosuid_transition=1
+
+[   51.134601] SELinux:  policy capability genfs_seclabel_symlinks=1
+
+[   51.135437] SELinux:  policy capability ioctl_skip_cloexec=0
+
+[   51.908386] cloud-init[1618]:   Running scriptlet: mysql-selinux-1.0.4-2.amzn2023.0.3.noarch            16/22
+
+[   51.909206] cloud-init[1618]: libsemanage.semanage_direct_install_info: Overriding mysql module at lower priority 100 with module at priority 200.
+
+[   52.284687] cloud-init[1618]:   Installing       : mariadb105-3:10.5.29-1.amzn2023.0.1.x86_64           17/22
+
+[   52.297843] cloud-init[1618]:   Installing       : mariadb105-backup-3:10.5.29-1.amzn2023.0.1.x86_64    18/22
+
+[   52.305340] cloud-init[1618]:   Installing       : mariadb105-cracklib-password-check-3:10.5.29-1.amz   19/22
+
+[   52.311190] cloud-init[1618]:   Installing       : mariadb105-gssapi-server-3:10.5.29-1.amzn2023.0.1.   20/22
+
+[   52.956759] cloud-init[1618]:   Running scriptlet: mariadb105-server-3:10.5.29-1.amzn2023.0.1.x86_64    21/22
+
+[   52.968975] cloud-init[1618]:   Installing       : mariadb105-server-3:10.5.29-1.amzn2023.0.1.x86_64    21/22
+
+[   53.015521] cloud-init[1618]:   Running scriptlet: mariadb105-server-3:10.5.29-1.amzn2023.0.1.x86_64    21/22
+
+[   53.024007] cloud-init[1618]:   Installing       : mariadb105-server-utils-3:10.5.29-1.amzn2023.0.1.x   22/22
+
+[   53.593408] cloud-init[1618]:   Running scriptlet: mysql-selinux-1.0.4-2.amzn2023.0.3.noarch            22/22
+
+[   53.314310] zram_generator::config[25683]: zram0: system has too much memory (916MB), limit is 800MB, ignoring.
+
+[   54.348458] cloud-init[1618]:   Running scriptlet: mariadb105-server-utils-3:10.5.29-1.amzn2023.0.1.x   22/22
+
+[   54.348729] cloud-init[1618]:   Verifying        : mariadb-connector-c-3.3.10-1.amzn2023.0.1.x86_64      1/22
+
+[   54.348857] cloud-init[1618]:   Verifying        : mariadb-connector-c-config-3.3.10-1.amzn2023.0.1.n    2/22
+
+[   54.349079] cloud-init[1618]:   Verifying        : mariadb105-3:10.5.29-1.amzn2023.0.1.x86_64            3/22
+
+[   54.349302] cloud-init[1618]:   Verifying        : mariadb105-backup-3:10.5.29-1.amzn2023.0.1.x86_64     4/22
+
+[   54.349536] cloud-init[1618]:   Verifying        : mariadb105-common-3:10.5.29-1.amzn2023.0.1.x86_64     5/22
+
+[   54.349762] cloud-init[1618]:   Verifying        : mariadb105-cracklib-password-check-3:10.5.29-1.amz    6/22
+
+[   54.349992] cloud-init[1618]:   Verifying        : mariadb105-errmsg-3:10.5.29-1.amzn2023.0.1.x86_64     7/22
+
+[   54.350448] cloud-init[1618]:   Verifying        : mariadb105-gssapi-server-3:10.5.29-1.amzn2023.0.1.    8/22
+
+[   54.363027] cloud-init[1618]:   Verifying        : mariadb105-server-3:10.5.29-1.amzn2023.0.1.x86_64     9/22
+
+[   54.364870] cloud-init[1618]:   Verifying        : mariadb105-server-utils-3:10.5.29-1.amzn2023.0.1.x   10/22
+
+[   54.366639] cloud-init[1618]:   Verifying        : mysql-selinux-1.0.4-2.amzn2023.0.3.noarch            11/22
+
+[   54.368467] cloud-init[1618]:   Verifying        : perl-B-1.80-477.amzn2023.0.7.x86_64                  12/22
+
+[   54.370243] cloud-init[1618]:   Verifying        : perl-DBD-MariaDB-1.22-1.amzn2023.0.4.x86_64          13/22
+
+[   54.372080] cloud-init[1618]:   Verifying        : perl-DBI-1.643-7.amzn2023.0.3.x86_64                 14/22
+
+[   54.374451] cloud-init[1618]:   Verifying        : perl-Data-Dumper-2.174-460.amzn2023.0.2.x86_64       15/22
+
+[   54.374539] cloud-init[1618]:   Verifying        : perl-File-Copy-2.34-477.amzn2023.0.7.noarch          16/22
+
+[   54.374770] cloud-init[1618]:   Verifying        : perl-FileHandle-2.03-477.amzn2023.0.7.noarch         17/22
+
+[   54.375003] cloud-init[1618]:   Verifying        : perl-Math-BigInt-1:1.9998.39-2.amzn2023.0.2.noarch   18/22
+
+[   54.375231] cloud-init[1618]:   Verifying        : perl-Math-BigRat-0.2624-500.amzn2023.0.2.noarch      19/22
+
+[   54.375703] cloud-init[1618]:   Verifying        : perl-Math-Complex-1.59-477.amzn2023.0.7.noarch       20/22
+
+[   54.375908] cloud-init[1618]:   Verifying        : perl-Sys-Hostname-1.23-477.amzn2023.0.7.x86_64       21/22
+
+[   54.686613] cloud-init[1618]:   Verifying        : perl-base-2.27-477.amzn2023.0.7.noarch               22/22
+
+[   54.686806] cloud-init[1618]: Installed:
+
+[   54.687033] cloud-init[1618]:   mariadb-connector-c-3.3.10-1.amzn2023.0.1.x86_64
+
+[   54.687261] cloud-init[1618]:   mariadb-connector-c-config-3.3.10-1.amzn2023.0.1.noarch
+
+[   54.687487] cloud-init[1618]:   mariadb105-3:10.5.29-1.amzn2023.0.1.x86_64
+
+[   54.687768] cloud-init[1618]:   mariadb105-backup-3:10.5.29-1.amzn2023.0.1.x86_64
+
+[   54.688012] cloud-init[1618]:   mariadb105-common-3:10.5.29-1.amzn2023.0.1.x86_64
+
+[   54.688253] cloud-init[1618]:   mariadb105-cracklib-password-check-3:10.5.29-1.amzn2023.0.1.x86_64
+
+[   54.688517] cloud-init[1618]:   mariadb105-errmsg-3:10.5.29-1.amzn2023.0.1.x86_64
+
+[   54.688777] cloud-init[1618]:   mariadb105-gssapi-server-3:10.5.29-1.amzn2023.0.1.x86_64
+
+[   54.689008] cloud-init[1618]:   mariadb105-server-3:10.5.29-1.amzn2023.0.1.x86_64
+
+[   54.689234] cloud-init[1618]:   mariadb105-server-utils-3:10.5.29-1.amzn2023.0.1.x86_64
+
+[   54.689457] cloud-init[1618]:   mysql-selinux-1.0.4-2.amzn2023.0.3.noarch
+
+[   54.689692] cloud-init[1618]:   perl-B-1.80-477.amzn2023.0.7.x86_64
+
+[   54.689906] cloud-init[1618]:   perl-DBD-MariaDB-1.22-1.amzn2023.0.4.x86_64
+
+[   54.690348] cloud-init[1618]:   perl-DBI-1.643-7.amzn2023.0.3.x86_64
+
+[   54.690571] cloud-init[1618]:   perl-Data-Dumper-2.174-460.amzn2023.0.2.x86_64
+
+[   54.690824] cloud-init[1618]:   perl-File-Copy-2.34-477.amzn2023.0.7.noarch
+
+[   54.691081] cloud-init[1618]:   perl-FileHandle-2.03-477.amzn2023.0.7.noarch
+
+[   54.691332] cloud-init[1618]:   perl-Math-BigInt-1:1.9998.39-2.amzn2023.0.2.noarch
+
+[   54.691584] cloud-init[1618]:   perl-Math-BigRat-0.2624-500.amzn2023.0.2.noarch
+
+[   54.691818] cloud-init[1618]:   perl-Math-Complex-1.59-477.amzn2023.0.7.noarch
+
+[   54.692043] cloud-init[1618]:   perl-Sys-Hostname-1.23-477.amzn2023.0.7.x86_64
+
+[   54.692272] cloud-init[1618]:   perl-base-2.27-477.amzn2023.0.7.noarch
+
+[   54.692499] cloud-init[1618]: Complete!
+
+[   54.795404] cloud-init[1618]: Created symlink /etc/systemd/system/mysql.service → /usr/lib/systemd/system/mariadb.service.
+
+[   54.795563] cloud-init[1618]: Created symlink /etc/systemd/system/mysqld.service → /usr/lib/systemd/system/mariadb.service.
+
+[   54.795898] cloud-init[1618]: Created symlink /etc/systemd/system/multi-user.target.wants/mariadb.service → /usr/lib/systemd/system/mariadb.service.
+
+[   54.206878] zram_generator::config[26126]: zram0: system has too much memory (916MB), limit is 800MB, ignoring.
+
+[   59.485252] cloud-init[1618]: Completed 256.0 KiB/60.7 MiB (1.1 MiB/s) with 1 file(s) remaining
+Completed 512.0 KiB/60.7 MiB (2.2 MiB/s) with 1 file(s) remaining
+Completed 768.0 KiB/60.7 MiB (3.3 MiB/s) with 1 file(s) remaining
+Completed 1.0 MiB/60.7 MiB (4.4 MiB/s) with 1 file(s) remaining  
+Completed 1.2 MiB/60.7 MiB (5.5 MiB/s) with 1 file(s) remaining  
+Completed 1.5 MiB/60.7 MiB (6.5 MiB/s) with 1 file(s) remaining  
+Completed 1.8 MiB/60.7 MiB (7.6 MiB/s) with 1 file(s) remaining  
+Completed 2.0 MiB/60.7 MiB (8.6 MiB/s) with 1 file(s) remaining  
+Completed 2.2 MiB/60.7 MiB (9.6 MiB/s) with 1 file(s) remaining  
+Completed 2.5 MiB/60.7 MiB (10.6 MiB/s) with 1 file(s) remaining 
+Completed 2.8 MiB/60.7 MiB (11.6 MiB/s) with 1 file(s) remaining 
+Completed 3.0 MiB/60.7 MiB (12.6 MiB/s) with 1 file(s) remaining 
+Completed 3.2 MiB/60.7 MiB (13.6 MiB/s) with 1 file(s) remaining 
+Completed 3.5 MiB/60.7 MiB (14.5 MiB/s) with 1 file(s) remaining 
+Completed 3.8 MiB/60.7 MiB (15.5 MiB/s[2026-03-17T01:42:12.922402]) with 1 file(s) remaining 
+Completed 4.0 MiB/60.7 MiB (16.5 MiB/s) with 1 file(s) remaining 
+Completed 4.2 MiB/60.7 MiB (17.4 MiB/s) with 1 file(s) remaining 
+Completed 4.5 MiB/60.7 MiB (18.1 MiB/s) with 1 file(s) remaining 
+Completed 4.8 MiB/60.7 MiB (19.1 MiB/s) with 1 file(s) remaining 
+Completed 5.0 MiB/60.7 MiB (20.1 MiB/s) with 1 file(s) remaining 
+Completed 5.2 MiB/60.7 MiB (20.9 MiB/s) with 1 file(s) remaining 
+Completed 5.5 MiB/60.7 MiB (21.8 MiB/s) with 1 file(s) remaining 
+Completed 5.8 MiB/60.7 MiB (22.7 MiB/s) with 1 file(s) remaining 
+Completed 6.0 MiB/60.7 MiB (23.7 MiB/s) with 1 file(s) remaining 
+Completed 6.2 MiB/60.7 MiB (24.6 MiB/s) with 1 file(s) remaining 
+Completed 6.5 MiB/60.7 MiB (25.4 MiB/s) with 1 file(s) remaining 
+Completed 6.8 MiB/60.7 MiB (26.2 MiB/s) with 1 file(s) remaining 
+Completed 7.0 MiB/60.7 MiB (27.1 MiB/s) with 1 file(s) remaining 
+Completed 7.2 MiB/60.7 MiB (28.1 MiB/s) with 1 file(s) remaining 
+Completed 7.5 MiB/60.7 MiB (29.0 MiB/s) wit[2026-03-17T01:42:12.922435]h 1 file(s) remaining 
+Completed 7.8 MiB/60.7 MiB (29.7 MiB/s) with 1 file(s) remaining 
+Completed 8.0 MiB/60.7 MiB (30.6 MiB/s) with 1 file(s) remaining 
+Completed 8.2 MiB/60.7 MiB (31.4 MiB/s) with 1 file(s) remaining 
+Completed 8.5 MiB/60.7 MiB (31.8 MiB/s) with 1 file(s) remaining 
+Completed 8.8 MiB/60.7 MiB (32.7 MiB/s) with 1 file(s) remaining 
+Completed 9.0 MiB/60.7 MiB (33.6 MiB/s) with 1 file(s) remaining 
+Completed 9.2 MiB/60.7 MiB (34.3 MiB/s) with 1 file(s) remaining 
+Completed 9.5 MiB/60.7 MiB (35.2 MiB/s) with 1 file(s) remaining 
+Completed 9.8 MiB/60.7 MiB (36.0 MiB/s) with 1 file(s) remaining 
+Completed 10.0 MiB/60.7 MiB (36.6 MiB/s) with 1 file(s) remaining
+Completed 10.2 MiB/60.7 MiB (37.4 MiB/s) with 1 file(s) remaining
+Completed 10.5 MiB/60.7 MiB (38.2 MiB/s) with 1 file(s) remaining
+Completed 10.8 MiB/60.7 MiB (38.9 MiB/s) with 1 file(s) remaining
+Completed 11.0 MiB/60.7 MiB (39.6 MiB/s) with 1 file(s) remaining
+Completed 11.2 MiB/60.7 MiB (40.5 MiB/s) with 1 [2026-03-17T01:42:12.922464]file(s) remaining
+Completed 11.5 MiB/60.7 MiB (41.2 MiB/s) with 1 file(s) remaining
+Completed 11.8 MiB/60.7 MiB (42.0 MiB/s) with 1 file(s) remaining
+Completed 12.0 MiB/60.7 MiB (42.9 MiB/s) with 1 file(s) remaining
+Completed 12.2 MiB/60.7 MiB (43.4 MiB/s) with 1 file(s) remaining
+Completed 12.5 MiB/60.7 MiB (44.1 MiB/s) with 1 file(s) remaining
+Completed 12.8 MiB/60.7 MiB (44.9 MiB/s) with 1 file(s) remaining
+Completed 13.0 MiB/60.7 MiB (45.7 MiB/s) with 1 file(s) remaining
+Completed 13.2 MiB/60.7 MiB (46.4 MiB/s) with 1 file(s) remaining
+Completed 13.5 MiB/60.7 MiB (47.1 MiB/s) with 1 file(s) remaining
+Completed 13.8 MiB/60.7 MiB (47.8 MiB/s) with 1 file(s) remaining
+Completed 14.0 MiB/60.7 MiB (48.5 MiB/s) with 1 file(s) remaining
+Completed 14.2 MiB/60.7 MiB (49.3 MiB/s) with 1 file(s) remaining
+Completed 14.5 MiB/60.7 MiB (50.0 MiB/s) with 1 file(s) remaining
+Completed 14.8 MiB/60.7 MiB (50.7 MiB/s) with 1 file(s) remaining
+Completed 15.0 MiB/60.7 MiB (51.3 MiB/s) with 1 file([2026-03-17T01:42:12.922494]s) remaining
+Completed 15.2 MiB/60.7 MiB (52.1 MiB/s) with 1 file(s) remaining
+Completed 15.5 MiB/60.7 MiB (52.9 MiB/s) with 1 file(s) remaining
+Completed 15.8 MiB/60.7 MiB (53.6 MiB/s) with 1 file(s) remaining
+Completed 16.0 MiB/60.7 MiB (54.1 MiB/s) with 1 file(s) remaining
+Completed 16.2 MiB/60.7 MiB (54.7 MiB/s) with 1 file(s) remaining
+Completed 16.5 MiB/60.7 MiB (55.4 MiB/s) with 1 file(s) remaining
+Completed 16.8 MiB/60.7 MiB (56.1 MiB/s) with 1 file(s) remaining
+Completed 17.0 MiB/60.7 MiB (56.8 MiB/s) with 1 file(s) remaining
+Completed 17.2 MiB/60.7 MiB (57.5 MiB/s) with 1 file(s) remaining
+Completed 17.5 MiB/60.7 MiB (58.2 MiB/s) with 1 file(s) remaining
+Completed 17.8 MiB/60.7 MiB (58.7 MiB/s) with 1 file(s) remaining
+Completed 18.0 MiB/60.7 MiB (59.3 MiB/s) with 1 file(s) remaining
+Completed 18.2 MiB/60.7 MiB (60.1 MiB/s) with 1 file(s) remaining
+Completed 18.5 MiB/60.7 MiB (60.6 MiB/s) with 1 file(s) remaining
+Completed 18.8 MiB/60.7 MiB (61.0 MiB/s) with 1 file(s) re[2026-03-17T01:42:12.922535]maining
+Completed 19.0 MiB/60.7 MiB (61.3 MiB/s) with 1 file(s) remaining
+Completed 19.2 MiB/60.7 MiB (62.0 MiB/s) with 1 file(s) remaining
+Completed 19.5 MiB/60.7 MiB (62.8 MiB/s) with 1 file(s) remaining
+Completed 19.8 MiB/60.7 MiB (63.3 MiB/s) with 1 file(s) remaining
+Completed 20.0 MiB/60.7 MiB (63.9 MiB/s) with 1 file(s) remaining
+Completed 20.2 MiB/60.7 MiB (64.4 MiB/s) with 1 file(s) remaining
+Completed 20.5 MiB/60.7 MiB (65.0 MiB/s) with 1 file(s) remaining
+Completed 20.8 MiB/60.7 MiB (65.4 MiB/s) with 1 file(s) remaining
+Completed 21.0 MiB/60.7 MiB (65.9 MiB/s) with 1 file(s) remaining
+Completed 21.2 MiB/60.7 MiB (66.5 MiB/s) with 1 file(s) remaining
+Completed 21.5 MiB/60.7 MiB (67.0 MiB/s) with 1 file(s) remaining
+Completed 21.8 MiB/60.7 MiB (67.6 MiB/s) with 1 file(s) remaining
+Completed 22.0 MiB/60.7 MiB (67.9 MiB/s) with 1 file(s) remaining
+Completed 22.2 MiB/60.7 MiB (68.5 MiB/s) with 1 file(s) remaining
+Completed 22.5 MiB/60.7 MiB (69.1 MiB/s) with 1 file(s) remaini[2026-03-17T01:42:13.022103]ng
+Completed 22.8 MiB/60.7 MiB (69.4 MiB/s) with 1 file(s) remaining
+Completed 23.0 MiB/60.7 MiB (69.9 MiB/s) with 1 file(s) remaining
+Completed 23.2 MiB/60.7 MiB (70.4 MiB/s) with 1 file(s) remaining
+Completed 23.5 MiB/60.7 MiB (71.0 MiB/s) with 1 file(s) remaining
+Completed 23.8 MiB/60.7 MiB (71.5 MiB/s) with 1 file(s) remaining
+Completed 24.0 MiB/60.7 MiB (72.0 MiB/s) with 1 file(s) remaining
+Completed 24.2 MiB/60.7 MiB (72.6 MiB/s) with 1 file(s) remaining
+Completed 24.5 MiB/60.7 MiB (73.2 MiB/s) with 1 file(s) remaining
+Completed 24.8 MiB/60.7 MiB (73.7 MiB/s) with 1 file(s) remaining
+Completed 25.0 MiB/60.7 MiB (74.2 MiB/s) with 1 file(s) remaining
+Completed 25.2 MiB/60.7 MiB (74.6 MiB/s) with 1 file(s) remaining
+Completed 25.5 MiB/60.7 MiB (75.1 MiB/s) with 1 file(s) remaining
+Completed 25.8 MiB/60.7 MiB (75.6 MiB/s) with 1 file(s) remaining
+Completed 26.0 MiB/60.7 MiB (76.2 MiB/s) with 1 file(s) remaining
+Completed 26.2 MiB/60.7 MiB (76.7 MiB/s) with 1 file(s) remaining
+Co[2026-03-17T01:42:13.022133]mpleted 26.5 MiB/60.7 MiB (77.3 MiB/s) with 1 file(s) remaining
+Completed 26.8 MiB/60.7 MiB (77.9 MiB/s) with 1 file(s) remaining
+Completed 27.0 MiB/60.7 MiB (78.4 MiB/s) with 1 file(s) remaining
+Completed 27.2 MiB/60.7 MiB (79.0 MiB/s) with 1 file(s) remaining
+Completed 27.5 MiB/60.7 MiB (79.2 MiB/s) with 1 file(s) remaining
+Completed 27.8 MiB/60.7 MiB (79.8 MiB/s) with 1 file(s) remaining
+Completed 27.9 MiB/60.7 MiB (80.1 MiB/s) with 1 file(s) remaining
+Completed 28.2 MiB/60.7 MiB (80.6 MiB/s) with 1 file(s) remaining
+Completed 28.4 MiB/60.7 MiB (81.3 MiB/s) with 1 file(s) remaining
+Completed 28.7 MiB/60.7 MiB (81.7 MiB/s) with 1 file(s) remaining
+Completed 28.9 MiB/60.7 MiB (81.9 MiB/s) with 1 file(s) remaining
+Completed 29.2 MiB/60.7 MiB (82.4 MiB/s) with 1 file(s) remaining
+Completed 29.4 MiB/60.7 MiB (82.9 MiB/s) with 1 file(s) remaining
+Completed 29.7 MiB/60.7 MiB (83.4 MiB/s) with 1 file(s) remaining
+Completed 29.9 MiB/60.7 MiB (84.0 MiB/s) with 1 file(s) remaining
+Complet[2026-03-17T01:42:13.022164]ed 30.2 MiB/60.7 MiB (84.5 MiB/s) with 1 file(s) remaining
+Completed 30.4 MiB/60.7 MiB (84.9 MiB/s) with 1 file(s) remaining
+Completed 30.7 MiB/60.7 MiB (85.5 MiB/s) with 1 file(s) remaining
+Completed 30.9 MiB/60.7 MiB (85.9 MiB/s) with 1 file(s) remaining
+Completed 31.2 MiB/60.7 MiB (86.3 MiB/s) with 1 file(s) remaining
+Completed 31.4 MiB/60.7 MiB (86.7 MiB/s) with 1 file(s) remaining
+Completed 31.7 MiB/60.7 MiB (87.2 MiB/s) with 1 file(s) remaining
+Completed 31.9 MiB/60.7 MiB (87.7 MiB/s) with 1 file(s) remaining
+Completed 32.2 MiB/60.7 MiB (88.2 MiB/s) with 1 file(s) remaining
+Completed 32.4 MiB/60.7 MiB (88.6 MiB/s) with 1 file(s) remaining
+Completed 32.7 MiB/60.7 MiB (89.2 MiB/s) with 1 file(s) remaining
+Completed 32.9 MiB/60.7 MiB (89.6 MiB/s) with 1 file(s) remaining
+Completed 33.2 MiB/60.7 MiB (90.1 MiB/s) with 1 file(s) remaining
+Completed 33.4 MiB/60.7 MiB (90.6 MiB/s) with 1 file(s) remaining
+Completed 33.7 MiB/60.7 MiB (91.2 MiB/s) with 1 file(s) remaining
+Completed 33[2026-03-17T01:42:13.022209].9 MiB/60.7 MiB (91.7 MiB/s) with 1 file(s) remaining
+Completed 34.2 MiB/60.7 MiB (92.2 MiB/s) with 1 file(s) remaining
+Completed 34.4 MiB/60.7 MiB (92.7 MiB/s) with 1 file(s) remaining
+Completed 34.7 MiB/60.7 MiB (93.2 MiB/s) with 1 file(s) remaining
+Completed 34.9 MiB/60.7 MiB (93.1 MiB/s) with 1 file(s) remaining
+Completed 35.2 MiB/60.7 MiB (93.7 MiB/s) with 1 file(s) remaining
+Completed 35.4 MiB/60.7 MiB (94.0 MiB/s) with 1 file(s) remaining
+Completed 35.7 MiB/60.7 MiB (94.6 MiB/s) with 1 file(s) remaining
+Completed 35.9 MiB/60.7 MiB (94.9 MiB/s) with 1 file(s) remaining
+Completed 36.2 MiB/60.7 MiB (95.4 MiB/s) with 1 file(s) remaining
+Completed 36.4 MiB/60.7 MiB (95.9 MiB/s) with 1 file(s) remaining
+Completed 36.7 MiB/60.7 MiB (96.3 MiB/s) with 1 file(s) remaining
+Completed 36.9 MiB/60.7 MiB (96.7 MiB/s) with 1 file(s) remaining
+Completed 37.2 MiB/60.7 MiB (97.3 MiB/s) with 1 file(s) remaining
+Completed 37.4 MiB/60.7 MiB (97.8 MiB/s) with 1 file(s) remaining
+Completed 37.7 Mi[2026-03-17T01:42:13.022248]B/60.7 MiB (98.3 MiB/s) with 1 file(s) remaining
+Completed 37.9 MiB/60.7 MiB (98.8 MiB/s) with 1 file(s) remaining
+Completed 38.2 MiB/60.7 MiB (98.8 MiB/s) with 1 file(s) remaining
+Completed 38.4 MiB/60.7 MiB (99.3 MiB/s) with 1 file(s) remaining
+Completed 38.7 MiB/60.7 MiB (99.9 MiB/s) with 1 file(s) remaining
+Completed 38.9 MiB/60.7 MiB (100.1 MiB/s) with 1 file(s) remaining
+Completed 39.2 MiB/60.7 MiB (100.6 MiB/s) with 1 file(s) remaining
+Completed 39.4 MiB/60.7 MiB (101.1 MiB/s) with 1 file(s) remaining
+Completed 39.7 MiB/60.7 MiB (101.6 MiB/s) with 1 file(s) remaining
+Completed 39.9 MiB/60.7 MiB (102.1 MiB/s) with 1 file(s) remaining
+Completed 40.2 MiB/60.7 MiB (102.4 MiB/s) with 1 file(s) remaining
+Completed 40.4 MiB/60.7 MiB (103.0 MiB/s) with 1 file(s) remaining
+Completed 40.7 MiB/60.7 MiB (103.4 MiB/s) with 1 file(s) remaining
+Completed 40.9 MiB/60.7 MiB (103.8 MiB/s) with 1 file(s) remaining
+Completed 41.2 MiB/60.7 MiB (104.2 MiB/s) with 1 file(s) remaining
+Completed 41[2026-03-17T01:42:13.022280].4 MiB/60.7 MiB (104.6 MiB/s) with 1 file(s) remaining
+Completed 41.7 MiB/60.7 MiB (104.7 MiB/s) with 1 file(s) remaining
+Completed 41.9 MiB/60.7 MiB (105.0 MiB/s) with 1 file(s) remaining
+Completed 42.2 MiB/60.7 MiB (105.4 MiB/s) with 1 file(s) remaining
+Completed 42.4 MiB/60.7 MiB (105.9 MiB/s) with 1 file(s) remaining
+Completed 42.7 MiB/60.7 MiB (106.3 MiB/s) with 1 file(s) remaining
+Completed 42.9 MiB/60.7 MiB (106.6 MiB/s) with 1 file(s) remaining
+Completed 43.2 MiB/60.7 MiB (107.1 MiB/s) with 1 file(s) remaining
+Completed 43.4 MiB/60.7 MiB (107.6 MiB/s) with 1 file(s) remaining
+Completed 43.7 MiB/60.7 MiB (108.1 MiB/s) with 1 file(s) remaining
+Completed 43.9 MiB/60.7 MiB (108.3 MiB/s) with 1 file(s) remaining
+Completed 44.2 MiB/60.7 MiB (108.7 MiB/s) with 1 file(s) remaining
+Completed 44.4 MiB/60.7 MiB (109.2 MiB/s) with 1 file(s) remaining
+Completed 44.7 MiB/60.7 MiB (109.7 MiB/s) with 1 file(s) remaining
+Completed 44.9 MiB/60.7 MiB (109.8 MiB/s) with 1 file(s) remaining
+Co[2026-03-17T01:42:13.121770]mpleted 45.2 MiB/60.7 MiB (110.4 MiB/s) with 1 file(s) remaining
+Completed 45.4 MiB/60.7 MiB (110.8 MiB/s) with 1 file(s) remaining
+Completed 45.7 MiB/60.7 MiB (111.2 MiB/s) with 1 file(s) remaining
+Completed 45.9 MiB/60.7 MiB (111.5 MiB/s) with 1 file(s) remaining
+Completed 46.2 MiB/60.7 MiB (111.9 MiB/s) with 1 file(s) remaining
+Completed 46.4 MiB/60.7 MiB (112.4 MiB/s) with 1 file(s) remaining
+Completed 46.7 MiB/60.7 MiB (112.9 MiB/s) with 1 file(s) remaining
+Completed 46.9 MiB/60.7 MiB (113.2 MiB/s) with 1 file(s) remaining
+Completed 47.2 MiB/60.7 MiB (113.7 MiB/s) with 1 file(s) remaining
+Completed 47.4 MiB/60.7 MiB (114.0 MiB/s) with 1 file(s) remaining
+Completed 47.7 MiB/60.7 MiB (114.5 MiB/s) with 1 file(s) remaining
+Completed 47.9 MiB/60.7 MiB (114.8 MiB/s) with 1 file(s) remaining
+Completed 48.2 MiB/60.7 MiB (115.1 MiB/s) with 1 file(s) remaining
+Completed 48.4 MiB/60.7 MiB (115.6 MiB/s) with 1 file(s) remaining
+Completed 48.7 MiB/60.7 MiB (116.0 MiB/s) with 1 file(s) re[2026-03-17T01:42:13.121818]maining
+Completed 48.9 MiB/60.7 MiB (116.4 MiB/s) with 1 file(s) remaining
+Completed 49.2 MiB/60.7 MiB (116.7 MiB/s) with 1 file(s) remaining
+Completed 49.4 MiB/60.7 MiB (116.9 MiB/s) with 1 file(s) remaining
+Completed 49.7 MiB/60.7 MiB (117.2 MiB/s) with 1 file(s) remaining
+Completed 49.9 MiB/60.7 MiB (117.6 MiB/s) with 1 file(s) remaining
+Completed 50.2 MiB/60.7 MiB (118.0 MiB/s) with 1 file(s) remaining
+Completed 50.4 MiB/60.7 MiB (117.7 MiB/s) with 1 file(s) remaining
+Completed 50.7 MiB/60.7 MiB (118.1 MiB/s) with 1 file(s) remaining
+Completed 50.9 MiB/60.7 MiB (118.0 MiB/s) with 1 file(s) remaining
+Completed 51.2 MiB/60.7 MiB (118.3 MiB/s) with 1 file(s) remaining
+Completed 51.4 MiB/60.7 MiB (118.6 MiB/s) with 1 file(s) remaining
+Completed 51.7 MiB/60.7 MiB (119.0 MiB/s) with 1 file(s) remaining
+Completed 51.9 MiB/60.7 MiB (119.3 MiB/s) with 1 file(s) remaining
+Completed 52.2 MiB/60.7 MiB (119.7 MiB/s) with 1 file(s) remaining
+Completed 52.4 MiB/60.7 MiB (120.0 MiB/s) with 1 [2026-03-17T01:42:13.121851]file(s) remaining
+Completed 52.7 MiB/60.7 MiB (120.4 MiB/s) with 1 file(s) remaining
+Completed 52.9 MiB/60.7 MiB (98.6 MiB/s) with 1 file(s) remaining 
+Completed 53.2 MiB/60.7 MiB (98.8 MiB/s) with 1 file(s) remaining 
+Completed 53.4 MiB/60.7 MiB (99.1 MiB/s) with 1 file(s) remaining 
+Completed 53.7 MiB/60.7 MiB (99.4 MiB/s) with 1 file(s) remaining 
+Completed 53.9 MiB/60.7 MiB (99.6 MiB/s) with 1 file(s) remaining 
+Completed 54.2 MiB/60.7 MiB (99.9 MiB/s) with 1 file(s) remaining 
+Completed 54.4 MiB/60.7 MiB (100.2 MiB/s) with 1 file(s) remaining
+Completed 54.7 MiB/60.7 MiB (100.5 MiB/s) with 1 file(s) remaining
+Completed 54.9 MiB/60.7 MiB (100.8 MiB/s) with 1 file(s) remaining
+Completed 55.2 MiB/60.7 MiB (101.1 MiB/s) with 1 file(s) remaining
+Completed 55.4 MiB/60.7 MiB (101.4 MiB/s) with 1 file(s) remaining
+Completed 55.7 MiB/60.7 MiB (101.7 MiB/s) with 1 file(s) remaining
+Completed 55.9 MiB/60.7 MiB (101.9 MiB/s) with 1 file(s) remaining
+Completed 56.2 MiB/60.7 MiB (102.2 MiB/[2026-03-17T01:42:13.121881]s) with 1 file(s) remaining
+Completed 56.4 MiB/60.7 MiB (102.5 MiB/s) with 1 file(s) remaining
+Completed 56.7 MiB/60.7 MiB (102.8 MiB/s) with 1 file(s) remaining
+Completed 56.9 MiB/60.7 MiB (103.1 MiB/s) with 1 file(s) remaining
+Completed 57.2 MiB/60.7 MiB (103.4 MiB/s) with 1 file(s) remaining
+Completed 57.4 MiB/60.7 MiB (103.7 MiB/s) with 1 file(s) remaining
+Completed 57.7 MiB/60.7 MiB (104.0 MiB/s) with 1 file(s) remaining
+Completed 57.9 MiB/60.7 MiB (104.3 MiB/s) with 1 file(s) remaining
+Completed 58.2 MiB/60.7 MiB (104.6 MiB/s) with 1 file(s) remaining
+Completed 58.4 MiB/60.7 MiB (104.9 MiB/s) with 1 file(s) remaining
+Completed 58.7 MiB/60.7 MiB (105.2 MiB/s) with 1 file(s) remaining
+Completed 58.9 MiB/60.7 MiB (97.7 MiB/s) with 1 file(s) remaining 
+Completed 59.2 MiB/60.7 MiB (98.0 MiB/s) with 1 file(s) remaining 
+Completed 59.4 MiB/60.7 MiB (98.3 MiB/s) with 1 file(s) remaining 
+Completed 59.7 MiB/60.7 MiB (98.6 MiB/s) with 1 file(s) remaining 
+Completed 59.9 MiB/60.7 MiB ([2026-03-17T01:42:13.121911]98.8 MiB/s) with 1 file(s) remaining 
+Completed 60.2 MiB/60.7 MiB (99.1 MiB/s) with 1 file(s) remaining 
+Completed 60.4 MiB/60.7 MiB (99.4 MiB/s) with 1 file(s) remaining 
+Completed 60.7 MiB/60.7 MiB (99.7 MiB/s) with 1 file(s) remaining 
+download: s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar to opt/hobby-shop-backend.jar
+
+[   59.321002] zram_generator::config[26329]: zram0: system has too much memory (916MB), limit is 800MB, ignoring.
+
+[   60.154635] cloud-init[1618]: Created symlink /etc/systemd/system/multi-user.target.wants/hobby-shop.service → /etc/systemd/system/hobby-shop.service.
+
+[   59.600794] zram_generator::config[26353]: zram0: system has too much memory (916MB), limit is 800MB, ignoring.
+
+ci-info: no authorized SSH keys fingerprints found for user ec2-user.
+
+<14>Mar 17 01:42:13 cloud-init: #############################################################
+
+<14>Mar 17 01:42:13 cloud-init: -----BEGIN SSH HOST KEY FINGERPRINTS-----
+
+<14>Mar 17 01:42:13 cloud-init: 256 SHA256:n4u6+cQAsyO2gzUq+dd8GwMmPeEeqOjloBYwXEsCW58 root@ip-172-31-41-71.us-east-2.compute.internal (ECDSA)
+
+<14>Mar 17 01:42:13 cloud-init: 256 SHA256:Sh6BfjMr6zmojBuglvDX+S/GPJtzW0fZB6SsPNmcKck root@ip-172-31-41-71.us-east-2.compute.internal (ED25519)
+
+<14>Mar 17 01:42:13 cloud-init: -----END SSH HOST KEY FINGERPRINTS-----
+
+<14>Mar 17 01:42:13 cloud-init: #############################################################
+
+-----BEGIN SSH HOST KEY KEYS-----
+
+ecdsa-sha2-nistp256 AAAAE2VjZHNhLXNoYTItbmlzdHAyNTYAAAAIbmlzdHAyNTYAAABBBO+rJunDoVT0hEInHGQNz9dHsWbtFqblC5isrFMLOs9q3/UCJ98cBbKJUqodwpx9ayEyRO9MC5fSK0VMZtRjN7Q= root@ip-172-31-41-71.us-east-2.compute.internal
+
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPhXoYc8nokiU2dqDvN9lxCzGys5t+oAWvIzlNo7/qNo root@ip-172-31-41-71.us-east-2.compute.internal
+
+-----END SSH HOST KEY KEYS-----
+
+[   60.530651] cloud-init[1618]: Cloud-init v. 22.2.2 finished at Tue, 17 Mar 2026 01:42:13 +0000. Datasource DataSourceEc2.  Up 60.52 seconds
+
+	2026-03-17T01:49:23+00:00
