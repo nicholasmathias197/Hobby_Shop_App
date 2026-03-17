@@ -37,6 +37,7 @@ const CartItemRow = ({ item, onUpdateQuantity, onRemove }) => {
           min="1"
           value={item.quantity}
           onChange={handleQuantityChange}
+          aria-label={`Quantity for ${item.productName}`}
           style={{
             width: '70px',
             padding: '0.5rem',
@@ -52,6 +53,7 @@ const CartItemRow = ({ item, onUpdateQuantity, onRemove }) => {
         <Button 
           variant="danger" 
           onClick={() => onRemove(item.id)}
+          aria-label={`Remove ${item.productName} from cart`}
         >
           Remove
         </Button>

@@ -17,7 +17,7 @@ const Navbar = () => {
   const cartItemsCount = cart?.items?.length || 0;
 
   return (
-    <nav className="navbar" style={{
+    <nav className="navbar" aria-label="Main navigation" style={{
       backgroundColor: '#343a40',
       padding: '0.75rem 2rem',
       color: 'white',
@@ -72,6 +72,9 @@ const Navbar = () => {
         <button
           className="nav-hamburger"
           onClick={() => setMobileOpen(!mobileOpen)}
+          aria-label={mobileOpen ? 'Close menu' : 'Open menu'}
+          aria-expanded={mobileOpen}
+          aria-controls="nav-links"
           style={{
             display: 'none',
             background: 'none',
@@ -86,7 +89,7 @@ const Navbar = () => {
         </button>
 
         {/* Navigation Links - Center/Right */}
-        <div className={`nav-links${mobileOpen ? ' nav-links--open' : ''}`} style={{ 
+        <div id="nav-links" className={`nav-links${mobileOpen ? ' nav-links--open' : ''}`} style={{ 
           display: 'flex', 
           gap: '2rem', 
           alignItems: 'center',
@@ -170,6 +173,8 @@ const Navbar = () => {
           <div style={{ position: 'relative' }}>
             <button
               onClick={() => setShowSearch(!showSearch)}
+              aria-label={showSearch ? 'Close search' : 'Open search'}
+              aria-expanded={showSearch}
               style={{
                 background: 'none',
                 border: 'none',
@@ -204,6 +209,7 @@ const Navbar = () => {
                 <input
                   type="text"
                   placeholder="Search products..."
+                  aria-label="Search products"
                   style={{
                     width: '100%',
                     padding: '0.75rem',
@@ -219,7 +225,7 @@ const Navbar = () => {
           </div>
           
           {/* Cart Icon */}
-          <Link to="/cart" style={{ 
+          <Link to="/cart" aria-label={`Shopping cart, ${cartItemsCount} ${cartItemsCount === 1 ? 'item' : 'items'}`} style={{ 
             color: 'white', 
             textDecoration: 'none',
             display: 'flex',
@@ -357,6 +363,9 @@ const Navbar = () => {
             <div style={{ position: 'relative' }}>
               <button
                 onClick={() => setShowAdminMenu(!showAdminMenu)}
+                aria-label="Admin menu"
+                aria-expanded={showAdminMenu}
+                aria-haspopup="true"
                 style={{
                   backgroundColor: '#28a745',
                   color: 'white',

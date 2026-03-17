@@ -6,7 +6,9 @@ const Button = ({
   onClick, 
   disabled = false,
   type = 'button',
-  fullWidth = false
+  fullWidth = false,
+  className,
+  'aria-label': ariaLabel
 }) => {
   const variants = {
     primary: {
@@ -32,6 +34,8 @@ const Button = ({
       type={type}
       onClick={onClick}
       disabled={disabled}
+      className={className}
+      aria-label={ariaLabel}
       style={{
         ...variants[variant],
         border: 'none',

@@ -47,7 +47,7 @@ const CartPage = () => {
       <h1>Shopping Cart</h1>
       
       <div className="cart-header">
-        <p className="cart-item-count">
+        <p className="cart-item-count" aria-live="polite" aria-atomic="true">
           {cartItemsCount} {cartItemsCount === 1 ? 'item' : 'items'} in your cart
         </p>
         {!isAuthenticated() && (
@@ -62,7 +62,7 @@ const CartPage = () => {
       </div>
 
       <div className="cart-table-container">
-        <table className="cart-table">
+        <table className="cart-table" aria-label="Shopping cart items">
           <thead>
             <tr>
               <th>Product</th>

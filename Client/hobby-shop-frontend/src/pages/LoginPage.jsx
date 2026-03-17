@@ -86,12 +86,12 @@ const LoginPage = () => {
         )}
         
         {error && (
-          <div className="alert alert-error">
+          <div className="alert alert-error" role="alert" aria-live="assertive">
             {error}
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="login-form">
+        <form onSubmit={handleSubmit} className="login-form" noValidate>
           <Input
             label="Email"
             type="email"

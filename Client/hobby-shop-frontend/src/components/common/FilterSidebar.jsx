@@ -50,12 +50,13 @@ const FilterSidebar = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="filter-sidebar">
-      <h3>Filters</h3>
+    <div className="filter-sidebar" role="search" aria-label="Product filters">
+      <h3 id="filter-heading">Filters</h3>
       
       <div className="filter-group">
-        <label>Search</label>
+        <label htmlFor="filter-search">Search</label>
         <input
+          id="filter-search"
           type="text"
           name="search"
           value={filters.search}
@@ -66,8 +67,9 @@ const FilterSidebar = ({ onFilterChange }) => {
       </div>
 
       <div className="filter-group">
-        <label>Category</label>
+        <label htmlFor="filter-category">Category</label>
         <select
+          id="filter-category"
           name="categoryId"
           value={filters.categoryId}
           onChange={handleChange}
@@ -83,8 +85,9 @@ const FilterSidebar = ({ onFilterChange }) => {
       </div>
 
       <div className="filter-group">
-        <label>Brand</label>
+        <label htmlFor="filter-brand">Brand</label>
         <select
+          id="filter-brand"
           name="brandId"
           value={filters.brandId}
           onChange={handleChange}
@@ -100,12 +103,14 @@ const FilterSidebar = ({ onFilterChange }) => {
       </div>
 
       <div className="filter-group">
-        <label>Price Range</label>
+        <label htmlFor="filter-min-price">Price Range</label>
         <div className="price-range">
           <input
+            id="filter-min-price"
             type="number"
             name="minPrice"
             placeholder="Min"
+            aria-label="Minimum price"
             value={filters.minPrice}
             onChange={handleChange}
             className="filter-input"
@@ -114,6 +119,7 @@ const FilterSidebar = ({ onFilterChange }) => {
             type="number"
             name="maxPrice"
             placeholder="Max"
+            aria-label="Maximum price"
             value={filters.maxPrice}
             onChange={handleChange}
             className="filter-input"
@@ -124,6 +130,7 @@ const FilterSidebar = ({ onFilterChange }) => {
       <button
         onClick={handleClear}
         className="btn btn-secondary clear-filters-btn"
+        aria-label="Clear all filters"
       >
         Clear Filters
       </button>
