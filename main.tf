@@ -88,28 +88,22 @@ resource "aws_instance" "spring_boot_app" {
   user_data_replace_on_change = true
 
   user_data = <<-EOF
-    #!/bin/bash
-    exec > /var/log/user-data.log 2>&1
+#!/bin/bash
+exec > /var/log/user-data.log 2>&1
 
-    # Install Java 21
-    dnf install -y java-21-amazon-corretto-headless
+dnf install -y java-21-amazon-corretto-headless
+dnf install -y mariadb105-server
+systemctl enable mariadb
+systemctl start mariadb
 
-    # Install MariaDB
-    dnf install -y mariadb105-server
-    systemctl enable mariadb
-    systemctl start mariadb
+mysql -e "CREATE DATABASE IF NOT EXISTS hobby_shop_db;"
+mysql -e "CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'Postgres1';"
+mysql -e "GRANT ALL PRIVILEGES ON hobby_shop_db.* TO 'root'@'localhost';"
+mysql -e "FLUSH PRIVILEGES;"
 
-    # Set up database and user
-    mysql -e "CREATE DATABASE IF NOT EXISTS hobby_shop_db;"
-    mysql -e "CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'Postgres1';"
-    mysql -e "GRANT ALL PRIVILEGES ON hobby_shop_db.* TO 'root'@'localhost';"
-    mysql -e "FLUSH PRIVILEGES;"
+aws s3 cp s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar /opt/hobby-shop-backend.jar
 
-    # Download JAR from S3
-    aws s3 cp s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar /opt/hobby-shop-backend.jar
-
-    # Create systemd service
-    cat > /etc/systemd/system/hobby-shop.service <<SERVICE
+cat > /etc/systemd/system/hobby-shop.service <<SERVICE
 [Unit]
 Description=Hobby Shop Spring Boot App
 After=network.target mariadb.service
@@ -124,9 +118,9 @@ StandardError=journal
 WantedBy=multi-user.target
 SERVICE
 
-    systemctl daemon-reload
-    systemctl enable hobby-shop
-    systemctl start hobby-shop
+systemctl daemon-reload
+systemctl enable hobby-shop
+systemctl start hobby-shop
   EOF
 
   tags = {
