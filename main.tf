@@ -105,10 +105,13 @@ systemctl start amazon-ssm-agent
 
 systemctl enable mariadb
 systemctl start mariadb
+sleep 5
 
-mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('Postgres1');"
-mysql -e "FLUSH PRIVILEGES;"
-mysql -e "CREATE DATABASE IF NOT EXISTS hobby_shop_db;"
+mysql <<'SQLEOF'
+ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('Postgres1');
+FLUSH PRIVILEGES;
+CREATE DATABASE IF NOT EXISTS hobby_shop_db;
+SQLEOF
 
 mkdir -p /opt/hobby-shop
 aws s3 cp s3://gundam-hobby-shop-frontend-911784620581/app/hobbyshop.sql /opt/hobby-shop/hobbyshop.sql
