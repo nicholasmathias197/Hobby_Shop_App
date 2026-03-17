@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { getFeaturedProductsArray } from '../../services/productService';
 import ProductGrid from '../../components/common/ProductGrid';
+import ProductCardSkeleton from '../../components/common/ProductCardSkeleton';
 import { useCart } from '../../hooks/useCart';
 import { Button } from '../../components/ui';
 
@@ -34,9 +35,8 @@ const FeaturedProducts = () => {
     return (
       <section style={{ marginBottom: '3rem' }}>
         <h2 style={{ marginBottom: '1.5rem' }}>Featured Products</h2>
-        <div style={{ textAlign: 'center', padding: '2rem' }}>
-          <div className="spinner"></div>
-          <p>Loading featured products...</p>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
+          {[...Array(4)].map((_, i) => <ProductCardSkeleton key={i} />)}
         </div>
       </section>
     );

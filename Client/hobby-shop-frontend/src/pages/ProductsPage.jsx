@@ -4,6 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { getAllProducts, filterProducts } from '../services/productService';
 import ProductGrid from '../components/common/ProductGrid';
 import FilterSidebar from '../components/common/FilterSidebar';
+import ProductCardSkeleton from '../components/common/ProductCardSkeleton';
 import { useCart } from '../hooks/useCart';
 import { Button } from '../components/ui';
 
@@ -86,23 +87,11 @@ const ProductsPage = () => {
 
   if (loading && products.length === 0) {
     return (
-      <div style={{ textAlign: 'center', padding: '3rem' }}>
-        <div className="spinner" style={{
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #007bff',
-          borderRadius: '50%',
-          width: '40px',
-          height: '40px',
-          animation: 'spin 1s linear infinite',
-          margin: '0 auto 1rem'
-        }}></div>
-        <p>Loading products...</p>
-        <style>{`
-          @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-          }
-        `}</style>
+      <div className="products-layout" style={{ display: 'grid', gridTemplateColumns: '320px 1fr', gap: '2rem', padding: '2rem 0' }}>
+        <div />
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))', gap: '1.5rem' }}>
+          {[...Array(8)].map((_, i) => <ProductCardSkeleton key={i} />)}
+        </div>
       </div>
     );
   }
