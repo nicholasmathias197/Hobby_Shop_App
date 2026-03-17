@@ -26,5 +26,18 @@ COMMAND_ID=$(aws ssm send-command \
   --query "Command.CommandId" --output text)
 
 echo "SSM command ID: $COMMAND_ID"
-aws ssm wait command-executed --command-id "$COMMAND_ID" --instance-id "$INSTANCE_ID" --region us-east-2
-echo "Spring Boot restarted successfully"
+
+for i in $(seq 1 20); do
+  STATUS=$(aws ssm get-command-invocation \
+    --command-id "$COMMAND_ID" \
+    --instance-id "$INSTANCE_ID" \
+    --region us-east-2 \
+    --query "Status" --output text 2>/dev/null)
+  echo "Command status $i/20: $STATUS"
+  [ "$STATUS" = "Success" ] && echo "Spring Boot restarted successfully" && exit 0
+  [ "$STATUS" = "Failed" ] && echo "Restart command failed" && exit 1
+  sleep 10
+done
+
+echo "Timed out waiting for restart"
+exit 1
