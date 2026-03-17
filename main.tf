@@ -84,6 +84,8 @@ resource "aws_instance" "spring_boot_app" {
   vpc_security_group_ids = [aws_security_group.spring_boot_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.ec2_profile.name
 
+  user_data_replace_on_change = true
+
   user_data = <<-EOF
     #!/bin/bash
     set -e
@@ -91,12 +93,12 @@ resource "aws_instance" "spring_boot_app" {
     # Install Java 21
     dnf install -y java-21-amazon-corretto-headless
 
-    # Install MySQL
-    dnf install -y mysql-server
-    systemctl enable mysqld
-    systemctl start mysqld
+    # Install MariaDB
+    dnf install -y mariadb105-server
+    systemctl enable mariadb
+    systemctl start mariadb
 
-    # Set up MySQL database and user
+    # Set up database and user
     mysql -e "CREATE DATABASE IF NOT EXISTS hobby_shop_db;"
     mysql -e "CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'Postgres1';"
     mysql -e "GRANT ALL PRIVILEGES ON hobby_shop_db.* TO 'root'@'localhost';"
@@ -109,7 +111,7 @@ resource "aws_instance" "spring_boot_app" {
     cat > /etc/systemd/system/hobby-shop.service <<SERVICE
     [Unit]
     Description=Hobby Shop Spring Boot App
-    After=network.target mysqld.service
+    After=network.target mariadb.service
 
     [Service]
     ExecStart=/usr/bin/java -jar /opt/hobby-shop-backend.jar
