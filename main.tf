@@ -109,19 +109,19 @@ resource "aws_instance" "spring_boot_app" {
 
     # Create systemd service
     cat > /etc/systemd/system/hobby-shop.service <<SERVICE
-    [Unit]
-    Description=Hobby Shop Spring Boot App
-    After=network.target mariadb.service
+[Unit]
+Description=Hobby Shop Spring Boot App
+After=network.target mariadb.service
 
-    [Service]
-    ExecStart=/usr/bin/java -jar /opt/hobby-shop-backend.jar
-    Restart=always
-    StandardOutput=journal
-    StandardError=journal
+[Service]
+ExecStart=/usr/bin/java -jar /opt/hobby-shop-backend.jar
+Restart=always
+StandardOutput=journal
+StandardError=journal
 
-    [Install]
-    WantedBy=multi-user.target
-    SERVICE
+[Install]
+WantedBy=multi-user.target
+SERVICE
 
     systemctl daemon-reload
     systemctl enable hobby-shop
