@@ -26,8 +26,9 @@ phases:
 
   build:
     commands:
-      - echo '========== UPLOADING JAR TO S3 =========='
+      - echo '========== UPLOADING JAR AND SQL TO S3 =========='
       - aws s3 cp Server/target/shop-0.0.1-SNAPSHOT.jar s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar
+      - aws s3 cp Server/src/main/resources/hobbyshop.sql s3://gundam-hobby-shop-frontend-911784620581/app/hobbyshop.sql
       - echo '========== UPLOADING REACT BUILD TO S3 =========='
       - aws s3 sync Client/hobby-shop-frontend/dist s3://gundam-hobby-shop-frontend-911784620581 --delete --exclude "terraform/*" --exclude "app/*" --exclude "tfstate"
       - echo '========== TERRAFORM APPLY =========='

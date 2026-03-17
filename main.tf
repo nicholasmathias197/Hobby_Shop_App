@@ -98,15 +98,22 @@ exec > /var/log/user-data.log 2>&1
 
 dnf install -y java-21-amazon-corretto-headless
 dnf install -y mariadb105-server
+dnf install -y amazon-ssm-agent
+
+systemctl enable amazon-ssm-agent
+systemctl start amazon-ssm-agent
+
 systemctl enable mariadb
 systemctl start mariadb
 
-mysql -e "CREATE DATABASE IF NOT EXISTS hobby_shop_db;"
-mysql -e "CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY 'Postgres1';"
-mysql -e "GRANT ALL PRIVILEGES ON hobby_shop_db.* TO 'root'@'localhost';"
+mysql -e "ALTER USER 'root'@'localhost' IDENTIFIED VIA mysql_native_password USING PASSWORD('Postgres1');"
 mysql -e "FLUSH PRIVILEGES;"
+mysql -e "CREATE DATABASE IF NOT EXISTS hobby_shop_db;"
 
 mkdir -p /opt/hobby-shop
+aws s3 cp s3://gundam-hobby-shop-frontend-911784620581/app/hobbyshop.sql /opt/hobby-shop/hobbyshop.sql
+mysql -u root -pPostgres1 hobby_shop_db < /opt/hobby-shop/hobbyshop.sql
+
 aws s3 cp s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar /opt/hobby-shop/hobby-shop-backend.jar
 
 cat > /etc/systemd/system/hobby-shop.service <<SERVICE
