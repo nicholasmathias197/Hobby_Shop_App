@@ -4,15 +4,15 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../hooks/useCart';
 // Import your logo - adjust the path based on where you place it
-import companyLogo from '../../assets/images/logo.png'; // Option 1: from assets
-// OR use public folder path (uncomment if using public folder)
-// const companyLogo = '/images/logo.png';
+import companyLogo from '../../assets/images/logo.png';
+import '../../assets/styles/layout/navigation.css';
 
 const Navbar = () => {
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
   const { cart } = useCart();
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const cartItemsCount = cart?.items?.length || 0;
 
@@ -33,7 +33,8 @@ const Navbar = () => {
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        width: '100%'
+        width: '100%',
+        flexWrap: 'wrap'
       }}>
         {/* Logo and Title - Left Side */}
         <Link to="/" style={{ 
@@ -67,8 +68,25 @@ const Navbar = () => {
           }}>U197 Hobbies</span>
         </Link>
         
+        {/* Hamburger button - mobile only */}
+        <button
+          className="nav-hamburger"
+          onClick={() => setMobileOpen(!mobileOpen)}
+          style={{
+            display: 'none',
+            background: 'none',
+            border: 'none',
+            color: 'white',
+            fontSize: '1.8rem',
+            cursor: 'pointer',
+            padding: '0.25rem 0.5rem'
+          }}
+        >
+          {mobileOpen ? '✕' : '☰'}
+        </button>
+
         {/* Navigation Links - Center/Right */}
-        <div style={{ 
+        <div className={`nav-links${mobileOpen ? ' nav-links--open' : ''}`} style={{ 
           display: 'flex', 
           gap: '2rem', 
           alignItems: 'center',
