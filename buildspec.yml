@@ -167,6 +167,17 @@ phases:
       # Import the EC2 instance into Terraform state using the dynamic instance ID
       - terraform import -input=false aws_instance.spring_boot_app $CURRENT_INSTANCE_ID || true
 
+      # Import SNS topic and email subscription for CloudWatch alerts
+      - terraform import -input=false aws_sns_topic.alerts arn:aws:sns:us-east-2:911784620581:gundam-hobby-shop-alerts || true
+      - SNS_SUB_ARN=$(aws sns list-subscriptions-by-topic --topic-arn arn:aws:sns:us-east-2:911784620581:gundam-hobby-shop-alerts --query "Subscriptions[?Protocol=='email'].SubscriptionArn" --output text --region us-east-2) && terraform import -input=false aws_sns_topic_subscription.email $SNS_SUB_ARN || true
+
+      # Import CloudWatch alarms
+      - terraform import -input=false aws_cloudwatch_metric_alarm.ec2_cpu_high gundam-hobby-shop-cpu-high || true
+      - terraform import -input=false aws_cloudwatch_metric_alarm.ec2_status_check gundam-hobby-shop-status-check || true
+
+      # Import AWS Budget
+      - terraform import -input=false aws_budgets_budget.monthly 911784620581:gundam-hobby-shop-monthly-budget || true
+
       # Apply all Terraform changes defined in main.tf.
       # -auto-approve skips the interactive confirmation prompt (required for CI).
       # -input=false prevents Terraform from prompting for variable values.
