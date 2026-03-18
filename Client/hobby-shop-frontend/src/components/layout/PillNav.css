@@ -3,6 +3,12 @@
   align-items: center;
 }
 
+@media (max-width: 768px) {
+  .pill-nav-items {
+    display: none;
+  }
+}
+
 .pill-list {
   list-style: none;
   margin: 0;

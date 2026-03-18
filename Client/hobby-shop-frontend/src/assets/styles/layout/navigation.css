@@ -31,7 +31,16 @@ nav::after {
     box-shadow: 0 0 30px rgba(0, 217, 255, 0.8);
 }
 
+.nav-mobile-link {
+  display: none;
+}
+
 /* ===== MOBILE NAV ===== */
+.nav-links {
+    display: flex;
+    align-items: center;
+}
+
 @media (max-width: 768px) {
     .nav-hamburger {
         display: block !important;
@@ -49,6 +58,10 @@ nav::after {
 
     .nav-links--open {
         display: flex !important;
+    }
+
+    .nav-mobile-link {
+        display: block;
     }
 
     .nav-links a,

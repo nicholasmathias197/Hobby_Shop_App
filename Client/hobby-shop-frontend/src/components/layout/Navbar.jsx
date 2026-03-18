@@ -99,7 +99,6 @@ const Navbar = () => {
 
         {/* Navigation Links - Center/Right */}
         <div id="nav-links" className={`nav-links${mobileOpen ? ' nav-links--open' : ''}`} style={{ 
-          display: 'flex', 
           gap: '2rem', 
           alignItems: 'center',
           flexWrap: 'wrap',
@@ -108,6 +107,19 @@ const Navbar = () => {
         }}>
           {/* Main Navigation Links */}
           <PillNav items={NAV_ITEMS} activeHref={pathname} />
+
+          {/* Mobile-only plain nav links (hidden on desktop via CSS) */}
+          {NAV_ITEMS.map(item => (
+            <Link
+              key={item.href}
+              to={item.href}
+              className="nav-mobile-link"
+              onClick={() => setMobileOpen(false)}
+              style={{ color: 'white', textDecoration: 'none', fontSize: '1rem', padding: '0.75rem 1rem', width: '100%', borderBottom: '1px solid rgba(0,217,255,0.1)' }}
+            >
+              {item.label}
+            </Link>
+          ))}
           
           {/* Search Icon */}
           <div style={{ position: 'relative' }}>
