@@ -5,6 +5,7 @@ import { AuthProvider } from './contexts/AuthProvider';
 import { CartProvider } from './contexts/CartProvider';    
 import AppRoutes from './routes/AppRoutes';
 import ErrorBoundary from './components/ErrorBoundary';
+import ScrollToTop from './components/ScrollToTop';
 
 
 import './App.css';
@@ -15,6 +16,7 @@ function App() {
       <Router>
         <AuthProvider>
           <CartProvider>
+            <ScrollToTop />
             <AppRoutes />
           </CartProvider>
         </AuthProvider>

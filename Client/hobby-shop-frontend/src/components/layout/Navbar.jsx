@@ -1,15 +1,24 @@
 // src/components/layout/Navbar.jsx (Dropdown Version)
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useCart } from '../../hooks/useCart';
-// Import your logo - adjust the path based on where you place it
 import companyLogo from '../../assets/images/logo.png';
+import PillNav from './PillNav';
 import '../../assets/styles/layout/navigation.css';
+
+const NAV_ITEMS = [
+  { href: '/', label: 'Home' },
+  { href: '/products', label: 'Products' },
+  { href: '/category/1', label: 'Gundam Models' },
+  { href: '/category/3', label: 'Tools' },
+  { href: '/category/2', label: 'Paints' }
+];
 
 const Navbar = () => {
   const { user, logout, isAuthenticated, isAdmin } = useAuth();
   const { cart } = useCart();
+  const { pathname } = useLocation();
   const [showAdminMenu, setShowAdminMenu] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -98,76 +107,7 @@ const Navbar = () => {
           flex: 1
         }}>
           {/* Main Navigation Links */}
-          <Link to="/" style={{ 
-            color: 'white', 
-            textDecoration: 'none', 
-            fontSize: '1.1rem',
-            fontWeight: '500',
-            padding: '0.5rem 0',
-            borderBottom: '2px solid transparent',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => e.target.style.borderBottomColor = '#00d9ff'}
-          onMouseLeave={(e) => e.target.style.borderBottomColor = 'transparent'}
-          >
-            Home
-          </Link>
-          <Link to="/products" style={{ 
-            color: 'white', 
-            textDecoration: 'none', 
-            fontSize: '1.1rem',
-            fontWeight: '500',
-            padding: '0.5rem 0',
-            borderBottom: '2px solid transparent',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => e.target.style.borderBottomColor = '#00d9ff'}
-          onMouseLeave={(e) => e.target.style.borderBottomColor = 'transparent'}
-          >
-            Products
-          </Link>
-          <Link to="/category/1" style={{ 
-            color: 'white', 
-            textDecoration: 'none', 
-            fontSize: '1.1rem',
-            fontWeight: '500',
-            padding: '0.5rem 0',
-            borderBottom: '2px solid transparent',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => e.target.style.borderBottomColor = '#00d9ff'}
-          onMouseLeave={(e) => e.target.style.borderBottomColor = 'transparent'}
-          >
-            Gundam Models
-          </Link>
-          <Link to="/category/3" style={{ 
-            color: 'white', 
-            textDecoration: 'none', 
-            fontSize: '1.1rem',
-            fontWeight: '500',
-            padding: '0.5rem 0',
-            borderBottom: '2px solid transparent',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => e.target.style.borderBottomColor = '#00d9ff'}
-          onMouseLeave={(e) => e.target.style.borderBottomColor = 'transparent'}
-          >
-            Tools
-          </Link>
-          <Link to="/category/2" style={{ 
-            color: 'white', 
-            textDecoration: 'none', 
-            fontSize: '1.1rem',
-            fontWeight: '500',
-            padding: '0.5rem 0',
-            borderBottom: '2px solid transparent',
-            transition: 'all 0.3s ease'
-          }}
-          onMouseEnter={(e) => e.target.style.borderBottomColor = '#00d9ff'}
-          onMouseLeave={(e) => e.target.style.borderBottomColor = 'transparent'}
-          >
-            Paints
-          </Link>
+          <PillNav items={NAV_ITEMS} activeHref={pathname} />
           
           {/* Search Icon */}
           <div style={{ position: 'relative' }}>
