@@ -4,13 +4,13 @@ import Footer from './Footer';
 
 const MainLayout = ({ children }) => {
   return (
-    <>
+    <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
-      <main className="container mt-3">
+      <main className="container mt-3" style={{ flex: 1 }}>
         {children}
       </main>
       <Footer />
-    </>
+    </div>
   );
 };
 
