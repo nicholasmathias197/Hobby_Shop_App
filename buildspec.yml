@@ -1,54 +1,193 @@
+# =============================================================================
+# buildspec.yml — Main CI/CD Build Specification
+# =============================================================================
+# Used by: AWS CodeBuild project "U197_Hobbies_Capstone_Project"
+# Triggered by: CodePipeline stage "Build" after Source and Code-Analysis pass
+#
+# What this file does end-to-end:
+#   1. Installs all required runtimes and tools (Java 21, Node 20, Maven, Terraform)
+#   2. Compiles the Spring Boot backend into a runnable JAR
+#   3. Builds the React frontend into static HTML/CSS/JS files
+#      - Dynamically injects the live EC2 public IP as the API base URL at build time
+#   4. Uploads the JAR and SQL schema to S3 so EC2 can pull them on restart
+#   5. Syncs the React build output to the S3 static website bucket
+#   6. Runs Terraform to ensure all AWS infrastructure matches main.tf
+#      - Imports existing resources first so Terraform doesn't try to recreate them
+#   7. Sends an SSM command to the EC2 instance to restart the Spring Boot service
+# =============================================================================
+
 version: 0.2
 
 phases:
+
+  # ---------------------------------------------------------------------------
+  # INSTALL PHASE
+  # Sets up the CodeBuild environment with all required runtimes and tools.
+  # CodeBuild provides a clean Amazon Linux 2023 environment for every build,
+  # so all dependencies must be installed fresh each time.
+  # ---------------------------------------------------------------------------
   install:
     runtime-versions:
-      java: corretto21
-      nodejs: 20
+      java: corretto21   # Amazon Corretto 21 — the JDK used to compile and run Spring Boot
+      nodejs: 20         # Node.js 20 LTS — required to run Vite and npm
     commands:
       - echo '========== INSTALLING DEPENDENCIES =========='
+
+      # Install Maven (build tool for the Spring Boot backend)
+      # Install nodejs/npm explicitly in addition to the runtime-versions declaration
+      # to ensure they are available on PATH for subsequent commands
       - dnf install -y maven nodejs npm
+
+      # Add the HashiCorp RPM repository so we can install Terraform via dnf.
+      # Terraform is not available in the default Amazon Linux package repos.
       - dnf config-manager --add-repo https://rpm.releases.hashicorp.com/AmazonLinux/hashicorp.repo
+
+      # Install Terraform CLI — used in the build phase to apply infrastructure changes
       - dnf install -y terraform
 
+  # ---------------------------------------------------------------------------
+  # PRE_BUILD PHASE
+  # Compiles both the backend and frontend before uploading anything to AWS.
+  # Failures here stop the pipeline before any artifacts are uploaded.
+  # ---------------------------------------------------------------------------
   pre_build:
     commands:
       - echo '========== BUILDING SPRING BOOT JAR =========='
+
+      # Print Java version to the build log for debugging purposes
       - java -version
+
+      # Navigate into the Server directory and run Maven clean package.
+      # -DskipTests skips unit tests here since they run in the Code-Analysis
+      # stage (SonarCloud) earlier in the pipeline. This keeps the build fast.
+      # Output: Server/target/shop-0.0.1-SNAPSHOT.jar
       - cd Server
       - mvn clean package -DskipTests
       - cd ..
+
       - echo '========== BUILDING REACT FRONTEND =========='
+
+      # Navigate into the React project directory
       - cd Client/hobby-shop-frontend
+
+      # Install all npm dependencies defined in package.json
       - npm install
+
+      # Build the React app with Vite.
+      # VITE_API_BASE_URL is injected at build time so the compiled JS knows
+      # where to send API requests. We dynamically look up the running EC2
+      # instance's public IP using the AWS CLI rather than hardcoding it,
+      # so the build still works if the EC2 IP changes after a stop/start.
+      #
+      # The AWS CLI command chain:
+      #   1. describe-instances with tag filter "gundam-hobby-shop-backend" + state "running"
+      #      → gets the InstanceId of the running backend EC2
+      #   2. describe-instances with that InstanceId
+      #      → gets the PublicIpAddress
+      #   3. Injects it as: http://<IP>:8080/api
       - VITE_API_BASE_URL=http://$(aws ec2 describe-instances --instance-ids $(aws ec2 describe-instances --filters "Name=tag:Name,Values=gundam-hobby-shop-backend" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].InstanceId" --output text --region us-east-2) --query "Reservations[0].Instances[0].PublicIpAddress" --output text --region us-east-2):8080/api npm run build
+
+      # Return to the repo root for subsequent phases
       - cd ../..
 
+  # ---------------------------------------------------------------------------
+  # BUILD PHASE
+  # Uploads compiled artifacts to S3, applies Terraform infrastructure changes,
+  # and restarts the Spring Boot service on EC2.
+  # ---------------------------------------------------------------------------
   build:
     commands:
       - echo '========== UPLOADING JAR AND SQL TO S3 =========='
+
+      # Upload the compiled Spring Boot JAR to S3.
+      # The EC2 instance pulls this file from S3 on first boot (via user_data)
+      # and also when manually restarted via the ssm-restart script.
       - aws s3 cp Server/target/shop-0.0.1-SNAPSHOT.jar s3://gundam-hobby-shop-frontend-911784620581/app/hobby-shop-backend.jar
+
+      # Upload the SQL schema/seed file to S3.
+      # EC2 uses this to initialize the MariaDB database on first boot.
+      # NOTE: Any data added directly to the live DB will be overwritten
+      # if the EC2 instance is replaced. Always add data via the admin panel
+      # and keep this SQL file up to date.
       - aws s3 cp Server/src/main/resources/hobbyshop.sql s3://gundam-hobby-shop-frontend-911784620581/app/hobbyshop.sql
+
       - echo '========== UPLOADING REACT BUILD TO S3 =========='
+
+      # Sync the Vite build output (dist/) to the root of the S3 bucket.
+      # --delete removes any files in S3 that no longer exist in the build output.
+      # The --exclude flags protect Terraform state, app artifacts, and the SQL
+      # file from being deleted by the sync operation.
       - aws s3 sync Client/hobby-shop-frontend/dist s3://gundam-hobby-shop-frontend-911784620581 --delete --exclude "terraform/*" --exclude "app/*" --exclude "tfstate"
+
       - echo '========== TERRAFORM APPLY =========='
+
+      # Initialize Terraform — downloads the AWS provider plugin and configures
+      # the S3 backend where Terraform state is stored (key: "tfstate").
       - terraform init
+
+      # Import existing AWS resources into Terraform state before applying.
+      # This is required because the resources were created before Terraform
+      # was introduced, or were created outside of this pipeline run.
+      # The "|| true" at the end of each import prevents the build from failing
+      # if the resource is already in state (import would error on duplicates).
+
+      # Import the EC2 security group that allows SSH (22) and API (8080) traffic
       - terraform import -input=false aws_security_group.spring_boot_sg sg-090cf228c30fca1dc || true
+
+      # Import the IAM role that allows EC2 to assume AWS service permissions
       - terraform import -input=false aws_iam_role.ec2_role gundam-hobby-shop-ec2-role || true
+
+      # Import the IAM instance profile that attaches the IAM role to the EC2 instance
       - terraform import -input=false aws_iam_instance_profile.ec2_profile gundam-hobby-shop-ec2-profile || true
+
+      # Import the policy attachment that gives EC2 read access to S3
       - terraform import -input=false aws_iam_role_policy_attachment.ec2_s3 gundam-hobby-shop-ec2-role/arn:aws:iam::aws:policy/AmazonS3ReadOnlyAccess || true
+
+      # Import the policy attachment that allows EC2 to be managed via AWS SSM
+      # (used for remote command execution without SSH)
       - terraform import -input=false aws_iam_role_policy_attachment.ec2_ssm gundam-hobby-shop-ec2-role/arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore || true
+
+      # Import the S3 bucket used for both frontend hosting and artifact storage
       - terraform import -input=false aws_s3_bucket.react_frontend gundam-hobby-shop-frontend-911784620581 || true
+
+      # Import the S3 static website configuration (index.html / error routing)
       - terraform import -input=false aws_s3_bucket_website_configuration.frontend gundam-hobby-shop-frontend-911784620581 || true
+
+      # Import the S3 public access block settings (allows public reads for the SPA)
       - terraform import -input=false aws_s3_bucket_public_access_block.frontend gundam-hobby-shop-frontend-911784620581 || true
+
+      # Import the S3 bucket policy that grants public s3:GetObject access
       - terraform import -input=false aws_s3_bucket_policy.frontend gundam-hobby-shop-frontend-911784620581 || true
+
+      # Dynamically look up the running EC2 instance ID by its Name tag.
+      # Stored in a variable so it can be used in the terraform import below.
+      # This avoids hardcoding the instance ID which changes if EC2 is replaced.
       - CURRENT_INSTANCE_ID=$(aws ec2 describe-instances --filters "Name=tag:Name,Values=gundam-hobby-shop-backend" "Name=instance-state-name,Values=running" --query "Reservations[0].Instances[0].InstanceId" --output text --region us-east-2)
+
+      # Import the EC2 instance into Terraform state using the dynamic instance ID
       - terraform import -input=false aws_instance.spring_boot_app $CURRENT_INSTANCE_ID || true
+
+      # Apply all Terraform changes defined in main.tf.
+      # -auto-approve skips the interactive confirmation prompt (required for CI).
+      # -input=false prevents Terraform from prompting for variable values.
+      # This will create, update, or destroy resources to match the desired state.
       - terraform apply -auto-approve -input=false
+
       - echo '========== RESTARTING SPRING BOOT ON EC2 =========='
+
+      # Make the SSM restart script executable and run it.
+      # This script sends an AWS SSM RunCommand to the EC2 instance telling it
+      # to run: sudo systemctl restart hobby-shop
+      # This picks up the new JAR that was uploaded to S3 earlier in this phase.
+      # "|| true" prevents a pipeline failure if SSM takes too long to respond.
       - chmod +x scripts/ssm-restart.sh
       - bash scripts/ssm-restart.sh || true
 
+  # ---------------------------------------------------------------------------
+  # POST_BUILD PHASE
+  # Runs after build regardless of success or failure.
+  # Used for logging and any cleanup steps.
+  # ---------------------------------------------------------------------------
   post_build:
     commands:
       - echo '========== DEPLOY COMPLETE =========='
