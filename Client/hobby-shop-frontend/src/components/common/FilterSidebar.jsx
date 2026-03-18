@@ -6,6 +6,7 @@ import { getBrandsArray } from '../../services/brandService';
 const FilterSidebar = ({ onFilterChange }) => {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [filters, setFilters] = useState({
     categoryId: '',
     brandId: '',
@@ -50,7 +51,24 @@ const FilterSidebar = ({ onFilterChange }) => {
   };
 
   return (
-    <div className="filter-sidebar" role="search" aria-label="Product filters">
+    <>
+      {/* Mobile toggle button */}
+      <button
+        className="filter-toggle-btn"
+        onClick={() => setMobileOpen(!mobileOpen)}
+        aria-label={mobileOpen ? 'Close filters' : 'Open filters'}
+        aria-expanded={mobileOpen}
+      >
+        {mobileOpen ? '✕' : '☰'}
+      </button>
+
+      {/* Overlay backdrop */}
+      {mobileOpen && (
+        <div className="filter-overlay" onClick={() => setMobileOpen(false)} />
+      )}
+
+      {/* Sidebar */}
+      <div className={`filter-sidebar${mobileOpen ? ' filter-sidebar--open' : ''}`} role="search" aria-label="Product filters">
       <h3 id="filter-heading">Filters</h3>
       
       <div className="filter-group">
@@ -134,7 +152,8 @@ const FilterSidebar = ({ onFilterChange }) => {
       >
         Clear Filters
       </button>
-    </div>
+      </div>
+    </>
   );
 };
 
