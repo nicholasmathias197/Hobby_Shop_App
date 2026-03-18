@@ -3,7 +3,8 @@
 A full-stack e-commerce platform for Gundam models and modeling supplies. Built with Spring Boot 4 and React 18, deployed on AWS using Terraform and CodePipeline.
 
 **Live Frontend:** http://gundam-hobby-shop-frontend-911784620581.s3-website.us-east-2.amazonaws.com  
-**API Base URL:** http://18.222.156.219:8080
+**API Base URL:** http://18.222.156.219:8080  
+**Jira Board:** https://nicholasmathias.atlassian.net/jira/software/projects/DEV/boards/1
 
 ---
 
