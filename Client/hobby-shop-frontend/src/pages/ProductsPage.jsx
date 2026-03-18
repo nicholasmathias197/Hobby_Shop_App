@@ -1,7 +1,7 @@
 // src/pages/ProductsPage.jsx
-import React, { useReducer, useEffect, useCallback } from 'react';
+import React, { useReducer, useEffect, useCallback, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import { getAllProducts, filterProducts } from '../services/productService';
+import { getAllProducts, filterProducts, getFeaturedProductsArray } from '../services/productService';
 import ProductGrid from '../components/common/ProductGrid';
 import FilterSidebar from '../components/common/FilterSidebar';
 import ProductCardSkeleton from '../components/common/ProductCardSkeleton';
@@ -41,6 +41,11 @@ const ProductsPage = () => {
   const [state, dispatch] = useReducer(productsReducer, initialState);
   const { products, loading, error, currentPage, totalPages, totalProducts, filters } = state;
   const { addToCart } = useCart();
+  const [featuredProducts, setFeaturedProducts] = useState([]);
+
+  useEffect(() => {
+    getFeaturedProductsArray(0, 6).then(setFeaturedProducts);
+  }, []);
 
   // Parse URL params for featured filter
   useEffect(() => {
@@ -133,6 +138,15 @@ const ProductsPage = () => {
             Showing {products.length} of {totalProducts} products
           </p>
         </div>
+
+        {/* Featured section — only shown on page 0 with no filters */}
+        {featuredProducts.length > 0 && currentPage === 0 && Object.keys(filters).every(k => !filters[k]) && (
+          <section style={{ marginBottom: '2.5rem' }}>
+            <h2 style={{ marginBottom: '1rem', color: '#00d9ff' }}>⭐ Featured Products</h2>
+            <ProductGrid products={featuredProducts} onAddToCart={addToCart} />
+            <hr style={{ margin: '2.5rem 0', borderColor: 'rgba(0, 217, 255, 0.2)' }} />
+          </section>
+        )}
 
         {/* Products grid */}
         {products.length > 0 ? (

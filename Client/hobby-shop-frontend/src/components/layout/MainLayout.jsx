@@ -6,7 +6,7 @@ const MainLayout = ({ children }) => {
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Navbar />
-      <main className="container mt-3" style={{ flex: 1 }}>
+      <main className="container mt-3" style={{ flex: 1, minWidth: 0, width: '100%' }}>
         {children}
       </main>
       <Footer />

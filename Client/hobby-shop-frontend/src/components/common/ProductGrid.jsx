@@ -22,7 +22,7 @@ const ProductGrid = ({ products, onAddToCart }) => {
   return (
     <div style={{
       display: 'grid',
-      gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
+      gridTemplateColumns: 'repeat(auto-fill, minmax(220px, 1fr))',
       gap: '1.5rem'
     }}>
       {productsArray.map(product => (

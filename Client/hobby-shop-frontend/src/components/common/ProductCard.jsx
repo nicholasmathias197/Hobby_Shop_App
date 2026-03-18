@@ -44,6 +44,20 @@ const ProductCard = ({ product }) => {
     <div className="product-card">
       <Link to={`/product/${product.id}`} className="product-card-link">
         <div className="product-image-container">
+          {product.featured && (
+            <span style={{
+              position: 'absolute',
+              top: '0.5rem',
+              left: '0.5rem',
+              backgroundColor: '#00d9ff',
+              color: '#05345f',
+              padding: '0.2rem 0.6rem',
+              borderRadius: '4px',
+              fontSize: '0.75rem',
+              fontWeight: 'bold',
+              zIndex: 3
+            }}>FEATURED</span>
+          )}
           {product.imageUrl ? (
             <div className="product-image-wrapper">
               <img 
