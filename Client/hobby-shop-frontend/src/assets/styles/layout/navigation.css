@@ -32,15 +32,16 @@ nav::after {
 }
 
 .nav-mobile-link {
-  display: none;
+    display: none;
 }
 
-/* ===== MOBILE NAV ===== */
+/* ===== DESKTOP NAV ===== */
 .nav-links {
     display: flex;
     align-items: center;
 }
 
+/* ===== MOBILE NAV ===== */
 @media (max-width: 768px) {
     .nav-hamburger {
         display: block !important;
@@ -75,5 +76,28 @@ nav::after {
 
     .nav-links > div {
         width: 100%;
+    }
+}
+
+@media (max-width: 425px) {
+    .navbar {
+        padding: 0.5rem 1rem !important;
+    }
+
+    .navbar > div {
+        flex-wrap: wrap !important;
+    }
+
+    .navbar > div > a:first-child {
+        flex: 1;
+    }
+
+    .navbar > div > a:first-child span {
+        font-size: 1.4rem !important;
+    }
+
+    .navbar > div > a:first-child img {
+        height: 36px !important;
+        width: 36px !important;
     }
 }
