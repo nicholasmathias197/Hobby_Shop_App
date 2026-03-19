@@ -1,0 +1,106 @@
+src/
+├── assets/
+│   ├── images/
+│   └── styles/
+│       ├── global.css
+│       └── variables.css
+│
+├── components/
+│   ├── layout/
+│   │   ├── MainLayout.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── Footer.jsx
+│   │   └── index.js          # Groups related layout components
+│   │
+│   ├── common/
+│   │   ├── ProductCard.jsx
+│   │   ├── ProductGrid.jsx
+│   │   ├── CartItemRow.jsx
+│   │   ├── FilterSidebar.jsx
+│   │   └── index.js          # Groups shared UI components
+│   │
+│   └── ui/                    # Optional: basic reusable components
+│       ├── Button.jsx
+│       ├── Input.jsx
+│       └── index.js
+│
+├── pages/
+│   ├── HomePage/              # Folder - has sub-components
+│   │   ├── HomePage.jsx
+│   │   ├── HeroBanner.jsx
+│   │   ├── FeaturedProducts.jsx
+│   │   └── index.js           # Exports HomePage
+│   │
+│   ├── ProductsPage.jsx        # Single file - no folder
+│   ├── ProductDetailPage.jsx   # Single file - no folder
+│   ├── CartPage.jsx            # Single file - no folder
+│   │
+│   ├── CheckoutPage/           # Folder - has sub-components
+│   │   ├── CheckoutPage.jsx
+│   │   ├── ShippingForm.jsx
+│   │   ├── OrderSummary.jsx
+│   │   └── index.js
+│   │
+│   ├── OrdersPage.jsx          # Single file - no folder
+│   ├── OrderDetailPage.jsx     # Single file - no folder
+│   │
+│   ├── ProfilePage/            # Folder - has sub-components
+│   │   ├── ProfilePage.jsx
+│   │   ├── ProfileForm.jsx
+│   │   └── index.js
+│   │
+│   ├── LoginPage.jsx           # Single file - no folder
+│   └── RegisterPage.jsx        # Single file - no folder
+│
+├── admin/                       # Admin section
+│   ├── AdminDashboard/          # Folder - has sub-components
+│   │   ├── AdminDashboard.jsx
+│   │   ├── StatsCards.jsx
+│   │   └── index.js
+│   │
+│   ├── AdminProductsPage/       # Folder - has sub-components
+│   │   ├── AdminProductsPage.jsx
+│   │   ├── ProductTable.jsx
+│   │   ├── ProductForm.jsx
+│   │   └── index.js
+│   │
+│   └── AdminOrdersPage/         # Folder - has sub-components
+│       ├── AdminOrdersPage.jsx
+│       ├── OrdersTable.jsx
+│       ├── OrderStatusDropdown.jsx
+│       └── index.js
+│
+├── contexts/
+│   ├── AuthContext.jsx
+│   ├── CartContext.jsx
+│   └── index.js              # Optional: convenient for multiple contexts
+│
+├── hooks/
+│   ├── useAuth.js
+│   ├── useCart.js
+│   ├── useProducts.js
+│   └── useOrders.js
+│
+├── services/
+│   ├── api.js
+│   ├── authService.js
+│   ├── productService.js
+│   ├── cartService.js
+│   ├── orderService.js
+│   └── userService.js
+│
+├── utils/
+│   ├── constants.js
+│   ├── helpers.js
+│   ├── validators.js
+│   └── formatters.js
+│
+├── routes/
+│   ├── AppRoutes.jsx
+│   ├── ProtectedRoute.jsx
+│   └── AdminRoute.jsx
+│
+├── App.jsx
+├── App.css
+├── index.js
+└── index.css
