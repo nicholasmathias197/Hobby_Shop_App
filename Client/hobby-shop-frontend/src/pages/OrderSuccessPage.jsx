@@ -81,12 +81,10 @@ const OrderSuccessPage = () => {
           <div className="detail-section">
             <h3>Shipping Address</h3>
             <p>
-              {order.shippingAddress?.firstName} {order.shippingAddress?.lastName}<br />
-              {order.shippingAddress?.address}<br />
-              {order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.postalCode}<br />
-              {order.shippingAddress?.country}<br />
-              {order.shippingAddress?.email}<br />
-              {order.shippingAddress?.phone}
+              {order.customerName}<br />
+              {order.shippingAddress}<br />
+              {order.shippingCity}, {order.shippingPostalCode}<br />
+              {order.shippingCountry}
             </p>
           </div>
 
