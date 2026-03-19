@@ -236,10 +236,11 @@ const OrderDetailsPage = () => {
           borderRadius: '8px'
         }}>
           <h3 style={{ marginBottom: '1rem' }}>Shipping Address</h3>
-          <p>{order.shippingAddress?.firstName} {order.shippingAddress?.lastName}</p>
-          <p>{order.shippingAddress?.address}</p>
-          <p>{order.shippingAddress?.city}, {order.shippingAddress?.state} {order.shippingAddress?.postalCode}</p>
-          <p>{order.shippingAddress?.country}</p>
+           <p>
+           {order.shippingAddress}<br />
+              {order.shippingCity}, {order.shippingPostalCode}<br />
+              {order.shippingCountry}
+              </p>
         </div>
       </div>
 
