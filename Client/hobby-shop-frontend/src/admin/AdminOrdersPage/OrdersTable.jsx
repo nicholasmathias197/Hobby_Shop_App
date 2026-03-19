@@ -58,6 +58,10 @@ const OrdersTable = ({ orders, onStatusChange, onViewDetails }) => {
                 <div className="customer-name" title={order.customerName || `${order.shippingAddress?.firstName} ${order.shippingAddress?.lastName}`}>
                   {order.customerName || `${order.shippingAddress?.firstName} ${order.shippingAddress?.lastName}`}
                 </div>
+                {/* Display email or phone for better identification */}
+                <div className="customer-contact" style={{ fontSize: '0.8rem', color: '#888' }}>
+                  {order.customerEmail || order.shippingAddress?.email}
+                </div>
               </td>
               <td className="col-date">
                 {order.orderDate ? new Date(order.orderDate).toLocaleDateString() : 'N/A'}
@@ -86,7 +90,10 @@ const OrdersTable = ({ orders, onStatusChange, onViewDetails }) => {
               <td className="col-actions">
                 <Button
                   variant="primary"
-                  onClick={() => onViewDetails(order)}
+                  onClick={() => {
+                    console.log('Order data being passed:', order); // Debug log
+                    onViewDetails(order);
+                  }}
                   className="action-btn"
                 >
                   View Details
