@@ -23,7 +23,11 @@ public interface OrderService {
     // Admin operations
     Page<OrderResponse> getAllOrders(Pageable pageable);
 
+    Page<OrderResponse> getOrdersByCustomer(Long customerId, Pageable pageable);
+
     Page<OrderResponse> getOrdersByStatus(String status, Pageable pageable);
+
+    OrderResponse getOrderById(Long orderId);
 
     OrderResponse updateOrderStatus(Long orderId, String status, String comment);
 

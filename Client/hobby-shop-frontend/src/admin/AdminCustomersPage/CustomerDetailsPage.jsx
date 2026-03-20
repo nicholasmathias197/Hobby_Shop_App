@@ -1,8 +1,8 @@
 // src/admin/AdminCustomersPage/CustomerDetailsPage.jsx
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { getCustomerById, toggleCustomerStatus } from '../../services/userService';
-import { getOrdersByCustomer } from '../../services/orderService';
+import { getAllOrders, getOrdersByCustomer } from '../../services/orderService';
 import { Button } from '../../components/ui';
 
 const CustomerDetailsPage = () => {
@@ -14,11 +14,45 @@ const CustomerDetailsPage = () => {
   const [error, setError] = useState(null);
   const [toggling, setToggling] = useState(false);
 
-  useEffect(() => {
-    loadCustomerDetails();
-  }, [customerId]);
+  const normalizeOrdersResponse = (payload) => {
+    if (!payload) return [];
+    if (Array.isArray(payload)) return payload;
+    if (Array.isArray(payload.content)) return payload.content;
+    if (payload.data && Array.isArray(payload.data.content)) return payload.data.content;
+    if (payload.data && Array.isArray(payload.data)) return payload.data;
+    return [];
+  };
 
-  const loadCustomerDetails = async () => {
+  const loadCustomerOrders = useCallback(async (id) => {
+    try {
+      console.log(`🔄 Starting order load for customer ID: ${id}`);
+      const ordersData = await getOrdersByCustomer(id, 0, 50);
+      console.log('🔄 Orders data received:', ordersData);
+      const normalizedOrders = normalizeOrdersResponse(ordersData);
+      console.log('🔄 Normalized orders:', normalizedOrders);
+      setOrders(normalizedOrders);
+      console.log(`✅ Successfully loaded ${normalizedOrders.length} orders`);
+      return;
+    } catch (orderErr) {
+      console.warn('⚠️ Customer orders endpoint failed, trying fallback:', orderErr);
+    }
+
+    try {
+      console.log('🔄 Using fallback: loading all orders');
+      const allOrdersData = await getAllOrders(0, 500);
+      console.log('🔄 All orders data:', allOrdersData);
+      const allOrders = normalizeOrdersResponse(allOrdersData);
+      console.log('🔄 Normalized all orders:', allOrders);
+      const filteredOrders = allOrders.filter((order) => String(order.customerId) === String(id));
+      console.log(`✅ Filtered to ${filteredOrders.length} orders for customer`);
+      setOrders(filteredOrders);
+    } catch (fallbackErr) {
+      console.error('❌ Fallback order loading failed:', fallbackErr);
+      setOrders([]);
+    }
+  }, []);
+
+  const loadCustomerDetails = useCallback(async () => {
     setLoading(true);
     setError(null);
     try {
@@ -28,16 +62,8 @@ const CustomerDetailsPage = () => {
       const customerData = await getCustomerById(customerId);
       console.log('Customer data loaded:', customerData);
       setCustomer(customerData);
-      
-      // Try to load orders, but don't fail if orders endpoint doesn't exist
-      try {
-        const ordersData = await getOrdersByCustomer(customerId, 0, 10);
-        console.log('Orders data loaded:', ordersData);
-        setOrders(ordersData.content || []);
-      } catch (orderErr) {
-        console.log('Orders endpoint not available or no orders found:', orderErr);
-        setOrders([]);
-      }
+
+      await loadCustomerOrders(customerData?.id ?? customerId);
       
     } catch (error) {
       console.error('Error loading customer details:', error);
@@ -45,7 +71,11 @@ const CustomerDetailsPage = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [customerId, loadCustomerOrders]);
+
+  useEffect(() => {
+    loadCustomerDetails();
+  }, [loadCustomerDetails]);
 
   const handleToggleStatus = async () => {
     if (!customer) return;
@@ -121,6 +151,7 @@ const CustomerDetailsPage = () => {
           <div className="customer-status-toggle">
             <div className="admin-toggle-container">
               <label className="admin-toggle-switch">
+                <span className="visually-hidden">Toggle customer active status</span>
                 <input
                   type="checkbox"
                   checked={customer.enabled}
@@ -131,7 +162,17 @@ const CustomerDetailsPage = () => {
                 <span className="admin-toggle-slider"></span>
               </label>
               <span className="admin-toggle-label">
-                {customer.enabled ? 'Active' : 'Inactive'}
+                {customer.enabled ? (
+                  <>
+                    <span>Active</span>
+                    <span className="active-checkmark" aria-hidden="true">✓</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Inactive</span>
+                    <span className="inactive-mark" aria-hidden="true">•</span>
+                  </>
+                )}
               </span>
             </div>
           </div>
@@ -139,15 +180,15 @@ const CustomerDetailsPage = () => {
 
         <div className="customer-info-grid">
           <div className="info-group">
-            <label>Email</label>
+            <p className="info-label">Email</p>
             <p>{customer.email || 'Not provided'}</p>
           </div>
           <div className="info-group">
-            <label>Phone</label>
+            <p className="info-label">Phone</p>
             <p>{customer.phone || 'Not provided'}</p>
           </div>
           <div className="info-group">
-            <label>Role</label>
+            <p className="info-label">Role</p>
             <p>
               <span className={`role-badge ${customer.role === 'ADMIN' ? 'admin' : 'user'}`}>
                 {customer.role || 'USER'}
@@ -155,16 +196,16 @@ const CustomerDetailsPage = () => {
             </p>
           </div>
           <div className="info-group">
-            <label>Customer ID</label>
+            <p className="info-label">Customer ID</p>
             <p>{customer.id}</p>
           </div>
           <div className="info-group">
-            <label>Customer Since</label>
+            <p className="info-label">Customer Since</p>
             <p>{customer.createdAt ? new Date(customer.createdAt).toLocaleDateString() : 'N/A'}</p>
           </div>
           {customer.lastLogin && (
             <div className="info-group">
-              <label>Last Login</label>
+              <p className="info-label">Last Login</p>
               <p>{new Date(customer.lastLogin).toLocaleString()}</p>
             </div>
           )}
@@ -204,11 +245,11 @@ const CustomerDetailsPage = () => {
                   <td>{order.orderNumber || 'N/A'}</td>
                   <td>{order.orderDate ? new Date(order.orderDate).toLocaleDateString() : 'N/A'}</td>
                   <td>
-                    <span className={`status-badge ${order.status?.toLowerCase() || 'pending'}`}>
+                    <span className={`status-badge ${(order.status || 'PENDING').toLowerCase()}`}>
                       {order.status || 'PENDING'}
                     </span>
                   </td>
-                  <td>${order.totalAmount?.toFixed(2) || '0.00'}</td>
+                  <td>${Number(order.totalAmount || 0).toFixed(2)}</td>
                   <td>
                     <Link to={`/admin/orders/${order.id}`}>
                       <Button variant="primary" className="action-btn">View</Button>

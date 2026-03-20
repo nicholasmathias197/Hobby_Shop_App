@@ -135,6 +135,20 @@ public class OrderController {
     }
 
     /**
+     * Get orders by customer ID (admin only)
+     * GET /api/orders/customer/{customerId}
+     */
+    @GetMapping("/customer/{customerId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Page<OrderResponse>> getOrdersByCustomer(
+            @PathVariable Long customerId,
+            @PageableDefault(size = 20, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        log.info("Admin fetching orders for customer ID: {}", customerId);
+        return ResponseEntity.ok(orderService.getOrdersByCustomer(customerId, pageable));
+    }
+
+    /**
      * Get orders by status (admin only)
      * GET /api/orders/status/{status}
      */
@@ -146,6 +160,17 @@ public class OrderController {
 
         log.info("Admin fetching orders with status: {}", status);
         return ResponseEntity.ok(orderService.getOrdersByStatus(status, pageable));
+    }
+
+    /**
+     * Get order by ID (admin only)
+     * GET /api/orders/admin/{orderId}
+     */
+    @GetMapping("/admin/{orderId}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<OrderResponse> getOrderById(@PathVariable Long orderId) {
+        log.info("Admin fetching order by ID: {}", orderId);
+        return ResponseEntity.ok(orderService.getOrderById(orderId));
     }
 
     /**

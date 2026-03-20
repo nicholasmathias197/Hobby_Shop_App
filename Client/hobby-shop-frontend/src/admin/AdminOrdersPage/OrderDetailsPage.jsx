@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { getOrderByNumber, updateOrderStatus, updatePaymentStatus, updateTrackingNumber } from '../../services/orderService';
+import { getAdminOrderById, updateOrderStatus, updatePaymentStatus, updateTrackingNumber } from '../../services/orderService';
 import { Button } from '../../components/ui';
 
 const OrderDetailsPage = () => {
@@ -17,7 +17,7 @@ const OrderDetailsPage = () => {
 
   const loadOrder = async () => {
     try {
-      const data = await getOrderByNumber(orderId);
+      const data = await getAdminOrderById(orderId);
       setOrder(data);
       setTrackingInput(data.trackingNumber || '');
     } catch (error) {

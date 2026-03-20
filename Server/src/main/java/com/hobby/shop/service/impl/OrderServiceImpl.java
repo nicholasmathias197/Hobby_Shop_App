@@ -148,9 +148,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public Page<OrderResponse> getOrdersByCustomer(Long customerId, Pageable pageable) {
+        return orderRepository.findByCustomerId(customerId, pageable)
+                .map(this::mapToOrderResponse);
+    }
+
+    @Override
     public Page<OrderResponse> getOrdersByStatus(String status, Pageable pageable) {
         return orderRepository.findByStatus(status, pageable)
                 .map(this::mapToOrderResponse);
+    }
+
+    @Override
+    public OrderResponse getOrderById(Long orderId) {
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new ResourceNotFoundException("Order not found with id: " + orderId));
+        return mapToOrderResponse(order);
     }
 
     @Override

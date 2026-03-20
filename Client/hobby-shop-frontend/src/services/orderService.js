@@ -70,6 +70,20 @@ export const getOrderByNumber = async (orderNumber) => {
 };
 
 /**
+ * Get specific order by ID (admin only)
+ * @param {number|string} orderId - Order ID
+ */
+export const getAdminOrderById = async (orderId) => {
+  try {
+    const response = await api.get(`/orders/admin/${orderId}`);
+    return response.data;
+  } catch (error) {
+    console.error('❌ Error fetching admin order by ID:', error);
+    throw error;
+  }
+};
+
+/**
  * Cancel an order
  * @param {number} orderId - Order ID
  * @param {string} reason - Cancellation reason (optional)
@@ -94,10 +108,14 @@ export const cancelOrder = async (orderId, reason = null) => {
  */
 export const getOrdersByCustomer = async (customerId, page = 0, size = 10) => {
   try {
+    console.log(`📦 Fetching orders for customer ${customerId}, page=${page}, size=${size}`);
     const response = await api.get(`/orders/customer/${customerId}`, {
       params: { page, size }
     });
-    return response.data;
+    console.log('📦 Raw response data:', response.data);
+    const extracted = extractContent(response.data);
+    console.log('📦 Extracted content:', extracted);
+    return extracted;
   } catch (error) {
     console.error('❌ Error fetching orders by customer:', error);
     throw error;
@@ -132,10 +150,14 @@ export const lookupGuestOrder = async (email, orderNumber) => {
  */
 export const getAllOrders = async (page = 0, size = 20) => {
   try {
+    console.log(`📦 Fetching all orders, page=${page}, size=${size}`);
     const response = await api.get('/orders/all', {
       params: { page, size }
     });
-    return extractContent(response.data);
+    console.log('📦 Raw all orders response:', response.data);
+    const extracted = extractContent(response.data);
+    console.log('📦 Extracted all orders:', extracted);
+    return extracted;
   } catch (error) {
     console.error('❌ Error fetching all orders:', error);
     throw error;
