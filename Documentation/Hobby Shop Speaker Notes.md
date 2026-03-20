@@ -56,19 +56,47 @@ If there is time, I can continue into checkout or order history to show the rest
 
 ## 4. Technical Deep Dive (2 min)
 
+<a id="cart-merge"></a>
+### Cart Merge Highlight
+
 The most interesting challenge was cart merging.
 
 The frontend stores a session ID in local storage for guest users. The Axios layer sends that session ID in an `X-Session-ID` header only when the user is not authenticated.
 
+> **Code:** `Client/hobby-shop-frontend/src/services/api.js` — request interceptor reads `sessionId` from `localStorage` and attaches the `X-Session-ID` header when no auth token is present.
+
 On the backend, the cart controller checks for a cart session using a cookie first, then the request header, and if neither exists it creates a new UUID.
+
+> **Code:** `Server/src/main/java/com/hobby/shop/controller/CartController.java` — `POST /api/cart/merge` endpoint, `mergeCarts()` method.
 
 During login or registration, the frontend includes the session ID with the auth request. The backend then merges the guest cart into the authenticated cart.
 
+> **Code:** `Client/hobby-shop-frontend/src/services/authService.js` — `login()` and `register()` both pull `sessionId` from `localStorage` and pass it as a query param and header to the auth endpoint.
+>
+> **Code:** `Server/src/main/java/com/hobby/shop/controller/AuthController.java` — after successful login or registration, calls `cartService.mergeCarts(email, sessionId)`.
+
 The merge logic checks whether the same product already exists in the user cart. If it does, it increases the quantity. If not, it creates a new cart item. Then it deletes the guest cart.
+
+> **Code:** `Server/src/main/java/com/hobby/shop/service/impl/CartServiceImpl.java` — `mergeCarts()` method (lines ~398–450): iterates session cart items, increases quantity for duplicates or adds new `CartItem`, then calls `cartRepository.delete(sessionCart)`.
+>
+> **Code:** `Server/src/main/java/com/hobby/shop/repository/CartRepository.java` — `findBySessionId(String sessionId)` is the key query that locates the guest cart.
 
 The reason this was challenging is that the cart has to survive a change in identity, from anonymous session to authenticated user, without breaking the user experience.
 
+> **Code:** `Client/hobby-shop-frontend/src/contexts/CartProvider.jsx` — `useEffect` on `user` state change triggers `loadCart()`, so the merged cart is immediately reflected in the UI after login.
+
+<a id="aws-pipeline"></a>
+### AWS Pipeline Highlight
+
 The second technical challenge was deployment automation. The pipeline had to build both applications, inject the live API URL into the frontend build, apply Terraform to AWS resources, and restart the backend remotely.
+
+> **Code:** `buildspec.yml` — the main CodeBuild spec. The frontend build step dynamically looks up the running EC2 instance's public IP via the AWS CLI and injects it as `VITE_API_BASE_URL` at `npm run build` time, so the compiled React app always points to the live backend even if the IP changes.
+>
+> **Code:** `main.tf` — Terraform configuration defining the EC2 instance, S3 bucket (frontend hosting + artifact storage), IAM roles, security group, and SSM policy attachment that enables remote restarts without SSH.
+>
+> **Code:** `scripts/ssm-restart.sh` — after the new JAR is uploaded to S3, this script uses AWS SSM `send-command` to restart the Spring Boot service on the EC2 instance remotely.
+>
+> **Code:** `buildspec-sonar.yml` — separate CodeBuild spec that runs SonarQube analysis before the main build stage.
 
 ---
 
