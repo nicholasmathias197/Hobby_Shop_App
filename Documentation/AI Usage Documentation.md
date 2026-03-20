@@ -8,6 +8,7 @@ This project used AI as a development assistant to support planning, implementat
 
 - GitHub Copilot in VS Code
 - Amazon Q for AWS and Terraform guidance
+- Figma AI for homepage design ideation and layout outlining
 - Model used for the current Copilot-based documentation and assistance in this workspace: GPT-5.4
 
 ## How AI Was Used in This Project
@@ -23,6 +24,7 @@ AI was used to help with:
 - organizing route handling with public, protected, and admin routes
 - improving component structure for pages such as products, cart, checkout, profile, and admin screens
 - debugging frontend integration issues between React and the backend API
+- creating a base homepage design outline before implementation
 
 Examples of frontend guidance that AI helped with:
 
@@ -30,6 +32,19 @@ Examples of frontend guidance that AI helped with:
 - how to build reusable cart-related components like `CartItemRow`, `ProductGrid`, and `ProductCard`
 - how to organize API access using a shared Axios instance and service files
 - how to manage authentication state and cart state with custom hooks and context providers
+- how to translate an initial homepage design concept into a practical component layout
+
+### 1a. UI Design Ideation with Figma AI
+
+Figma AI was used to help create an initial base outline for the homepage design.
+
+It was used for:
+
+- generating an initial page structure for the homepage
+- exploring layout ideas for hero content, featured sections, and content blocks
+- speeding up the early design phase before React implementation
+
+The Figma AI output was treated as a starting point, not as a final design. The final homepage structure still required manual review, styling decisions, and implementation in the React codebase.
 
 ### 2. Backend Security
 
@@ -81,6 +96,11 @@ These were primarily done with GitHub Copilot.
 - "Show me how to build a cart provider using React Context and hooks."
 - "Help me protect checkout and profile routes in React Router."
 - "Explain how to organize API calls using Axios and reusable service files."
+
+Representative Figma AI usage:
+
+- "Generate a base homepage outline for a hobby shop storefront."
+- "Give me a homepage structure with a hero section, featured products, and promotional content blocks."
 
 ### Backend Security Prompt Examples
 
@@ -167,6 +187,14 @@ Amazon Q was used mainly for:
 - EC2, S3, IAM, CloudWatch, SNS, and SSM setup guidance
 - troubleshooting AWS deployment steps
 
+### Figma AI
+
+Figma AI was used mainly for:
+
+- homepage design ideation
+- generating a starting layout for the homepage
+- helping define the base visual structure before frontend implementation
+
 ## Academic and Professional Integrity Statement
 
 AI was used as an assistive engineering tool for learning, planning, implementation support, troubleshooting, and documentation. The project still required human design decisions, testing, debugging, and integration work. All final project outcomes were reviewed and validated in the codebase and deployed environment.
@@ -176,3 +204,7 @@ AI was used as an assistive engineering tool for learning, planning, implementat
 If asked during the presentation how AI was used, the short answer is:
 
 "I used GitHub Copilot mainly for frontend development and backend security, especially JWT and role-based access control. I used Amazon Q mainly for AWS deployment and Terraform, where it walked me step by step through infrastructure and pipeline setup. I still reviewed, tested, and adjusted the final implementation myself." 
+
+An expanded version if you want to mention design is:
+
+"I used GitHub Copilot for frontend development and backend security, Amazon Q for AWS and Terraform guidance, and Figma AI to help generate a base homepage design outline. I still reviewed, refined, and implemented the final result myself." 
