@@ -206,8 +206,7 @@ All list endpoints support Spring pagination params: `page`, `size`, `sort`.
 | POST | `/api/orders/guest` | Public | Create guest order (requires `X-Session-ID`) |
 | GET | `/api/orders` | User | Get current user's orders |
 | GET | `/api/orders/{orderNumber}` | User | Get specific order |
-| PUT | `/api/orders/{orderId}/cancel` | User | Cancel an order |
-| GET | `/api/orders/guest/lookup` | Public | Guest order lookup by email + order number |
+| PUT | `/api/orders/{orderId}/cancel` | User | Cancel an order |s
 | GET | `/api/orders/all` | Admin | All orders |
 | GET | `/api/orders/status/{status}` | Admin | Orders by status |
 | PUT | `/api/orders/{orderId}/status` | Admin | Update order status |
