@@ -19,6 +19,7 @@ A full-stack e-commerce platform for Gundam models and modeling supplies. Built 
 - [CI/CD Pipeline](#cicd-pipeline)
 - [Testing](#testing)
 - [Architecture Decisions](#architecture-decisions)
+- [Future Implementation — External API Integrations](#future-implementation--external-api-integrations)
 
 ---
 
@@ -397,3 +398,37 @@ The products page manages 6+ related state values (filters, pagination, loading,
 
 **Why useMemo/useCallback in CartProvider?**  
 The cart context is consumed by many components. Memoizing derived values (`cartTotal`, `cartItemsCount`) and stabilizing function references prevents unnecessary re-renders across the component tree.
+
+---
+
+## Future Implementation — External API Integrations
+
+If this project were taken live, the following external APIs would add production-ready capabilities:
+
+### Payment Processing
+- **[Stripe API](https://stripe.com/docs/api)** — Credit card payments, Apple/Google Pay, checkout sessions, refunds, and webhook-driven order status updates. Would integrate with the existing `CheckoutPage` and `OrderService`.
+- **[PayPal REST API](https://developer.paypal.com/api/rest/)** — Additional payment option customers expect alongside card payments.
+
+### Shipping & Tracking
+- **[EasyPost API](https://www.easypost.com/docs/api)** — Multi-carrier shipping (USPS, UPS, FedEx) with real-time rate comparison, label generation, and package tracking. Would plug into the existing `Order` and `OrderStatusHistory` entities.
+- **[ShipEngine API](https://www.shipengine.com/docs/)** — Alternative multi-carrier shipping with address validation and batch label creation.
+
+### Address Validation
+- **[USPS Web Tools API](https://www.usps.com/business/web-tools-apis/)** (free) — Validate and standardize shipping addresses at checkout to reduce failed deliveries.
+- **[Google Maps Places API](https://developers.google.com/maps/documentation/places/web-service)** — Address autocomplete on the `CheckoutPage` for improved UX.
+
+### Email & Notifications
+- **[SendGrid API](https://docs.sendgrid.com/)** — Transactional emails for order confirmations, shipping updates, password resets, and email verification. The `Customer` entity already tracks email verification status.
+- **[Twilio API](https://www.twilio.com/docs)** — SMS notifications for order status changes and delivery updates.
+
+### Image Management
+- **[Cloudinary API](https://cloudinary.com/documentation)** — Image optimization, automatic resizing, format conversion, and CDN delivery for the `ProductImage` gallery. Better performance than serving images directly from S3.
+
+### Product Data Enrichment
+- **[MyAnimeList / Jikan API](https://jikan.moe/)** (free) — Pull related anime/series metadata for Gundam models to enrich product descriptions with series info, release dates, and related kits.
+
+### Tax Calculation
+- **[TaxJar API](https://www.taxjar.com/api-docs/)** — Automatic sales tax calculation based on shipping destination. Essential for compliance when selling across US states.
+
+### Analytics
+- **[Google Analytics 4](https://developers.google.com/analytics/devguides/collection/ga4)** — Track user behavior, popular products, and conversion funnels to power the `AdminDashboard` with real data.
