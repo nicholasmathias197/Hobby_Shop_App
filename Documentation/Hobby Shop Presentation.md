@@ -96,16 +96,26 @@ Show the end-to-end shopping flow, with emphasis on the cart experience and gues
    - subtotal calculation
    - guest warning message
 5. While still in guest mode, explain that the cart is tracked by a session ID.
-6. Log in or register.
-7. Return to the cart and show that the guest cart was preserved and merged into the authenticated cart.
-8. Continue to checkout or order flow to show the user journey remains intact.
+6. Open browser DevTools (`Application` + `Network`) and show:
+   - `localStorage` contains `sessionId`
+   - cart API calls include `X-Session-ID`
+7. Log in or register.
+8. In `Network`, show the auth/cart requests now return the merged cart for the authenticated user.
+9. Return to the cart UI and show that the guest cart was preserved and merged into the authenticated cart.
+10. Continue to checkout or order flow to show the user journey remains intact.
 
 ### What to Narrate During the Demo
 
 - “The cart is not just local UI state. It is backed by the API.”
 - “Guest shoppers get a session-based cart, so they can start buying immediately.”
+- “In DevTools, you can see the session ID in local storage and on guest cart requests as `X-Session-ID`.”
 - “When the user logs in, the backend merges the guest cart into the account cart.”
+- “After login, the app refreshes cart state from the authenticated path, which proves the merge worked.”
 - “That merge was one of the hardest technical problems in the project.”
+
+### Verbatim Demo Script (20-30 sec)
+
+"Before authentication, the browser has a persisted `sessionId` in local storage, and guest cart requests carry it via `X-Session-ID`. When I submit login, that same identifier is forwarded to the auth flow so the server can execute `mergeCarts` against the customer cart. On the next cart fetch, we are on the JWT-authenticated path and the original guest line items are still present, which is the runtime proof that merge completed server-side."
 
 ### Optional Demo Backup
 
@@ -114,6 +124,7 @@ If live login or AWS is slow, show these instead:
 - the cart page UI
 - the navbar cart counter
 - the login flow carrying session context
+- a saved DevTools screenshot of `localStorage.sessionId` and request headers
 - the CodePipeline definition and Terraform files
 
 ---
@@ -134,6 +145,12 @@ This was the most interesting problem because the cart exists before the user id
   - generate a new UUID
 - On login or registration, the frontend sends the session ID to the auth endpoints.
 - The backend then merges the guest cart into the authenticated user cart.
+
+### How to Prove It in the Browser
+
+- In DevTools `Application > Local Storage`, verify `sessionId` exists before login.
+- In DevTools `Network`, open a guest cart request and confirm `X-Session-ID` is present.
+- Log in, then inspect the next cart/auth requests to verify the user cart is returned with guest items merged.
 
 ### Why This Is Tricky
 

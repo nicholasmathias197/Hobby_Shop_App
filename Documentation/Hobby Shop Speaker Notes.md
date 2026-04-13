@@ -44,9 +44,20 @@ Then I’ll open the cart page and show quantity updates, item removal, subtotal
 
 At this point I’ll explain that the user is still a guest, and the cart is being tracked by a session ID rather than by an account.
 
+Before login, I’ll open browser DevTools as proof:
+
+- In `Application > Local Storage`, I’ll point out the `sessionId` key.
+- In `Network`, I’ll click a cart request and show the `X-Session-ID` request header.
+- I’ll call out that this is the handoff identity used for merge.
+
 Then I’ll log in or register.
 
 After authentication, I’ll return to the cart and show that the guest cart was preserved and merged into the user’s account cart.
+
+I’ll also quickly check `Network` again and explain that the app is now using the authenticated path, while still preserving the pre-login guest cart contents through backend merge logic.
+
+**Verbatim line (20-30 sec):**
+"Before authentication, the browser has a persisted `sessionId` in local storage, and guest cart requests carry it via `X-Session-ID`. When I submit login, that same identifier is forwarded to the auth flow so the server can execute `mergeCarts` against the customer cart. On the next cart fetch, we are on the JWT-authenticated path and the original guest line items are still present, which is the runtime proof that merge completed server-side."
 
 That is the most important user experience point in the demo, because it shows continuity instead of forcing the user to start over.
 
@@ -82,6 +93,8 @@ The merge logic checks whether the same product already exists in the user cart.
 > **Code:** `Server/src/main/java/com/hobby/shop/repository/CartRepository.java` — `findBySessionId(String sessionId)` is the key query that locates the guest cart.
 
 The reason this was challenging is that the cart has to survive a change in identity, from anonymous session to authenticated user, without breaking the user experience.
+
+If asked how I validated this during debugging, I used DevTools in two panels: `Application` to inspect `localStorage.sessionId`, and `Network` to inspect headers and response payloads before and after login.
 
 > **Code:** `Client/hobby-shop-frontend/src/contexts/CartProvider.jsx` — `useEffect` on `user` state change triggers `loadCart()`, so the merged cart is immediately reflected in the UI after login.
 
